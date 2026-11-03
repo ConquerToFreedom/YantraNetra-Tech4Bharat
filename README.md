@@ -1,4 +1,4 @@
-YantraNetra: Agentic Edge AI for MSME Predictive Maintenance
+#YantraNetra: Agentic Edge AI for MSME Predictive Maintenance
 Project Tracks: Tech4Bharat (GAVS) & L&T TECHgium
 Team Name: Yantra Yodha
 
