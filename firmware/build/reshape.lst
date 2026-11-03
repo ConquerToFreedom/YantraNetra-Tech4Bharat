@@ -1,0 +1,356 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"reshape.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc"
+  20              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L20EvalReshapeReferenceEPNS0_13TfLiteContextEPNS0_10T
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	_ZN6tflite5micro12_GLOBAL__N_1L20EvalReshapeReferenceEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:
+  27              	.LVL0:
+  28              	.LFB10570:
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** /* Copyright 2023 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** #include "tensorflow/lite/micro/kernels/reshape.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** #include <cstring>
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** #include "tensorflow/lite/micro/builtin_op_data.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** #include "tensorflow/lite/micro/compatibility.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** #include "tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** #include "tensorflow/lite/micro/kernels/kernel_util.h"
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** #include "tensorflow/lite/micro/memory_helpers.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** #include "tensorflow/lite/micro/micro_common.h"
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** #include "tensorflow/lite/micro/micro_utils.h"
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** namespace tflite {
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** namespace micro {
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** namespace {
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s 			page 2
+
+
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** TfLiteStatus EvalReshapeReference(TfLiteContext* context, TfLiteNode* node) {
+  29              		.loc 1 32 77 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 32 77 is_stmt 0 view .LVU1
+  34 0000 70B5     		push	{r4, r5, r6, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 4, -16
+  38              		.cfi_offset 5, -12
+  39              		.cfi_offset 6, -8
+  40              		.cfi_offset 14, -4
+  41 0002 82B0     		sub	sp, sp, #8
+  42              	.LCFI1:
+  43              		.cfi_def_cfa_offset 24
+  44 0004 0646     		mov	r6, r0
+  45 0006 0D46     		mov	r5, r1
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   const TfLiteEvalTensor* input =
+  46              		.loc 1 33 3 is_stmt 1 view .LVU2
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****       tflite::micro::GetEvalInput(context, node, kReshapeInputTensor);
+  47              		.loc 1 34 34 is_stmt 0 view .LVU3
+  48 0008 0022     		movs	r2, #0
+  49 000a FFF7FEFF 		bl	_ZN6tflite5micro12GetEvalInputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+  50              	.LVL1:
+  51              		.loc 1 34 34 view .LVU4
+  52 000e 0446     		mov	r4, r0
+  53              	.LVL2:
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   TfLiteEvalTensor* output =
+  54              		.loc 1 35 3 is_stmt 1 view .LVU5
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****       tflite::micro::GetEvalOutput(context, node, kReshapeOutputTensor);
+  55              		.loc 1 36 35 is_stmt 0 view .LVU6
+  56 0010 0022     		movs	r2, #0
+  57 0012 2946     		mov	r1, r5
+  58 0014 3046     		mov	r0, r6
+  59              	.LVL3:
+  60              		.loc 1 36 35 view .LVU7
+  61 0016 FFF7FEFF 		bl	_ZN6tflite5micro13GetEvalOutputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+  62              	.LVL4:
+  63 001a 0546     		mov	r5, r0
+  64              	.LVL5:
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   // TODO(b/162522304): storing input bytes in OpData increases some models
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   // significantly, possibly due to alignment issues.
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   size_t input_bytes;
+  65              		.loc 1 40 3 is_stmt 1 view .LVU8
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   TF_LITE_ENSURE_STATUS(TfLiteTypeSizeOf(input->type, &input_bytes));
+  66              		.loc 1 41 3 view .LVU9
+  67              	.LBB2:
+  68              		.loc 1 41 3 view .LVU10
+  69 001c 01A9     		add	r1, sp, #4
+  70 001e 207A     		ldrb	r0, [r4, #8]	@ zero_extendqisi2
+  71              	.LVL6:
+  72              		.loc 1 41 3 is_stmt 0 view .LVU11
+  73 0020 FFF7FEFF 		bl	_ZN6tflite5micro16TfLiteTypeSizeOfENS0_10TfLiteTypeEPj
+  74              	.LVL7:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s 			page 3
+
+
+  75              		.loc 1 41 3 is_stmt 1 discriminator 1 view .LVU12
+  76 0024 0646     		mov	r6, r0
+  77              	.LVL8:
+  78              		.loc 1 41 3 is_stmt 0 discriminator 1 view .LVU13
+  79 0026 10B1     		cbz	r0, .L4
+  80              	.LVL9:
+  81              	.L2:
+  82              		.loc 1 41 3 discriminator 1 view .LVU14
+  83              	.LBE2:
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   input_bytes *= ElementCount(*input->dims);
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   // Do nothing for in-place reshape.
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   if (input->data.raw != output->data.raw) {
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****     // Otherwise perform reshape with copy.
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****     memcpy(output->data.raw, input->data.raw, input_bytes);
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   }
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   return kTfLiteOk;
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** }
+  84              		.loc 1 50 1 view .LVU15
+  85 0028 3046     		mov	r0, r6
+  86 002a 02B0     		add	sp, sp, #8
+  87              	.LCFI2:
+  88              		.cfi_remember_state
+  89              		.cfi_def_cfa_offset 16
+  90              		@ sp needed
+  91 002c 70BD     		pop	{r4, r5, r6, pc}
+  92              	.LVL10:
+  93              	.L4:
+  94              	.LCFI3:
+  95              		.cfi_restore_state
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   TF_LITE_ENSURE_STATUS(TfLiteTypeSizeOf(input->type, &input_bytes));
+  96              		.loc 1 41 3 is_stmt 1 view .LVU16
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   input_bytes *= ElementCount(*input->dims);
+  97              		.loc 1 42 3 view .LVU17
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   input_bytes *= ElementCount(*input->dims);
+  98              		.loc 1 42 30 is_stmt 0 view .LVU18
+  99 002e 6068     		ldr	r0, [r4, #4]
+ 100              	.LVL11:
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   input_bytes *= ElementCount(*input->dims);
+ 101              		.loc 1 42 30 view .LVU19
+ 102 0030 FFF7FEFF 		bl	_ZN6tflite5micro12ElementCountERKNS0_14TfLiteIntArrayE
+ 103              	.LVL12:
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   input_bytes *= ElementCount(*input->dims);
+ 104              		.loc 1 42 15 discriminator 1 view .LVU20
+ 105 0034 019B     		ldr	r3, [sp, #4]
+ 106 0036 03FB00F2 		mul	r2, r3, r0
+ 107 003a 0192     		str	r2, [sp, #4]
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****     // Otherwise perform reshape with copy.
+ 108              		.loc 1 45 3 is_stmt 1 view .LVU21
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****     // Otherwise perform reshape with copy.
+ 109              		.loc 1 45 19 is_stmt 0 view .LVU22
+ 110 003c 2168     		ldr	r1, [r4]
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****     // Otherwise perform reshape with copy.
+ 111              		.loc 1 45 39 view .LVU23
+ 112 003e 2868     		ldr	r0, [r5]
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****     // Otherwise perform reshape with copy.
+ 113              		.loc 1 45 3 view .LVU24
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s 			page 4
+
+
+ 114 0040 8142     		cmp	r1, r0
+ 115 0042 F1D0     		beq	.L2
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   }
+ 116              		.loc 1 47 5 is_stmt 1 view .LVU25
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   }
+ 117              		.loc 1 47 11 is_stmt 0 view .LVU26
+ 118 0044 FFF7FEFF 		bl	memcpy
+ 119              	.LVL13:
+ 120 0048 EEE7     		b	.L2
+ 121              		.cfi_endproc
+ 122              	.LFE10570:
+ 124              		.section	.text._ZN6tflite5micro16Register_RESHAPEEv,"ax",%progbits
+ 125              		.align	1
+ 126              		.global	_ZN6tflite5micro16Register_RESHAPEEv
+ 127              		.syntax unified
+ 128              		.thumb
+ 129              		.thumb_func
+ 131              	_ZN6tflite5micro16Register_RESHAPEEv:
+ 132              	.LVL14:
+ 133              	.LFB10571:
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** }  // namespace
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** 
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** TFLMRegistration Register_RESHAPE() {
+ 134              		.loc 1 54 37 is_stmt 1 view -0
+ 135              		.cfi_startproc
+ 136              		@ args = 0, pretend = 0, frame = 0
+ 137              		@ frame_needed = 0, uses_anonymous_args = 0
+ 138              		.loc 1 54 37 is_stmt 0 view .LVU28
+ 139 0000 10B5     		push	{r4, lr}
+ 140              	.LCFI4:
+ 141              		.cfi_def_cfa_offset 8
+ 142              		.cfi_offset 4, -8
+ 143              		.cfi_offset 14, -4
+ 144 0002 82B0     		sub	sp, sp, #8
+ 145              	.LCFI5:
+ 146              		.cfi_def_cfa_offset 16
+ 147 0004 0446     		mov	r4, r0
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****   return tflite::micro::RegisterOp(nullptr, PrepareReshapeReference,
+ 148              		.loc 1 55 3 is_stmt 1 view .LVU29
+ 149              		.loc 1 55 35 is_stmt 0 view .LVU30
+ 150 0006 0021     		movs	r1, #0
+ 151 0008 0191     		str	r1, [sp, #4]
+ 152 000a 0091     		str	r1, [sp]
+ 153 000c 034B     		ldr	r3, .L7
+ 154 000e 044A     		ldr	r2, .L7+4
+ 155 0010 FFF7FEFF 		bl	_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLit
+ 156              	.LVL15:
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc ****                                    EvalReshapeReference);
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.cc **** }
+ 157              		.loc 1 57 1 view .LVU31
+ 158 0014 2046     		mov	r0, r4
+ 159 0016 02B0     		add	sp, sp, #8
+ 160              	.LCFI6:
+ 161              		.cfi_def_cfa_offset 8
+ 162              		@ sp needed
+ 163 0018 10BD     		pop	{r4, pc}
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s 			page 5
+
+
+ 164              	.LVL16:
+ 165              	.L8:
+ 166              		.loc 1 57 1 view .LVU32
+ 167 001a 00BF     		.align	2
+ 168              	.L7:
+ 169 001c 00000000 		.word	_ZN6tflite5micro12_GLOBAL__N_1L20EvalReshapeReferenceEPNS0_13TfLiteContextEPNS0_10TfLiteNode
+ 170 0020 00000000 		.word	_ZN6tflite5micro23PrepareReshapeReferenceEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ 171              		.cfi_endproc
+ 172              	.LFE10571:
+ 174              		.text
+ 175              	.Letext0:
+ 176              		.file 2 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none
+ 177              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 178              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 179              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 180              		.file 6 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ 181              		.file 7 "lib/tflite-micro/tensorflow/lite/micro/builtin_op_data.h"
+ 182              		.file 8 "lib/tflite-micro/tensorflow/lite/micro/kernels/reshape.h"
+ 183              		.file 9 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h"
+ 184              		.file 10 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/types.h"
+ 185              		.file 11 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+ 186              		.file 12 "lib/tflite-micro/tensorflow/lite/micro/micro_profiler_interface.h"
+ 187              		.file 13 "lib/tflite-micro/tensorflow/lite/micro/micro_context.h"
+ 188              		.file 14 "lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h"
+ 189              		.file 15 "lib/tflite-micro/tensorflow/lite/micro/memory_helpers.h"
+ 190              		.file 16 "lib/tflite-micro/tensorflow/lite/micro/micro_utils.h"
+ 191              		.file 17 "lib/tflite-micro/tensorflow/lite/micro/micro_graph.h"
+ 192              		.file 18 "lib/tflite-micro/tensorflow/lite/micro/schema/schema_generated.h"
+ 193              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 194              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 195              		.file 21 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 196              		.file 22 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 197              		.file 23 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 198              		.file 24 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 199              		.file 25 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 200              		.file 26 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 201              		.file 27 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 202              		.file 28 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 203              		.file 29 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 204              		.file 30 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 205              		.file 31 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 206              		.file 32 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 207              		.file 33 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 208              		.file 34 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 209              		.file 35 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 210              		.file 36 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 211              		.file 37 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 212              		.file 38 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 213              		.file 39 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 214              		.file 40 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 215              		.file 41 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 216              		.file 42 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 217              		.file 43 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 218              		.file 44 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 219              		.file 45 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 220              		.file 46 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 221              		.file 47 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s 			page 6
+
+
+ 222              		.file 48 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 223              		.file 49 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 224              		.file 50 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 225              		.file 51 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 226              		.file 52 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 227              		.file 53 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 228              		.file 54 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 229              		.file 55 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 230              		.file 56 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 231              		.file 57 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 232              		.file 58 "<built-in>"
+ 233              		.file 59 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 234              		.file 60 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 235              		.file 61 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 236              		.file 62 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 237              		.file 63 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 238              		.file 64 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 239              		.file 65 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 240              		.file 66 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 241              		.file 67 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 242              		.file 68 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/base.h"
+ 243              		.file 69 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/stl_emulation.h"
+ 244              		.file 70 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/buffer.h"
+ 245              		.file 71 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/string.h"
+ 246              		.file 72 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/vector.h"
+ 247              		.file 73 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/verifier.h"
+ 248              		.file 74 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/detached_buffer.h"
+ 249              		.file 75 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/allocator.h"
+ 250              		.file 76 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/table.h"
+ 251              		.file 77 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/vector_downward.h"
+ 252              		.file 78 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/flatbuffer_builder.h"
+ 253              		.file 79 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/flatbuffers.h"
+ 254              		.file 80 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 255              		.file 81 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 reshape.cc
+C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s:21     .text._ZN6tflite5micro12_GLOBAL__N_1L20EvalReshapeReferenceEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s:26     .text._ZN6tflite5micro12_GLOBAL__N_1L20EvalReshapeReferenceEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 _ZN6tflite5micro12_GLOBAL__N_1L20EvalReshapeReferenceEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s:125    .text._ZN6tflite5micro16Register_RESHAPEEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s:131    .text._ZN6tflite5micro16Register_RESHAPEEv:00000000 _ZN6tflite5micro16Register_RESHAPEEv
+C:\Users\Chetan\AppData\Local\Temp\ccX2LQjq.s:169    .text._ZN6tflite5micro16Register_RESHAPEEv:0000001c $d
+
+UNDEFINED SYMBOLS
+_ZN6tflite5micro12GetEvalInputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+_ZN6tflite5micro13GetEvalOutputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+_ZN6tflite5micro16TfLiteTypeSizeOfENS0_10TfLiteTypeEPj
+_ZN6tflite5micro12ElementCountERKNS0_14TfLiteIntArrayE
+memcpy
+_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLiteNodeEESC_PFvS3_S1_ESE_
+_ZN6tflite5micro23PrepareReshapeReferenceEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE

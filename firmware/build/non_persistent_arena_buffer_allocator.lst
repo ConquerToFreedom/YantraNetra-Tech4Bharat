@@ -1,0 +1,1477 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"non_persistent_arena_buffer_allocator.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_alloca
+  20              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorD2Ev,"ax",%progbits
+  21              		.align	1
+  22              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorD2Ev
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorD2Ev:
+  28              	.LVL0:
+  29              	.LFB10084:
+   1:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** /* Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** #include "tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.h"
+  16:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+  17:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** #include "tensorflow/lite/micro/memory_helpers.h"
+  18:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** #include "tensorflow/lite/micro/micro_log.h"
+  19:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+  20:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** namespace tflite {
+  21:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** namespace micro {
+  22:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+  23:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** NonPersistentArenaBufferAllocator::NonPersistentArenaBufferAllocator(
+  24:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     uint8_t* buffer, size_t buffer_size)
+  25:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     : buffer_head_(buffer),
+  26:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****       buffer_tail_(buffer + buffer_size),
+  27:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****       head_temp_(buffer),
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****       next_temp_(buffer) {}
+  29:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 2
+
+
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** NonPersistentArenaBufferAllocator::~NonPersistentArenaBufferAllocator() {}
+  30              		.loc 1 30 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  35              	.LBB13:
+  36              		.loc 1 30 71 is_stmt 0 view .LVU1
+  37 0000 024A     		ldr	r2, .L2
+  38 0002 0260     		str	r2, [r0]
+  39              	.LVL1:
+  40              	.LBB14:
+  41              	.LBI14:
+  42              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** /* Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #ifndef TENSORFLOW_LITE_MICRO_ARENA_ALLOCATOR_IBUFFER_ALLOCATOR_H_
+  16:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #define TENSORFLOW_LITE_MICRO_ARENA_ALLOCATOR_IBUFFER_ALLOCATOR_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #include <cstddef>
+  19:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #include <cstdint>
+  20:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #include "tensorflow/lite/micro/micro_common.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  23:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** namespace tflite {
+  24:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** namespace micro {
+  25:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // Interface classes that the TFLM framework relies on to get buffers it needs.
+  26:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // There are two types of buffers that the TFLM framework requires: persistent
+  27:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // and non-persistent. Persistent buffers, once allocated, are never freed by
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // the TFLM framework. Non-persist buffers can be allocated and deallocated by
+  29:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // the TFLM framework. This file defines two interfaces classes that TFLM
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // framework will rely on to manage these buffers.
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  32:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // Interface class for managing persistent buffers.
+  33:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** class IPersistentBufferAllocator {
+  34:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****  public:
+  35:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   IPersistentBufferAllocator() {}
+  36:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual ~IPersistentBufferAllocator() {}
+  37:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   // Allocates persistent memory. The persistent buffer is never freed.
+  39:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual uint8_t* AllocatePersistentBuffer(size_t size, size_t alignment) = 0;
+  40:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  41:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   // Returns the size of all persistent allocations in bytes.
+  42:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual size_t GetPersistentUsedBytes() const = 0;
+  43:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** };
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 3
+
+
+  44:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  45:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // Interface class for managing non-persistent buffers.
+  46:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // The default non-persistent buffers are temp buffers that are not resizable.
+  47:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // Support of at least one resizable buffer is required.
+  48:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** class INonPersistentBufferAllocator {
+  49:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****  public:
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   INonPersistentBufferAllocator() {}
+  51:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual ~INonPersistentBufferAllocator() {}
+  43              		.loc 2 51 11 is_stmt 1 view .LVU2
+  44              	.LBB15:
+  45              		.loc 2 51 44 is_stmt 0 view .LVU3
+  46 0004 024A     		ldr	r2, .L2+4
+  47 0006 0260     		str	r2, [r0]
+  48              	.LVL2:
+  49              		.loc 2 51 44 view .LVU4
+  50              	.LBE15:
+  51              	.LBE14:
+  52              	.LBE13:
+  53              		.loc 1 30 74 view .LVU5
+  54 0008 7047     		bx	lr
+  55              	.L3:
+  56 000a 00BF     		.align	2
+  57              	.L2:
+  58 000c 08000000 		.word	_ZTVN6tflite5micro33NonPersistentArenaBufferAllocatorE+8
+  59 0010 08000000 		.word	_ZTVN6tflite5micro29INonPersistentBufferAllocatorE+8
+  60              		.cfi_endproc
+  61              	.LFE10084:
+  63              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorD1Ev
+  64              		.thumb_set _ZN6tflite5micro33NonPersistentArenaBufferAllocatorD1Ev,_ZN6tflite5micro33NonPersistent
+  65              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocator14DeallocateTempEPh,"ax",%progbi
+  66              		.align	1
+  67              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocator14DeallocateTempEPh
+  68              		.syntax unified
+  69              		.thumb
+  70              		.thumb_func
+  72              	_ZN6tflite5micro33NonPersistentArenaBufferAllocator14DeallocateTempEPh:
+  73              	.LVL3:
+  74              	.LFB10088:
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+  32:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Allocates a temporary buffer. This buffer is not resizable.
+  33:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** uint8_t* NonPersistentArenaBufferAllocator::AllocateTemp(size_t size,
+  34:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****                                                          size_t alignment) {
+  35:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* const aligned_result = AlignPointerUp(next_temp_, alignment);
+  36:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   const size_t available_memory = buffer_tail_ - aligned_result;
+  37:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (available_memory < size) {
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+  39:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Failed to allocate temp memory. Requested: %u, "
+  40:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "available %u, missing: %u",
+  41:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         size, available_memory, size - available_memory);
+  42:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return nullptr;
+  43:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+  44:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   next_temp_ = aligned_result + size;
+  45:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   temp_buffer_ptr_check_sum_ ^= reinterpret_cast<intptr_t>(aligned_result);
+  46:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   temp_buffer_count_++;
+  47:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return aligned_result;
+  48:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+  49:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 4
+
+
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Signals that a temporary buffer is no longer needed.
+  51:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** void NonPersistentArenaBufferAllocator::DeallocateTemp(uint8_t* temp_buf) {
+  75              		.loc 1 51 75 is_stmt 1 view -0
+  76              		.cfi_startproc
+  77              		@ args = 0, pretend = 0, frame = 0
+  78              		@ frame_needed = 0, uses_anonymous_args = 0
+  79              		@ link register save eliminated.
+  52:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   temp_buffer_ptr_check_sum_ ^= reinterpret_cast<intptr_t>(temp_buf);
+  80              		.loc 1 52 3 view .LVU7
+  81 0000 4369     		ldr	r3, [r0, #20]
+  82              		.loc 1 52 30 is_stmt 0 view .LVU8
+  83 0002 5940     		eors	r1, r1, r3
+  84              	.LVL4:
+  85              		.loc 1 52 30 view .LVU9
+  86 0004 4161     		str	r1, [r0, #20]
+  53:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   temp_buffer_count_--;
+  87              		.loc 1 53 3 is_stmt 1 view .LVU10
+  88 0006 8369     		ldr	r3, [r0, #24]
+  89              		.loc 1 53 21 is_stmt 0 view .LVU11
+  90 0008 013B     		subs	r3, r3, #1
+  91 000a 8361     		str	r3, [r0, #24]
+  54:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+  92              		.loc 1 54 1 view .LVU12
+  93 000c 7047     		bx	lr
+  94              		.cfi_endproc
+  95              	.LFE10088:
+  97              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocator25DeallocateResizableBufferEPh,"
+  98              		.align	1
+  99              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocator25DeallocateResizableBufferEPh
+ 100              		.syntax unified
+ 101              		.thumb
+ 102              		.thumb_func
+ 104              	_ZN6tflite5micro33NonPersistentArenaBufferAllocator25DeallocateResizableBufferEPh:
+ 105              	.LVL5:
+ 106              	.LFB10093:
+  55:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+  56:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Returns true if all temporary buffers are already deallocated.
+  57:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** bool NonPersistentArenaBufferAllocator::IsAllTempDeallocated() {
+  58:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (temp_buffer_count_ != 0 || temp_buffer_ptr_check_sum_ != 0) {
+  59:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+  60:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Number of allocated temp buffers: %d. Checksum passing status: %d",
+  61:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         temp_buffer_count_, !temp_buffer_ptr_check_sum_);
+  62:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return false;
+  63:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+  64:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return true;
+  65:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+  66:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+  67:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Signals that all temporary allocations can be reclaimed. TFLM calls this
+  68:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // API when it knows that all temporary buffers that it requested has been
+  69:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // deallocated. The goal of API is to facilitate implementations of
+  70:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // INonPersistentBufferAllocator can reuse buffer with some reasonable
+  71:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // complexity.
+  72:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** TfLiteStatus NonPersistentArenaBufferAllocator::ResetTempAllocations() {
+  73:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (!IsAllTempDeallocated()) {
+  74:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+  75:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "All temp buffers must be freed before calling ResetTempAllocations()");
+  76:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 5
+
+
+  77:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+  78:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   next_temp_ = head_temp_;
+  79:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return kTfLiteOk;
+  80:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+  81:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+  82:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Returns a buffer that is resizable viable ResizeBuffer().
+  83:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** uint8_t* NonPersistentArenaBufferAllocator::AllocateResizableBuffer(
+  84:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     size_t size, size_t alignment) {
+  85:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   // Only supports one resizable buffer, which starts at the buffer head.
+  86:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* expected_resizable_buf = AlignPointerUp(buffer_head_, alignment);
+  87:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+  88:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (resizable_buffer_allocated_) {
+  89:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+  90:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Cannot allocate a new resizable buffer when one is already allocated");
+  91:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return nullptr;
+  92:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+  93:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+  94:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (ResizeBuffer(expected_resizable_buf, size, alignment) == kTfLiteOk) {
+  95:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     resizable_buffer_allocated_ = true;
+  96:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return expected_resizable_buf;
+  97:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+  98:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return nullptr;
+  99:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 100:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 101:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Resizes a buffer that is previously returned by the AllocateResizableBuffer.
+ 102:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Note that ResizeBuffer(old_resizable_buf, 0, 1) effectively deallocates
+ 103:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // a previous allocated resizable buffer.
+ 104:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** TfLiteStatus NonPersistentArenaBufferAllocator::ResizeBuffer(
+ 105:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     uint8_t* resizable_buf, size_t size, size_t alignment) {
+ 106:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   // Only supports one resizable buffer, which starts at the buffer head.
+ 107:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* expect_resizable_buf = AlignPointerUp(buffer_head_, alignment);
+ 108:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (resizable_buf != expect_resizable_buf) {
+ 109:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf("Internal error: buffer is not resizable");
+ 110:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ 111:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 112:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (head_temp_ != next_temp_) {
+ 113:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf("ResetTempAllocations() is not called before ResizeBuffer().");
+ 114:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ 115:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 116:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 117:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   const size_t available_memory = buffer_tail_ - expect_resizable_buf;
+ 118:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (available_memory < size) {
+ 119:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 120:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Failed to resize buffer. Requested: %u, available %u, missing: %u",
+ 121:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         size, available_memory, size - available_memory);
+ 122:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ 123:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 124:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   head_temp_ = expect_resizable_buf + size;
+ 125:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   next_temp_ = head_temp_;
+ 126:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 127:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return kTfLiteOk;
+ 128:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 129:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 130:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Frees up the memory occupied by the resizable buffer.
+ 131:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** TfLiteStatus NonPersistentArenaBufferAllocator::DeallocateResizableBuffer(
+ 132:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     uint8_t* resizable_buf) {
+ 107              		.loc 1 132 29 is_stmt 1 view -0
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 6
+
+
+ 108              		.cfi_startproc
+ 109              		@ args = 0, pretend = 0, frame = 0
+ 110              		@ frame_needed = 0, uses_anonymous_args = 0
+ 111              		.loc 1 132 29 is_stmt 0 view .LVU14
+ 112 0000 38B5     		push	{r3, r4, r5, lr}
+ 113              	.LCFI0:
+ 114              		.cfi_def_cfa_offset 16
+ 115              		.cfi_offset 3, -16
+ 116              		.cfi_offset 4, -12
+ 117              		.cfi_offset 5, -8
+ 118              		.cfi_offset 14, -4
+ 119 0002 0446     		mov	r4, r0
+ 133:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   TfLiteStatus status = ResizeBuffer(resizable_buf, 0, 1);
+ 120              		.loc 1 133 3 is_stmt 1 view .LVU15
+ 121              		.loc 1 133 37 is_stmt 0 view .LVU16
+ 122 0004 0368     		ldr	r3, [r0]
+ 123 0006 DD69     		ldr	r5, [r3, #28]
+ 124 0008 0123     		movs	r3, #1
+ 125 000a 0022     		movs	r2, #0
+ 126 000c A847     		blx	r5
+ 127              	.LVL6:
+ 134:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (status == kTfLiteOk) {
+ 128              		.loc 1 134 3 is_stmt 1 view .LVU17
+ 129 000e 00B9     		cbnz	r0, .L6
+ 135:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     resizable_buffer_allocated_ = false;
+ 130              		.loc 1 135 5 view .LVU18
+ 131              		.loc 1 135 33 is_stmt 0 view .LVU19
+ 132 0010 2077     		strb	r0, [r4, #28]
+ 133              	.L6:
+ 136:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 137:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return status;
+ 134              		.loc 1 137 3 is_stmt 1 view .LVU20
+ 138:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 135              		.loc 1 138 1 is_stmt 0 view .LVU21
+ 136 0012 38BD     		pop	{r3, r4, r5, pc}
+ 137              		.loc 1 138 1 view .LVU22
+ 138              		.cfi_endproc
+ 139              	.LFE10093:
+ 141              		.section	.text._ZNK6tflite5micro33NonPersistentArenaBufferAllocator23GetOverlayMemoryAddressEv,"ax
+ 142              		.align	1
+ 143              		.global	_ZNK6tflite5micro33NonPersistentArenaBufferAllocator23GetOverlayMemoryAddressEv
+ 144              		.syntax unified
+ 145              		.thumb
+ 146              		.thumb_func
+ 148              	_ZNK6tflite5micro33NonPersistentArenaBufferAllocator23GetOverlayMemoryAddressEv:
+ 149              	.LVL7:
+ 150              	.LFB10094:
+ 139:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 140:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Returns a pointer pointing to the start of the overlay memory, which is
+ 141:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // used for activation tensors and scratch buffers by kernels at Invoke stage.
+ 142:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** uint8_t* NonPersistentArenaBufferAllocator::GetOverlayMemoryAddress() const {
+ 151              		.loc 1 142 77 is_stmt 1 view -0
+ 152              		.cfi_startproc
+ 153              		@ args = 0, pretend = 0, frame = 0
+ 154              		@ frame_needed = 0, uses_anonymous_args = 0
+ 155              		@ link register save eliminated.
+ 143:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return buffer_head_;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 7
+
+
+ 156              		.loc 1 143 3 view .LVU24
+ 144:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 157              		.loc 1 144 1 is_stmt 0 view .LVU25
+ 158 0000 4068     		ldr	r0, [r0, #4]
+ 159              	.LVL8:
+ 160              		.loc 1 144 1 view .LVU26
+ 161 0002 7047     		bx	lr
+ 162              		.cfi_endproc
+ 163              	.LFE10094:
+ 165              		.section	.text._ZNK6tflite5micro33NonPersistentArenaBufferAllocator25GetNonPersistentUsedBytesEv,"
+ 166              		.align	1
+ 167              		.global	_ZNK6tflite5micro33NonPersistentArenaBufferAllocator25GetNonPersistentUsedBytesEv
+ 168              		.syntax unified
+ 169              		.thumb
+ 170              		.thumb_func
+ 172              	_ZNK6tflite5micro33NonPersistentArenaBufferAllocator25GetNonPersistentUsedBytesEv:
+ 173              	.LVL9:
+ 174              	.LFB10096:
+ 145:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 146:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Reserves the size of the overlay memory. This overlay is reserved for the
+ 147:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // kernels at Invoke stage. This is referred to as the overlay because before
+ 148:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Invoket state, the same memory can be used for temp buffers. The layout of
+ 149:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // the memory is planned by the memory planner separately at Invoke stage.
+ 150:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** TfLiteStatus
+ 151:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** NonPersistentArenaBufferAllocator::ReserveNonPersistentOverlayMemory(
+ 152:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     size_t size, size_t alignment) {
+ 153:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* expect_resizable_buf = AlignPointerUp(buffer_head_, alignment);
+ 154:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return ResizeBuffer(expect_resizable_buf, size, alignment);
+ 155:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 156:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 157:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Returns the size of non-persistent buffer in use.
+ 158:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** size_t NonPersistentArenaBufferAllocator::GetNonPersistentUsedBytes() const {
+ 175              		.loc 1 158 77 is_stmt 1 view -0
+ 176              		.cfi_startproc
+ 177              		@ args = 0, pretend = 0, frame = 0
+ 178              		@ frame_needed = 0, uses_anonymous_args = 0
+ 179              		@ link register save eliminated.
+ 159:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return (next_temp_ - buffer_head_);
+ 180              		.loc 1 159 3 view .LVU28
+ 181              		.loc 1 159 11 is_stmt 0 view .LVU29
+ 182 0000 0269     		ldr	r2, [r0, #16]
+ 183              		.loc 1 159 24 view .LVU30
+ 184 0002 4068     		ldr	r0, [r0, #4]
+ 185              	.LVL10:
+ 160:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 186              		.loc 1 160 1 view .LVU31
+ 187 0004 101A     		subs	r0, r2, r0
+ 188 0006 7047     		bx	lr
+ 189              		.cfi_endproc
+ 190              	.LFE10096:
+ 192              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorD0Ev,"ax",%progbits
+ 193              		.align	1
+ 194              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorD0Ev
+ 195              		.syntax unified
+ 196              		.thumb
+ 197              		.thumb_func
+ 199              	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorD0Ev:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 8
+
+
+ 200              	.LVL11:
+ 201              	.LFB10086:
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 202              		.loc 1 30 1 is_stmt 1 view -0
+ 203              		.cfi_startproc
+ 204              		@ args = 0, pretend = 0, frame = 0
+ 205              		@ frame_needed = 0, uses_anonymous_args = 0
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 206              		.loc 1 30 1 is_stmt 0 view .LVU33
+ 207 0000 10B5     		push	{r4, lr}
+ 208              	.LCFI1:
+ 209              		.cfi_def_cfa_offset 8
+ 210              		.cfi_offset 4, -8
+ 211              		.cfi_offset 14, -4
+ 212 0002 0446     		mov	r4, r0
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 213              		.loc 1 30 74 view .LVU34
+ 214 0004 FFF7FEFF 		bl	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorD1Ev
+ 215              	.LVL12:
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 216              		.loc 1 30 74 discriminator 1 view .LVU35
+ 217 0008 2021     		movs	r1, #32
+ 218 000a 2046     		mov	r0, r4
+ 219 000c FFF7FEFF 		bl	_ZdlPvj
+ 220              	.LVL13:
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 221              		.loc 1 30 74 view .LVU36
+ 222 0010 2046     		mov	r0, r4
+ 223 0012 10BD     		pop	{r4, pc}
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 224              		.loc 1 30 74 view .LVU37
+ 225              		.cfi_endproc
+ 226              	.LFE10086:
+ 228              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocator33ReserveNonPersistentOverlayMem
+ 229              		.align	1
+ 230              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocator33ReserveNonPersistentOverlayMemoryEjj
+ 231              		.syntax unified
+ 232              		.thumb
+ 233              		.thumb_func
+ 235              	_ZN6tflite5micro33NonPersistentArenaBufferAllocator33ReserveNonPersistentOverlayMemoryEjj:
+ 236              	.LVL14:
+ 237              	.LFB10095:
+ 152:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* expect_resizable_buf = AlignPointerUp(buffer_head_, alignment);
+ 238              		.loc 1 152 36 is_stmt 1 view -0
+ 239              		.cfi_startproc
+ 240              		@ args = 0, pretend = 0, frame = 0
+ 241              		@ frame_needed = 0, uses_anonymous_args = 0
+ 152:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* expect_resizable_buf = AlignPointerUp(buffer_head_, alignment);
+ 242              		.loc 1 152 36 is_stmt 0 view .LVU39
+ 243 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ 244              	.LCFI2:
+ 245              		.cfi_def_cfa_offset 24
+ 246              		.cfi_offset 3, -24
+ 247              		.cfi_offset 4, -20
+ 248              		.cfi_offset 5, -16
+ 249              		.cfi_offset 6, -12
+ 250              		.cfi_offset 7, -8
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 9
+
+
+ 251              		.cfi_offset 14, -4
+ 252 0002 0446     		mov	r4, r0
+ 253 0004 0F46     		mov	r7, r1
+ 254 0006 1646     		mov	r6, r2
+ 153:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return ResizeBuffer(expect_resizable_buf, size, alignment);
+ 255              		.loc 1 153 3 is_stmt 1 view .LVU40
+ 153:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return ResizeBuffer(expect_resizable_buf, size, alignment);
+ 256              		.loc 1 153 49 is_stmt 0 view .LVU41
+ 257 0008 1146     		mov	r1, r2
+ 258              	.LVL15:
+ 153:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return ResizeBuffer(expect_resizable_buf, size, alignment);
+ 259              		.loc 1 153 49 view .LVU42
+ 260 000a 4068     		ldr	r0, [r0, #4]
+ 261              	.LVL16:
+ 153:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return ResizeBuffer(expect_resizable_buf, size, alignment);
+ 262              		.loc 1 153 49 view .LVU43
+ 263 000c FFF7FEFF 		bl	_ZN6tflite5micro14AlignPointerUpEPhj
+ 264              	.LVL17:
+ 153:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return ResizeBuffer(expect_resizable_buf, size, alignment);
+ 265              		.loc 1 153 49 view .LVU44
+ 266 0010 0146     		mov	r1, r0
+ 267              	.LVL18:
+ 154:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 268              		.loc 1 154 3 is_stmt 1 view .LVU45
+ 154:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 269              		.loc 1 154 22 is_stmt 0 view .LVU46
+ 270 0012 2368     		ldr	r3, [r4]
+ 271 0014 DD69     		ldr	r5, [r3, #28]
+ 272 0016 3346     		mov	r3, r6
+ 273 0018 3A46     		mov	r2, r7
+ 274 001a 2046     		mov	r0, r4
+ 275              	.LVL19:
+ 154:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 276              		.loc 1 154 22 view .LVU47
+ 277 001c A847     		blx	r5
+ 278              	.LVL20:
+ 155:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 279              		.loc 1 155 1 view .LVU48
+ 280 001e F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 155:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 281              		.loc 1 155 1 view .LVU49
+ 282              		.cfi_endproc
+ 283              	.LFE10095:
+ 285              		.section	.rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj.str1.4,"aMS"
+ 286              		.align	2
+ 287              	.LC0:
+ 288 0000 4661696C 		.ascii	"Failed to allocate temp memory. Requested: %u, avai"
+ 288      65642074 
+ 288      6F20616C 
+ 288      6C6F6361 
+ 288      74652074 
+ 289 0033 6C61626C 		.ascii	"lable %u, missing: %u\000"
+ 289      65202575 
+ 289      2C206D69 
+ 289      7373696E 
+ 289      673A2025 
+ 290              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj,"ax",%progbits
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 10
+
+
+ 291              		.align	1
+ 292              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj
+ 293              		.syntax unified
+ 294              		.thumb
+ 295              		.thumb_func
+ 297              	_ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj:
+ 298              	.LVL21:
+ 299              	.LFB10087:
+  34:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* const aligned_result = AlignPointerUp(next_temp_, alignment);
+ 300              		.loc 1 34 76 is_stmt 1 view -0
+ 301              		.cfi_startproc
+ 302              		@ args = 0, pretend = 0, frame = 0
+ 303              		@ frame_needed = 0, uses_anonymous_args = 0
+  34:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* const aligned_result = AlignPointerUp(next_temp_, alignment);
+ 304              		.loc 1 34 76 is_stmt 0 view .LVU51
+ 305 0000 38B5     		push	{r3, r4, r5, lr}
+ 306              	.LCFI3:
+ 307              		.cfi_def_cfa_offset 16
+ 308              		.cfi_offset 3, -16
+ 309              		.cfi_offset 4, -12
+ 310              		.cfi_offset 5, -8
+ 311              		.cfi_offset 14, -4
+ 312 0002 0446     		mov	r4, r0
+ 313 0004 0D46     		mov	r5, r1
+  35:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   const size_t available_memory = buffer_tail_ - aligned_result;
+ 314              		.loc 1 35 3 is_stmt 1 view .LVU52
+  35:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   const size_t available_memory = buffer_tail_ - aligned_result;
+ 315              		.loc 1 35 49 is_stmt 0 view .LVU53
+ 316 0006 1146     		mov	r1, r2
+ 317              	.LVL22:
+  35:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   const size_t available_memory = buffer_tail_ - aligned_result;
+ 318              		.loc 1 35 49 view .LVU54
+ 319 0008 0069     		ldr	r0, [r0, #16]
+ 320              	.LVL23:
+  35:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   const size_t available_memory = buffer_tail_ - aligned_result;
+ 321              		.loc 1 35 49 view .LVU55
+ 322 000a FFF7FEFF 		bl	_ZN6tflite5micro14AlignPointerUpEPhj
+ 323              	.LVL24:
+  36:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (available_memory < size) {
+ 324              		.loc 1 36 3 is_stmt 1 view .LVU56
+  36:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (available_memory < size) {
+ 325              		.loc 1 36 35 is_stmt 0 view .LVU57
+ 326 000e A268     		ldr	r2, [r4, #8]
+  36:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (available_memory < size) {
+ 327              		.loc 1 36 48 view .LVU58
+ 328 0010 121A     		subs	r2, r2, r0
+ 329              	.LVL25:
+  37:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 330              		.loc 1 37 3 is_stmt 1 view .LVU59
+ 331 0012 AA42     		cmp	r2, r5
+ 332 0014 08D3     		bcc	.L18
+  44:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   temp_buffer_ptr_check_sum_ ^= reinterpret_cast<intptr_t>(aligned_result);
+ 333              		.loc 1 44 3 view .LVU60
+  44:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   temp_buffer_ptr_check_sum_ ^= reinterpret_cast<intptr_t>(aligned_result);
+ 334              		.loc 1 44 31 is_stmt 0 view .LVU61
+ 335 0016 0544     		add	r5, r5, r0
+ 336              	.LVL26:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 11
+
+
+  44:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   temp_buffer_ptr_check_sum_ ^= reinterpret_cast<intptr_t>(aligned_result);
+ 337              		.loc 1 44 14 view .LVU62
+ 338 0018 2561     		str	r5, [r4, #16]
+  45:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   temp_buffer_count_++;
+ 339              		.loc 1 45 3 is_stmt 1 view .LVU63
+ 340 001a 6369     		ldr	r3, [r4, #20]
+  45:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   temp_buffer_count_++;
+ 341              		.loc 1 45 30 is_stmt 0 view .LVU64
+ 342 001c 4340     		eors	r3, r3, r0
+ 343 001e 6361     		str	r3, [r4, #20]
+  46:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return aligned_result;
+ 344              		.loc 1 46 3 is_stmt 1 view .LVU65
+ 345 0020 A369     		ldr	r3, [r4, #24]
+  46:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return aligned_result;
+ 346              		.loc 1 46 21 is_stmt 0 view .LVU66
+ 347 0022 0133     		adds	r3, r3, #1
+ 348 0024 A361     		str	r3, [r4, #24]
+  47:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 349              		.loc 1 47 3 is_stmt 1 view .LVU67
+ 350              	.LVL27:
+ 351              	.L14:
+  48:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 352              		.loc 1 48 1 is_stmt 0 view .LVU68
+ 353 0026 38BD     		pop	{r3, r4, r5, pc}
+ 354              	.LVL28:
+ 355              	.L18:
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Failed to allocate temp memory. Requested: %u, "
+ 356              		.loc 1 38 5 is_stmt 1 view .LVU69
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Failed to allocate temp memory. Requested: %u, "
+ 357              		.loc 1 38 16 is_stmt 0 view .LVU70
+ 358 0028 AB1A     		subs	r3, r5, r2
+ 359 002a 2946     		mov	r1, r5
+ 360 002c 0248     		ldr	r0, .L19
+ 361              	.LVL29:
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Failed to allocate temp memory. Requested: %u, "
+ 362              		.loc 1 38 16 view .LVU71
+ 363 002e FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 364              	.LVL30:
+  42:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 365              		.loc 1 42 5 is_stmt 1 view .LVU72
+  42:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 366              		.loc 1 42 12 is_stmt 0 view .LVU73
+ 367 0032 0020     		movs	r0, #0
+ 368 0034 F7E7     		b	.L14
+ 369              	.L20:
+ 370 0036 00BF     		.align	2
+ 371              	.L19:
+ 372 0038 00000000 		.word	.LC0
+ 373              		.cfi_endproc
+ 374              	.LFE10087:
+ 376              		.section	.rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv.str1.
+ 377              		.align	2
+ 378              	.LC1:
+ 379 0000 4E756D62 		.ascii	"Number of allocated temp buffers: %d. Checksum pass"
+ 379      6572206F 
+ 379      6620616C 
+ 379      6C6F6361 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 12
+
+
+ 379      74656420 
+ 380 0033 696E6720 		.ascii	"ing status: %d\000"
+ 380      73746174 
+ 380      75733A20 
+ 380      256400
+ 381              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv,"ax",%p
+ 382              		.align	1
+ 383              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv
+ 384              		.syntax unified
+ 385              		.thumb
+ 386              		.thumb_func
+ 388              	_ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv:
+ 389              	.LVL31:
+ 390              	.LFB10089:
+  57:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (temp_buffer_count_ != 0 || temp_buffer_ptr_check_sum_ != 0) {
+ 391              		.loc 1 57 64 is_stmt 1 view -0
+ 392              		.cfi_startproc
+ 393              		@ args = 0, pretend = 0, frame = 0
+ 394              		@ frame_needed = 0, uses_anonymous_args = 0
+  57:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (temp_buffer_count_ != 0 || temp_buffer_ptr_check_sum_ != 0) {
+ 395              		.loc 1 57 64 is_stmt 0 view .LVU75
+ 396 0000 08B5     		push	{r3, lr}
+ 397              	.LCFI4:
+ 398              		.cfi_def_cfa_offset 8
+ 399              		.cfi_offset 3, -8
+ 400              		.cfi_offset 14, -4
+  58:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 401              		.loc 1 58 3 is_stmt 1 view .LVU76
+  58:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 402              		.loc 1 58 7 is_stmt 0 view .LVU77
+ 403 0002 8169     		ldr	r1, [r0, #24]
+  58:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 404              		.loc 1 58 3 view .LVU78
+ 405 0004 19B9     		cbnz	r1, .L22
+  58:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 406              		.loc 1 58 34 discriminator 1 view .LVU79
+ 407 0006 4369     		ldr	r3, [r0, #20]
+  58:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 408              		.loc 1 58 31 discriminator 1 view .LVU80
+ 409 0008 0BB9     		cbnz	r3, .L22
+  64:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 410              		.loc 1 64 10 view .LVU81
+ 411 000a 0120     		movs	r0, #1
+ 412              	.LVL32:
+ 413              	.L23:
+  65:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 414              		.loc 1 65 1 view .LVU82
+ 415 000c 08BD     		pop	{r3, pc}
+ 416              	.LVL33:
+ 417              	.L22:
+  59:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Number of allocated temp buffers: %d. Checksum passing status: %d",
+ 418              		.loc 1 59 5 is_stmt 1 view .LVU83
+  61:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return false;
+ 419              		.loc 1 61 30 is_stmt 0 view .LVU84
+ 420 000e 4269     		ldr	r2, [r0, #20]
+  59:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Number of allocated temp buffers: %d. Checksum passing status: %d",
+ 421              		.loc 1 59 16 view .LVU85
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 13
+
+
+ 422 0010 B2FA82F2 		clz	r2, r2
+ 423 0014 5209     		lsrs	r2, r2, #5
+ 424 0016 0248     		ldr	r0, .L26
+ 425              	.LVL34:
+  59:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Number of allocated temp buffers: %d. Checksum passing status: %d",
+ 426              		.loc 1 59 16 view .LVU86
+ 427 0018 FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 428              	.LVL35:
+  62:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 429              		.loc 1 62 5 is_stmt 1 view .LVU87
+  62:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 430              		.loc 1 62 12 is_stmt 0 view .LVU88
+ 431 001c 0020     		movs	r0, #0
+ 432 001e F5E7     		b	.L23
+ 433              	.L27:
+ 434              		.align	2
+ 435              	.L26:
+ 436 0020 00000000 		.word	.LC1
+ 437              		.cfi_endproc
+ 438              	.LFE10089:
+ 440              		.section	.rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv.str1.
+ 441              		.align	2
+ 442              	.LC2:
+ 443 0000 416C6C20 		.ascii	"All temp buffers must be freed before calling Reset"
+ 443      74656D70 
+ 443      20627566 
+ 443      66657273 
+ 443      206D7573 
+ 444 0033 54656D70 		.ascii	"TempAllocations()\000"
+ 444      416C6C6F 
+ 444      63617469 
+ 444      6F6E7328 
+ 444      2900
+ 445              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv,"ax",%p
+ 446              		.align	1
+ 447              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv
+ 448              		.syntax unified
+ 449              		.thumb
+ 450              		.thumb_func
+ 452              	_ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv:
+ 453              	.LVL36:
+ 454              	.LFB10090:
+  72:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (!IsAllTempDeallocated()) {
+ 455              		.loc 1 72 72 is_stmt 1 view -0
+ 456              		.cfi_startproc
+ 457              		@ args = 0, pretend = 0, frame = 0
+ 458              		@ frame_needed = 0, uses_anonymous_args = 0
+  72:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (!IsAllTempDeallocated()) {
+ 459              		.loc 1 72 72 is_stmt 0 view .LVU90
+ 460 0000 10B5     		push	{r4, lr}
+ 461              	.LCFI5:
+ 462              		.cfi_def_cfa_offset 8
+ 463              		.cfi_offset 4, -8
+ 464              		.cfi_offset 14, -4
+ 465 0002 0446     		mov	r4, r0
+  73:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 466              		.loc 1 73 3 is_stmt 1 view .LVU91
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 14
+
+
+  73:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 467              		.loc 1 73 28 is_stmt 0 view .LVU92
+ 468 0004 0368     		ldr	r3, [r0]
+ 469 0006 1B69     		ldr	r3, [r3, #16]
+ 470 0008 9847     		blx	r3
+ 471              	.LVL37:
+  73:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 472              		.loc 1 73 3 discriminator 1 view .LVU93
+ 473 000a 18B1     		cbz	r0, .L32
+  78:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return kTfLiteOk;
+ 474              		.loc 1 78 3 is_stmt 1 view .LVU94
+  78:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return kTfLiteOk;
+ 475              		.loc 1 78 16 is_stmt 0 view .LVU95
+ 476 000c E368     		ldr	r3, [r4, #12]
+  78:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return kTfLiteOk;
+ 477              		.loc 1 78 14 view .LVU96
+ 478 000e 2361     		str	r3, [r4, #16]
+  79:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 479              		.loc 1 79 3 is_stmt 1 view .LVU97
+  79:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 480              		.loc 1 79 10 is_stmt 0 view .LVU98
+ 481 0010 0020     		movs	r0, #0
+ 482              	.L30:
+  80:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 483              		.loc 1 80 1 view .LVU99
+ 484 0012 10BD     		pop	{r4, pc}
+ 485              	.LVL38:
+ 486              	.L32:
+  74:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "All temp buffers must be freed before calling ResetTempAllocations()");
+ 487              		.loc 1 74 5 is_stmt 1 view .LVU100
+  74:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "All temp buffers must be freed before calling ResetTempAllocations()");
+ 488              		.loc 1 74 16 is_stmt 0 view .LVU101
+ 489 0014 0248     		ldr	r0, .L33
+ 490 0016 FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 491              	.LVL39:
+  76:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 492              		.loc 1 76 5 is_stmt 1 view .LVU102
+  76:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 493              		.loc 1 76 12 is_stmt 0 view .LVU103
+ 494 001a 0120     		movs	r0, #1
+ 495 001c F9E7     		b	.L30
+ 496              	.L34:
+ 497 001e 00BF     		.align	2
+ 498              	.L33:
+ 499 0020 00000000 		.word	.LC2
+ 500              		.cfi_endproc
+ 501              	.LFE10090:
+ 503              		.section	.rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj.s
+ 504              		.align	2
+ 505              	.LC3:
+ 506 0000 43616E6E 		.ascii	"Cannot allocate a new resizable buffer when one is "
+ 506      6F742061 
+ 506      6C6C6F63 
+ 506      61746520 
+ 506      61206E65 
+ 507 0033 616C7265 		.ascii	"already allocated\000"
+ 507      61647920 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 15
+
+
+ 507      616C6C6F 
+ 507      63617465 
+ 507      6400
+ 508              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj,"ax
+ 509              		.align	1
+ 510              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj
+ 511              		.syntax unified
+ 512              		.thumb
+ 513              		.thumb_func
+ 515              	_ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj:
+ 516              	.LVL40:
+ 517              	.LFB10091:
+  84:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   // Only supports one resizable buffer, which starts at the buffer head.
+ 518              		.loc 1 84 36 is_stmt 1 view -0
+ 519              		.cfi_startproc
+ 520              		@ args = 0, pretend = 0, frame = 0
+ 521              		@ frame_needed = 0, uses_anonymous_args = 0
+  84:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   // Only supports one resizable buffer, which starts at the buffer head.
+ 522              		.loc 1 84 36 is_stmt 0 view .LVU105
+ 523 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 524              	.LCFI6:
+ 525              		.cfi_def_cfa_offset 24
+ 526              		.cfi_offset 4, -24
+ 527              		.cfi_offset 5, -20
+ 528              		.cfi_offset 6, -16
+ 529              		.cfi_offset 7, -12
+ 530              		.cfi_offset 8, -8
+ 531              		.cfi_offset 14, -4
+ 532 0004 0446     		mov	r4, r0
+ 533 0006 0F46     		mov	r7, r1
+ 534 0008 9046     		mov	r8, r2
+  86:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 535              		.loc 1 86 3 is_stmt 1 view .LVU106
+  86:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 536              		.loc 1 86 51 is_stmt 0 view .LVU107
+ 537 000a 1146     		mov	r1, r2
+ 538              	.LVL41:
+  86:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 539              		.loc 1 86 51 view .LVU108
+ 540 000c 4068     		ldr	r0, [r0, #4]
+ 541              	.LVL42:
+  86:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 542              		.loc 1 86 51 view .LVU109
+ 543 000e FFF7FEFF 		bl	_ZN6tflite5micro14AlignPointerUpEPhj
+ 544              	.LVL43:
+  88:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 545              		.loc 1 88 3 is_stmt 1 view .LVU110
+  88:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 546              		.loc 1 88 7 is_stmt 0 view .LVU111
+ 547 0012 237F     		ldrb	r3, [r4, #28]	@ zero_extendqisi2
+  88:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 548              		.loc 1 88 3 view .LVU112
+ 549 0014 73B9     		cbnz	r3, .L40
+ 550 0016 0646     		mov	r6, r0
+  94:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     resizable_buffer_allocated_ = true;
+ 551              		.loc 1 94 3 is_stmt 1 view .LVU113
+  94:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     resizable_buffer_allocated_ = true;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 16
+
+
+ 552              		.loc 1 94 19 is_stmt 0 view .LVU114
+ 553 0018 2368     		ldr	r3, [r4]
+ 554 001a DB69     		ldr	r3, [r3, #28]
+ 555 001c 1D46     		mov	r5, r3
+ 556 001e 4346     		mov	r3, r8
+ 557 0020 3A46     		mov	r2, r7
+ 558 0022 0146     		mov	r1, r0
+ 559 0024 2046     		mov	r0, r4
+ 560              	.LVL44:
+  94:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     resizable_buffer_allocated_ = true;
+ 561              		.loc 1 94 19 view .LVU115
+ 562 0026 A847     		blx	r5
+ 563              	.LVL45:
+  94:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     resizable_buffer_allocated_ = true;
+ 564              		.loc 1 94 3 discriminator 1 view .LVU116
+ 565 0028 50B9     		cbnz	r0, .L38
+  95:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return expected_resizable_buf;
+ 566              		.loc 1 95 5 is_stmt 1 view .LVU117
+  95:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return expected_resizable_buf;
+ 567              		.loc 1 95 33 is_stmt 0 view .LVU118
+ 568 002a 0123     		movs	r3, #1
+ 569 002c 2377     		strb	r3, [r4, #28]
+  96:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 570              		.loc 1 96 5 is_stmt 1 view .LVU119
+ 571              	.LVL46:
+ 572              	.L35:
+  99:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 573              		.loc 1 99 1 is_stmt 0 view .LVU120
+ 574 002e 3046     		mov	r0, r6
+ 575 0030 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 576              	.LVL47:
+ 577              	.L40:
+  89:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Cannot allocate a new resizable buffer when one is already allocated");
+ 578              		.loc 1 89 5 is_stmt 1 view .LVU121
+  89:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Cannot allocate a new resizable buffer when one is already allocated");
+ 579              		.loc 1 89 16 is_stmt 0 view .LVU122
+ 580 0034 0448     		ldr	r0, .L41
+ 581              	.LVL48:
+  89:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Cannot allocate a new resizable buffer when one is already allocated");
+ 582              		.loc 1 89 16 view .LVU123
+ 583 0036 FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 584              	.LVL49:
+  91:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 585              		.loc 1 91 5 is_stmt 1 view .LVU124
+  91:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 586              		.loc 1 91 12 is_stmt 0 view .LVU125
+ 587 003a 0023     		movs	r3, #0
+ 588 003c 1E46     		mov	r6, r3
+ 589 003e F6E7     		b	.L35
+ 590              	.LVL50:
+ 591              	.L38:
+  98:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 592              		.loc 1 98 10 view .LVU126
+ 593 0040 0023     		movs	r3, #0
+ 594 0042 1E46     		mov	r6, r3
+ 595              	.LVL51:
+  98:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 17
+
+
+ 596              		.loc 1 98 10 view .LVU127
+ 597 0044 F3E7     		b	.L35
+ 598              	.L42:
+ 599 0046 00BF     		.align	2
+ 600              	.L41:
+ 601 0048 00000000 		.word	.LC3
+ 602              		.cfi_endproc
+ 603              	.LFE10091:
+ 605              		.section	.rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj.str1.4,"aM
+ 606              		.align	2
+ 607              	.LC4:
+ 608 0000 496E7465 		.ascii	"Internal error: buffer is not resizable\000"
+ 608      726E616C 
+ 608      20657272 
+ 608      6F723A20 
+ 608      62756666 
+ 609              		.align	2
+ 610              	.LC5:
+ 611 0028 52657365 		.ascii	"ResetTempAllocations() is not called before ResizeB"
+ 611      7454656D 
+ 611      70416C6C 
+ 611      6F636174 
+ 611      696F6E73 
+ 612 005b 75666665 		.ascii	"uffer().\000"
+ 612      7228292E 
+ 612      00
+ 613              		.align	2
+ 614              	.LC6:
+ 615 0064 4661696C 		.ascii	"Failed to resize buffer. Requested: %u, available %"
+ 615      65642074 
+ 615      6F207265 
+ 615      73697A65 
+ 615      20627566 
+ 616 0097 752C206D 		.ascii	"u, missing: %u\000"
+ 616      69737369 
+ 616      6E673A20 
+ 616      257500
+ 617              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj,"ax",%progbi
+ 618              		.align	1
+ 619              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj
+ 620              		.syntax unified
+ 621              		.thumb
+ 622              		.thumb_func
+ 624              	_ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj:
+ 625              	.LVL52:
+ 626              	.LFB10092:
+ 105:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   // Only supports one resizable buffer, which starts at the buffer head.
+ 627              		.loc 1 105 60 is_stmt 1 view -0
+ 628              		.cfi_startproc
+ 629              		@ args = 0, pretend = 0, frame = 0
+ 630              		@ frame_needed = 0, uses_anonymous_args = 0
+ 105:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   // Only supports one resizable buffer, which starts at the buffer head.
+ 631              		.loc 1 105 60 is_stmt 0 view .LVU129
+ 632 0000 70B5     		push	{r4, r5, r6, lr}
+ 633              	.LCFI7:
+ 634              		.cfi_def_cfa_offset 16
+ 635              		.cfi_offset 4, -16
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 18
+
+
+ 636              		.cfi_offset 5, -12
+ 637              		.cfi_offset 6, -8
+ 638              		.cfi_offset 14, -4
+ 639 0002 0446     		mov	r4, r0
+ 640 0004 0D46     		mov	r5, r1
+ 641 0006 1646     		mov	r6, r2
+ 107:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (resizable_buf != expect_resizable_buf) {
+ 642              		.loc 1 107 3 is_stmt 1 view .LVU130
+ 107:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (resizable_buf != expect_resizable_buf) {
+ 643              		.loc 1 107 49 is_stmt 0 view .LVU131
+ 644 0008 1946     		mov	r1, r3
+ 645              	.LVL53:
+ 107:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (resizable_buf != expect_resizable_buf) {
+ 646              		.loc 1 107 49 view .LVU132
+ 647 000a 4068     		ldr	r0, [r0, #4]
+ 648              	.LVL54:
+ 107:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (resizable_buf != expect_resizable_buf) {
+ 649              		.loc 1 107 49 view .LVU133
+ 650 000c FFF7FEFF 		bl	_ZN6tflite5micro14AlignPointerUpEPhj
+ 651              	.LVL55:
+ 108:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf("Internal error: buffer is not resizable");
+ 652              		.loc 1 108 3 is_stmt 1 view .LVU134
+ 653 0010 A842     		cmp	r0, r5
+ 654 0012 0CD1     		bne	.L49
+ 112:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf("ResetTempAllocations() is not called before ResizeBuffer().");
+ 655              		.loc 1 112 3 view .LVU135
+ 112:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf("ResetTempAllocations() is not called before ResizeBuffer().");
+ 656              		.loc 1 112 7 is_stmt 0 view .LVU136
+ 657 0014 E268     		ldr	r2, [r4, #12]
+ 112:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf("ResetTempAllocations() is not called before ResizeBuffer().");
+ 658              		.loc 1 112 21 view .LVU137
+ 659 0016 2369     		ldr	r3, [r4, #16]
+ 112:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf("ResetTempAllocations() is not called before ResizeBuffer().");
+ 660              		.loc 1 112 3 view .LVU138
+ 661 0018 9A42     		cmp	r2, r3
+ 662 001a 0DD1     		bne	.L50
+ 117:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (available_memory < size) {
+ 663              		.loc 1 117 3 is_stmt 1 view .LVU139
+ 117:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (available_memory < size) {
+ 664              		.loc 1 117 35 is_stmt 0 view .LVU140
+ 665 001c A268     		ldr	r2, [r4, #8]
+ 117:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   if (available_memory < size) {
+ 666              		.loc 1 117 48 view .LVU141
+ 667 001e 121A     		subs	r2, r2, r0
+ 668              	.LVL56:
+ 118:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     MicroPrintf(
+ 669              		.loc 1 118 3 is_stmt 1 view .LVU142
+ 670 0020 B242     		cmp	r2, r6
+ 671 0022 0ED3     		bcc	.L51
+ 124:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   next_temp_ = head_temp_;
+ 672              		.loc 1 124 3 view .LVU143
+ 124:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   next_temp_ = head_temp_;
+ 673              		.loc 1 124 37 is_stmt 0 view .LVU144
+ 674 0024 3044     		add	r0, r0, r6
+ 675              	.LVL57:
+ 124:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   next_temp_ = head_temp_;
+ 676              		.loc 1 124 14 view .LVU145
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 19
+
+
+ 677 0026 E060     		str	r0, [r4, #12]
+ 125:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 678              		.loc 1 125 3 is_stmt 1 view .LVU146
+ 125:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 679              		.loc 1 125 14 is_stmt 0 view .LVU147
+ 680 0028 2061     		str	r0, [r4, #16]
+ 127:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 681              		.loc 1 127 3 is_stmt 1 view .LVU148
+ 127:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 682              		.loc 1 127 10 is_stmt 0 view .LVU149
+ 683 002a 0020     		movs	r0, #0
+ 684 002c 03E0     		b	.L45
+ 685              	.LVL58:
+ 686              	.L49:
+ 109:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ 687              		.loc 1 109 5 is_stmt 1 view .LVU150
+ 109:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ 688              		.loc 1 109 16 is_stmt 0 view .LVU151
+ 689 002e 0848     		ldr	r0, .L52
+ 690              	.LVL59:
+ 109:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ 691              		.loc 1 109 16 view .LVU152
+ 692 0030 FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 693              	.LVL60:
+ 110:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 694              		.loc 1 110 5 is_stmt 1 view .LVU153
+ 110:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 695              		.loc 1 110 12 is_stmt 0 view .LVU154
+ 696 0034 0120     		movs	r0, #1
+ 697              	.L45:
+ 128:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 698              		.loc 1 128 1 view .LVU155
+ 699 0036 70BD     		pop	{r4, r5, r6, pc}
+ 700              	.LVL61:
+ 701              	.L50:
+ 113:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ 702              		.loc 1 113 5 is_stmt 1 view .LVU156
+ 113:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ 703              		.loc 1 113 16 is_stmt 0 view .LVU157
+ 704 0038 0648     		ldr	r0, .L52+4
+ 705              	.LVL62:
+ 113:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     return kTfLiteError;
+ 706              		.loc 1 113 16 view .LVU158
+ 707 003a FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 708              	.LVL63:
+ 114:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 709              		.loc 1 114 5 is_stmt 1 view .LVU159
+ 114:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 710              		.loc 1 114 12 is_stmt 0 view .LVU160
+ 711 003e 0120     		movs	r0, #1
+ 712 0040 F9E7     		b	.L45
+ 713              	.LVL64:
+ 714              	.L51:
+ 119:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Failed to resize buffer. Requested: %u, available %u, missing: %u",
+ 715              		.loc 1 119 5 is_stmt 1 view .LVU161
+ 119:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Failed to resize buffer. Requested: %u, available %u, missing: %u",
+ 716              		.loc 1 119 16 is_stmt 0 view .LVU162
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 20
+
+
+ 717 0042 3146     		mov	r1, r6
+ 718 0044 B31A     		subs	r3, r6, r2
+ 719 0046 0448     		ldr	r0, .L52+8
+ 720              	.LVL65:
+ 119:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****         "Failed to resize buffer. Requested: %u, available %u, missing: %u",
+ 721              		.loc 1 119 16 view .LVU163
+ 722 0048 FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 723              	.LVL66:
+ 122:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 724              		.loc 1 122 5 is_stmt 1 view .LVU164
+ 122:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   }
+ 725              		.loc 1 122 12 is_stmt 0 view .LVU165
+ 726 004c 0120     		movs	r0, #1
+ 727 004e F2E7     		b	.L45
+ 728              	.L53:
+ 729              		.align	2
+ 730              	.L52:
+ 731 0050 00000000 		.word	.LC4
+ 732 0054 28000000 		.word	.LC5
+ 733 0058 64000000 		.word	.LC6
+ 734              		.cfi_endproc
+ 735              	.LFE10092:
+ 737              		.section	.text._ZNK6tflite5micro33NonPersistentArenaBufferAllocator18GetAvailableMemoryEj,"ax",%pr
+ 738              		.align	1
+ 739              		.global	_ZNK6tflite5micro33NonPersistentArenaBufferAllocator18GetAvailableMemoryEj
+ 740              		.syntax unified
+ 741              		.thumb
+ 742              		.thumb_func
+ 744              	_ZNK6tflite5micro33NonPersistentArenaBufferAllocator18GetAvailableMemoryEj:
+ 745              	.LVL67:
+ 746              	.LFB10097:
+ 161:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 162:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // Returns the number of bytes available with a given alignment. This number
+ 163:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** // takes in account any temporary allocations.
+ 164:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** size_t NonPersistentArenaBufferAllocator::GetAvailableMemory(
+ 165:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     size_t alignment) const {
+ 747              		.loc 1 165 29 is_stmt 1 view -0
+ 748              		.cfi_startproc
+ 749              		@ args = 0, pretend = 0, frame = 0
+ 750              		@ frame_needed = 0, uses_anonymous_args = 0
+ 751              		.loc 1 165 29 is_stmt 0 view .LVU167
+ 752 0000 70B5     		push	{r4, r5, r6, lr}
+ 753              	.LCFI8:
+ 754              		.cfi_def_cfa_offset 16
+ 755              		.cfi_offset 4, -16
+ 756              		.cfi_offset 5, -12
+ 757              		.cfi_offset 6, -8
+ 758              		.cfi_offset 14, -4
+ 759 0002 0446     		mov	r4, r0
+ 760 0004 0E46     		mov	r6, r1
+ 166:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* const aligned_temp = AlignPointerUp(next_temp_, alignment);
+ 761              		.loc 1 166 3 is_stmt 1 view .LVU168
+ 762              		.loc 1 166 47 is_stmt 0 view .LVU169
+ 763 0006 0069     		ldr	r0, [r0, #16]
+ 764              	.LVL68:
+ 765              		.loc 1 166 47 view .LVU170
+ 766 0008 FFF7FEFF 		bl	_ZN6tflite5micro14AlignPointerUpEPhj
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 21
+
+
+ 767              	.LVL69:
+ 768              		.loc 1 166 47 view .LVU171
+ 769 000c 0546     		mov	r5, r0
+ 770              	.LVL70:
+ 167:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   uint8_t* const aligned_tail = AlignPointerDown(buffer_tail_, alignment);
+ 771              		.loc 1 167 3 is_stmt 1 view .LVU172
+ 772              		.loc 1 167 49 is_stmt 0 view .LVU173
+ 773 000e 3146     		mov	r1, r6
+ 774 0010 A068     		ldr	r0, [r4, #8]
+ 775              	.LVL71:
+ 776              		.loc 1 167 49 view .LVU174
+ 777 0012 FFF7FEFF 		bl	_ZN6tflite5micro16AlignPointerDownEPhj
+ 778              	.LVL72:
+ 168:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****   return aligned_tail - aligned_temp;
+ 779              		.loc 1 168 3 is_stmt 1 view .LVU175
+ 169:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** }
+ 780              		.loc 1 169 1 is_stmt 0 view .LVU176
+ 781 0016 401B     		subs	r0, r0, r5
+ 782              	.LVL73:
+ 783              		.loc 1 169 1 view .LVU177
+ 784 0018 70BD     		pop	{r4, r5, r6, pc}
+ 785              		.loc 1 169 1 view .LVU178
+ 786              		.cfi_endproc
+ 787              	.LFE10097:
+ 789              		.section	.text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorC2EPhj,"ax",%progbits
+ 790              		.align	1
+ 791              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorC2EPhj
+ 792              		.syntax unified
+ 793              		.thumb
+ 794              		.thumb_func
+ 796              	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorC2EPhj:
+ 797              	.LVL74:
+ 798              	.LFB10081:
+  23:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****     uint8_t* buffer, size_t buffer_size)
+ 799              		.loc 1 23 1 is_stmt 1 view -0
+ 800              		.cfi_startproc
+ 801              		@ args = 0, pretend = 0, frame = 0
+ 802              		@ frame_needed = 0, uses_anonymous_args = 0
+ 803              		@ link register save eliminated.
+ 804              	.LBB16:
+ 805              	.LBB17:
+ 806              	.LBI17:
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual ~INonPersistentBufferAllocator() {}
+ 807              		.loc 2 50 3 view .LVU180
+ 808              	.LBB18:
+ 809              	.LBB19:
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual ~INonPersistentBufferAllocator() {}
+ 810              		.loc 2 50 35 is_stmt 0 view .LVU181
+ 811 0000 DFF820C0 		ldr	ip, .L57
+ 812 0004 C0F800C0 		str	ip, [r0]
+ 813              	.LVL75:
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual ~INonPersistentBufferAllocator() {}
+ 814              		.loc 2 50 35 view .LVU182
+ 815              	.LBE19:
+ 816              	.LBE18:
+ 817              	.LBE17:
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 22
+
+
+ 818              		.loc 1 28 24 discriminator 1 view .LVU183
+ 819 0008 DFF81CC0 		ldr	ip, .L57+4
+ 820 000c C0F800C0 		str	ip, [r0]
+  25:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****       buffer_tail_(buffer + buffer_size),
+ 821              		.loc 1 25 7 view .LVU184
+ 822 0010 4160     		str	r1, [r0, #4]
+  26:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****       head_temp_(buffer),
+ 823              		.loc 1 26 27 view .LVU185
+ 824 0012 0A44     		add	r2, r2, r1
+ 825              	.LVL76:
+  26:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****       head_temp_(buffer),
+ 826              		.loc 1 26 7 view .LVU186
+ 827 0014 8260     		str	r2, [r0, #8]
+  27:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc ****       next_temp_(buffer) {}
+ 828              		.loc 1 27 7 view .LVU187
+ 829 0016 C160     		str	r1, [r0, #12]
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 830              		.loc 1 28 7 view .LVU188
+ 831 0018 0161     		str	r1, [r0, #16]
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 832              		.loc 1 28 24 view .LVU189
+ 833 001a 0022     		movs	r2, #0
+ 834 001c 4261     		str	r2, [r0, #20]
+ 835 001e 8261     		str	r2, [r0, #24]
+ 836 0020 0277     		strb	r2, [r0, #28]
+ 837              	.LBE16:
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_allocator.cc **** 
+ 838              		.loc 1 28 27 view .LVU190
+ 839 0022 7047     		bx	lr
+ 840              	.L58:
+ 841              		.align	2
+ 842              	.L57:
+ 843 0024 08000000 		.word	_ZTVN6tflite5micro29INonPersistentBufferAllocatorE+8
+ 844 0028 08000000 		.word	_ZTVN6tflite5micro33NonPersistentArenaBufferAllocatorE+8
+ 845              		.cfi_endproc
+ 846              	.LFE10081:
+ 848              		.global	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorC1EPhj
+ 849              		.thumb_set _ZN6tflite5micro33NonPersistentArenaBufferAllocatorC1EPhj,_ZN6tflite5micro33NonPersiste
+ 850              		.weak	_ZTVN6tflite5micro29INonPersistentBufferAllocatorE
+ 851              		.section	.rodata._ZTVN6tflite5micro29INonPersistentBufferAllocatorE,"aG",%progbits,_ZTVN6tflite5mi
+ 852              		.align	2
+ 855              	_ZTVN6tflite5micro29INonPersistentBufferAllocatorE:
+ 856 0000 00000000 		.word	0
+ 857 0004 00000000 		.word	0
+ 858 0008 00000000 		.word	0
+ 859 000c 00000000 		.word	0
+ 860 0010 00000000 		.word	__cxa_pure_virtual
+ 861 0014 00000000 		.word	__cxa_pure_virtual
+ 862 0018 00000000 		.word	__cxa_pure_virtual
+ 863 001c 00000000 		.word	__cxa_pure_virtual
+ 864 0020 00000000 		.word	__cxa_pure_virtual
+ 865 0024 00000000 		.word	__cxa_pure_virtual
+ 866 0028 00000000 		.word	__cxa_pure_virtual
+ 867 002c 00000000 		.word	__cxa_pure_virtual
+ 868 0030 00000000 		.word	__cxa_pure_virtual
+ 869 0034 00000000 		.word	__cxa_pure_virtual
+ 870 0038 00000000 		.word	__cxa_pure_virtual
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 23
+
+
+ 871              		.global	_ZTVN6tflite5micro33NonPersistentArenaBufferAllocatorE
+ 872              		.section	.rodata._ZTVN6tflite5micro33NonPersistentArenaBufferAllocatorE,"a"
+ 873              		.align	2
+ 876              	_ZTVN6tflite5micro33NonPersistentArenaBufferAllocatorE:
+ 877 0000 00000000 		.word	0
+ 878 0004 00000000 		.word	0
+ 879 0008 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorD1Ev
+ 880 000c 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocatorD0Ev
+ 881 0010 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj
+ 882 0014 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocator14DeallocateTempEPh
+ 883 0018 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv
+ 884 001c 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv
+ 885 0020 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj
+ 886 0024 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj
+ 887 0028 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocator25DeallocateResizableBufferEPh
+ 888 002c 00000000 		.word	_ZNK6tflite5micro33NonPersistentArenaBufferAllocator23GetOverlayMemoryAddressEv
+ 889 0030 00000000 		.word	_ZN6tflite5micro33NonPersistentArenaBufferAllocator33ReserveNonPersistentOverlayMemoryEjj
+ 890 0034 00000000 		.word	_ZNK6tflite5micro33NonPersistentArenaBufferAllocator25GetNonPersistentUsedBytesEv
+ 891 0038 00000000 		.word	_ZNK6tflite5micro33NonPersistentArenaBufferAllocator18GetAvailableMemoryEj
+ 892              		.weak	__cxa_pure_virtual
+ 893              		.text
+ 894              	.Letext0:
+ 895              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 896              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 897              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 898              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 899              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 900              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 901              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 902              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 903              		.file 11 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 904              		.file 12 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 905              		.file 13 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 906              		.file 14 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 907              		.file 15 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 908              		.file 16 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 909              		.file 17 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 910              		.file 18 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 911              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 912              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 913              		.file 21 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 914              		.file 22 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 915              		.file 23 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 916              		.file 24 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 917              		.file 25 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 918              		.file 26 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 919              		.file 27 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 920              		.file 28 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 921              		.file 29 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 922              		.file 30 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 923              		.file 31 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 924              		.file 32 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 925              		.file 33 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 926              		.file 34 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 927              		.file 35 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 928              		.file 36 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 929              		.file 37 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 24
+
+
+ 930              		.file 38 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 931              		.file 39 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 932              		.file 40 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 933              		.file 41 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 934              		.file 42 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 935              		.file 43 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 936              		.file 44 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ 937              		.file 45 "lib/tflite-micro/tensorflow/lite/micro/arena_allocator/non_persistent_arena_buffer_alloc
+ 938              		.file 46 "lib/tflite-micro/tensorflow/lite/micro/memory_helpers.h"
+ 939              		.file 47 "lib/tflite-micro/tensorflow/lite/micro/schema/schema_generated.h"
+ 940              		.file 48 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 941              		.file 49 "<built-in>"
+ 942              		.file 50 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 943              		.file 51 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 944              		.file 52 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 945              		.file 53 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 946              		.file 54 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 947              		.file 55 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 948              		.file 56 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 949              		.file 57 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 950              		.file 58 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 951              		.file 59 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/base.h"
+ 952              		.file 60 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/buffer.h"
+ 953              		.file 61 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/stl_emulation.h"
+ 954              		.file 62 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/string.h"
+ 955              		.file 63 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/vector.h"
+ 956              		.file 64 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/verifier.h"
+ 957              		.file 65 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/detached_buffer.h"
+ 958              		.file 66 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/allocator.h"
+ 959              		.file 67 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/table.h"
+ 960              		.file 68 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/vector_downward.h"
+ 961              		.file 69 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/flatbuffer_builder.h"
+ 962              		.file 70 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/flatbuffers.h"
+ 963              		.file 71 "lib/tflite-micro/tensorflow/lite/micro/micro_log.h"
+ 964              		.file 72 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 965              		.file 73 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s 			page 25
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 non_persistent_arena_buffer_allocator.cc
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:21     .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorD2Ev:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:27     .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorD2Ev:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocatorD2Ev
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:58     .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorD2Ev:0000000c $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:876    .rodata._ZTVN6tflite5micro33NonPersistentArenaBufferAllocatorE:00000000 _ZTVN6tflite5micro33NonPersistentArenaBufferAllocatorE
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:855    .rodata._ZTVN6tflite5micro29INonPersistentBufferAllocatorE:00000000 _ZTVN6tflite5micro29INonPersistentBufferAllocatorE
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:27     .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorD2Ev:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocatorD1Ev
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:66     .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator14DeallocateTempEPh:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:72     .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator14DeallocateTempEPh:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocator14DeallocateTempEPh
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:98     .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator25DeallocateResizableBufferEPh:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:104    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator25DeallocateResizableBufferEPh:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocator25DeallocateResizableBufferEPh
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:142    .text._ZNK6tflite5micro33NonPersistentArenaBufferAllocator23GetOverlayMemoryAddressEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:148    .text._ZNK6tflite5micro33NonPersistentArenaBufferAllocator23GetOverlayMemoryAddressEv:00000000 _ZNK6tflite5micro33NonPersistentArenaBufferAllocator23GetOverlayMemoryAddressEv
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:166    .text._ZNK6tflite5micro33NonPersistentArenaBufferAllocator25GetNonPersistentUsedBytesEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:172    .text._ZNK6tflite5micro33NonPersistentArenaBufferAllocator25GetNonPersistentUsedBytesEv:00000000 _ZNK6tflite5micro33NonPersistentArenaBufferAllocator25GetNonPersistentUsedBytesEv
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:193    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorD0Ev:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:199    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorD0Ev:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocatorD0Ev
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:229    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator33ReserveNonPersistentOverlayMemoryEjj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:235    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator33ReserveNonPersistentOverlayMemoryEjj:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocator33ReserveNonPersistentOverlayMemoryEjj
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:286    .rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:291    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:297    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:372    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator12AllocateTempEjj:00000038 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:377    .rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:382    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:388    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:436    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator20IsAllTempDeallocatedEv:00000020 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:441    .rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:446    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:452    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:499    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator20ResetTempAllocationsEv:00000020 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:504    .rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:509    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:515    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:601    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator23AllocateResizableBufferEjj:00000048 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:606    .rodata._ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:618    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:624    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:731    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocator12ResizeBufferEPhjj:00000050 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:738    .text._ZNK6tflite5micro33NonPersistentArenaBufferAllocator18GetAvailableMemoryEj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:744    .text._ZNK6tflite5micro33NonPersistentArenaBufferAllocator18GetAvailableMemoryEj:00000000 _ZNK6tflite5micro33NonPersistentArenaBufferAllocator18GetAvailableMemoryEj
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:790    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorC2EPhj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:796    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorC2EPhj:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocatorC2EPhj
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:843    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorC2EPhj:00000024 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:796    .text._ZN6tflite5micro33NonPersistentArenaBufferAllocatorC2EPhj:00000000 _ZN6tflite5micro33NonPersistentArenaBufferAllocatorC1EPhj
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:852    .rodata._ZTVN6tflite5micro29INonPersistentBufferAllocatorE:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\cctgfodw.s:873    .rodata._ZTVN6tflite5micro33NonPersistentArenaBufferAllocatorE:00000000 $d
+
+UNDEFINED SYMBOLS
+_ZdlPvj
+_ZN6tflite5micro14AlignPointerUpEPhj
+_Z11MicroPrintfPKcz
+_ZN6tflite5micro16AlignPointerDownEPhj
+__cxa_pure_virtual

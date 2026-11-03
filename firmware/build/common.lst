@@ -1,0 +1,1462 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"common.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc"
+  20              		.section	.text._ZN6tflite5micro33SaturatingRoundingDoublingHighMulIlEET_S2_S2_,"axG",%progbits,_ZN
+  21              		.align	1
+  22              		.weak	_ZN6tflite5micro33SaturatingRoundingDoublingHighMulIlEET_S2_S2_
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro33SaturatingRoundingDoublingHighMulIlEET_S2_S2_:
+  28              	.LVL0:
+  29              	.LFB2735:
+  30              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** /* Copyright 2026 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // fixedpoint.h: scalar fixed-point arithmetic, with basic operations and
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // a few math functions such as tanh and logistic.
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Adapted from gemmlowp/fixedpoint/fixedpoint.h.
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_INTERNAL_FIXEDPOINT_H_
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_INTERNAL_FIXEDPOINT_H_
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** #include <algorithm>
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** #include <cassert>
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** #include <cmath>
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** #include <cstdint>
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** #include <limits>
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** #include <type_traits>
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 2
+
+
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** namespace tflite {
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** namespace micro {
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Part 1: Low-level integer-arithmetic primitives.
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // The implementations here are generic implementations valid for
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // scalar types (e.g. std::int32_t, std::int16_t).
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // The purpose of these primitives is two-fold:
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //  - They will be used to implement higher-level fixed-point
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //    abstractions, namely the FixedPoint class and its arithmetic
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //    operators.
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //  - They will be directly used to implement some more involved
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //    fixed-point computations, e.g. the fixed-point implementation
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //    of math functions such as tanh.
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Compile-time traits around raw types: number of lanes, underlying scalar
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // type.
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** struct FixedPointRawTypeTraits {};
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <>
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** struct FixedPointRawTypeTraits<std::int32_t> {
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   typedef std::int32_t ScalarRawType;
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static constexpr int kLanes = 1;
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** };
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <>
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** struct FixedPointRawTypeTraits<std::int16_t> {
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   typedef std::int16_t ScalarRawType;
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static constexpr int kLanes = 1;
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** };
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Returns a value duplicating a scalar value across all lanes.
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tRawType>
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tRawType Dup(typename FixedPointRawTypeTraits<tRawType>::ScalarRawType x) {
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return x;
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Plain bit-wise AND
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType BitAnd(tIntegerType a, tIntegerType b) {
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a & b;
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Plain bit-wise OR
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType BitOr(tIntegerType a, tIntegerType b) {
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a | b;
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Plain bit-wise XOR
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType BitXor(tIntegerType a, tIntegerType b) {
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a ^ b;
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Plain bit-wise NOT
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 3
+
+
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType BitNot(tIntegerType a) {
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return ~a;
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Integer addition. Not saturating. Overflow is undefined behavior.
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType Add(tIntegerType a, tIntegerType b) {
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a + b;
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Integer multiplication. Not saturating. Overflow is undefined behavior.
+  98:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType Mul(tIntegerType a, tIntegerType b) {
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a * b;
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 103:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Integer subtraction. Not saturating. Overflow is undefined behavior.
+ 104:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType Sub(tIntegerType a, tIntegerType b) {
+ 106:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a - b;
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 108:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 109:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Integer unary negative. Not saturating. Overflow is undefined behavior.
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 111:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType Neg(tIntegerType a) {
+ 112:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return -a;
+ 113:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 114:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 115:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Integer arithmetic left-shift, equivalent to multiplying with a power of two.
+ 116:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Negative values are OK. In case of overflow, no Undefined
+ 117:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Behavior, but the results are implementation-defined (in practice,
+ 118:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // they currently are saturated, but we make no commitment to that). The idea
+ 119:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // is that the caller will want to implement the overflowing cases with
+ 120:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // saturation with compare-and-mask, so we don't care about the results
+ 121:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // in the overflow case, we just want to avoid undefined behavior.
+ 122:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //
+ 123:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // tIntegerType may be int32 or any narrower signed type.
+ 124:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 125:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType ShiftLeft(tIntegerType a, int offset) {
+ 126:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const std::int64_t wide_a = static_cast<std::int64_t>(a);
+ 127:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const std::int64_t wide_shifted = wide_a * (1 << offset);
+ 128:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const auto min = std::numeric_limits<tIntegerType>::min();
+ 129:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const auto max = std::numeric_limits<tIntegerType>::max();
+ 130:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return wide_shifted < min   ? min
+ 131:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****          : wide_shifted > max ? max
+ 132:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****                               : static_cast<tIntegerType>(wide_shifted);
+ 133:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 134:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 135:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Integer arithmetic right-shift. Not rounding.
+ 136:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Relying on implementation-defined, but in-practice-consistent,
+ 137:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // C++ compiler behavior.
+ 138:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 139:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType ShiftRight(tIntegerType a, int offset) {
+ 140:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a >> offset;
+ 141:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 142:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 4
+
+
+ 143:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Each bit of the result is set to the corresponding bit of either then_val or
+ 144:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // else_val depending on whether the corresponding bit of if_mask is set.
+ 145:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Equivalent to the VBSL instruction in ARM NEON.
+ 146:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 147:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType SelectUsingMask(tIntegerType if_mask, tIntegerType then_val,
+ 148:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****                              tIntegerType else_val) {
+ 149:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return BitXor(BitAnd(if_mask, then_val), BitAnd(BitNot(if_mask), else_val));
+ 150:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 151:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 152:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // For each input scalar, the corresponding bits of the result are set if the
+ 153:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // input scalar is non-zero.
+ 154:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 155:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType MaskIfNonZero(tIntegerType a) {
+ 156:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static constexpr tIntegerType zero = 0;
+ 157:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a ? BitNot(zero) : zero;
+ 158:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 159:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 160:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // For each input scalar, the corresponding bits of the result are set if the
+ 161:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // input scalar is zero.
+ 162:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 163:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType MaskIfZero(tIntegerType a) {
+ 164:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(!a);
+ 165:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 166:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 167:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // For each pair of input scalars, the corresponding bits of the result are
+ 168:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // set if the input scalars are equal.
+ 169:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 170:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType MaskIfEqual(tIntegerType a, tIntegerType b) {
+ 171:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a == b);
+ 172:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 173:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 174:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // For each pair of input scalars, the corresponding bits of the result are
+ 175:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // set if the input scalars are not equal.
+ 176:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 177:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType MaskIfNotEqual(tIntegerType a, tIntegerType b) {
+ 178:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a != b);
+ 179:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 180:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 181:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // For each pair of input scalars, the corresponding bits of the result are
+ 182:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // set if the input scalars a, b satisfy a > b.
+ 183:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 184:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType MaskIfGreaterThan(tIntegerType a, tIntegerType b) {
+ 185:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a > b);
+ 186:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 187:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 188:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // For each pair of input scalars, the corresponding bits of the result are
+ 189:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // set if the input scalars a, b satisfy a >= b.
+ 190:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 191:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType MaskIfGreaterThanOrEqual(tIntegerType a, tIntegerType b) {
+ 192:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a >= b);
+ 193:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 194:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 195:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // For each pair of input scalars, the corresponding bits of the result are
+ 196:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // set if the input scalars a, b satisfy a < b.
+ 197:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 198:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType MaskIfLessThan(tIntegerType a, tIntegerType b) {
+ 199:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a < b);
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 5
+
+
+ 200:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 201:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 202:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // For each pair of input scalars, the corresponding bits of the result are
+ 203:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // set if the input scalars a, b satisfy a <= b.
+ 204:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 205:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** tIntegerType MaskIfLessThanOrEqual(tIntegerType a, tIntegerType b) {
+ 206:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a <= b);
+ 207:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 208:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 209:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Returns true if all of the input scalars are nonzero.
+ 210:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // This function may currently assume that each of the input scalars has either
+ 211:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // all or none of its bits set. Otherwise, its behavior is currently undefined.
+ 212:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 213:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** bool All(tIntegerType a) {
+ 214:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a;
+ 215:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 216:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 217:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Returns true if any of the input scalars are nonzero.
+ 218:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // This function may currently assume that each of the input scalars has either
+ 219:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // all or none of its bits set. Otherwise, its behavior is currently undefined.
+ 220:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename tIntegerType>
+ 221:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** bool Any(tIntegerType a) {
+ 222:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a;
+ 223:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 224:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 225:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Returns (a+b)/2, rounded to the nearest integer.
+ 226:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Equivalent to VRHADD in the ARM NEON instruction set.
+ 227:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename IntegerType>
+ 228:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** IntegerType RoundingHalfSum(IntegerType a, IntegerType b) {
+ 229:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static_assert(std::is_same<IntegerType, void>::value, "unimplemented");
+ 230:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   (void)b;
+ 231:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a;
+ 232:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 233:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 234:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <>
+ 235:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** inline std::int32_t RoundingHalfSum(std::int32_t a, std::int32_t b) {
+ 236:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t a64 = a;
+ 237:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t b64 = b;
+ 238:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t sum = a64 + b64;
+ 239:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t sign = sum >= 0 ? 1 : -1;
+ 240:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return static_cast<std::int32_t>((sum + sign) / 2);
+ 241:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 242:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 243:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <>
+ 244:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** inline std::int16_t RoundingHalfSum(std::int16_t a, std::int16_t b) {
+ 245:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t a32 = a;
+ 246:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t b32 = b;
+ 247:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t sum = a32 + b32;
+ 248:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t sign = sum >= 0 ? 1 : -1;
+ 249:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return static_cast<std::int16_t>((sum + sign) / 2);
+ 250:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 251:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 252:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename IntegerType>
+ 253:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** IntegerType SaturatingAdd(IntegerType a, IntegerType b) {
+ 254:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static_assert(std::is_same<IntegerType, void>::value, "unimplemented");
+ 255:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   (void)b;
+ 256:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 6
+
+
+ 257:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 258:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 259:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // So far this is only needed for int16.
+ 260:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <>
+ 261:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** inline std::int16_t SaturatingAdd(std::int16_t a, std::int16_t b) {
+ 262:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t a32 = a;
+ 263:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t b32 = b;
+ 264:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t sum = a32 + b32;
+ 265:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return static_cast<std::int16_t>(
+ 266:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****       std::min(static_cast<std::int32_t>(32767),
+ 267:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****                std::max(static_cast<std::int32_t>(-32768), sum)));
+ 268:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 269:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 270:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Returns a+b, saturating if the integers are 16bit or narrower,
+ 271:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // otherwise just a plain addition.
+ 272:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename IntegerType, bool Is16Bit>
+ 273:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** struct AddSaturatingIf16BitImpl {
+ 274:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static IntegerType Run(IntegerType a, IntegerType b) { return Add(a, b); }
+ 275:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** };
+ 276:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename IntegerType>
+ 277:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** struct AddSaturatingIf16BitImpl<IntegerType, true> {
+ 278:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static IntegerType Run(IntegerType a, IntegerType b) {
+ 279:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****     return SaturatingAdd(a, b);
+ 280:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   }
+ 281:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** };
+ 282:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename IntegerType>
+ 283:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** IntegerType AddSaturatingIf16Bit(IntegerType a, IntegerType b) {
+ 284:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   using ScalarType =
+ 285:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****       typename FixedPointRawTypeTraits<IntegerType>::ScalarRawType;
+ 286:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return AddSaturatingIf16BitImpl<IntegerType, sizeof(ScalarType) == 2>::Run(a,
+ 287:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****                                                                              b);
+ 288:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 289:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 290:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Returns the integer that represents the product of two fixed-point
+ 291:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // numbers, interpreting all integers as fixed-point values in the
+ 292:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // interval [-1, 1), rounding to the nearest value, and saturating
+ 293:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // -1 * -1 to the maximum value (since 1 is not in the half-open
+ 294:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // interval [-1, 1)).
+ 295:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //
+ 296:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // [The explanation below specializes to std::int32_t for example purpose.]
+ 297:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //
+ 298:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // The mapping between IntegerType and the interval [-1, 1) is unique and
+ 299:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // implied by IntegerType, which is assumed to be signed. For example,
+ 300:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // for IntegerType==std::int32_t, the mapping is
+ 301:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //   real_value = integer_value / 2^31.
+ 302:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // So in this case, and leaving aside rounding and saturating, this
+ 303:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // function computes ((a / 2^31) * (b / 2^31)) * 2^31, which simplifies to
+ 304:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //   (a * b) / 2^31.
+ 305:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //
+ 306:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // The 'doubling' part in the name of this function comes from the fact that
+ 307:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // this operation is very close to a "multiply-high" operation, keeping only
+ 308:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // the top half bits, except that that would be effectively computing
+ 309:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //   (a * b) / 2^32,
+ 310:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // so here we are computing 2x that, since
+ 311:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //   1/2^31 = 2 * 1/2^32.
+ 312:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // The idea is to use all of the available 32 bits in the destination int32
+ 313:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // value.
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 7
+
+
+ 314:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //
+ 315:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // [End of the explanation specializing to int32.]
+ 316:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** //
+ 317:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // This is equivalent to the VQRDMULH instruction in ARM NEON.
+ 318:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename IntegerType>
+ 319:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** IntegerType SaturatingRoundingDoublingHighMul(IntegerType a, IntegerType b) {
+ 320:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static_assert(std::is_same<IntegerType, void>::value, "unimplemented");
+ 321:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   (void)b;
+ 322:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a;
+ 323:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 324:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 325:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // This function implements the same computation as the ARMv7 NEON VQRDMULH
+ 326:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // instruction.
+ 327:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <>
+ 328:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** inline std::int32_t SaturatingRoundingDoublingHighMul(std::int32_t a,
+ 329:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****                                                       std::int32_t b) {
+  31              		.loc 2 329 71 view -0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35              		@ link register save eliminated.
+ 330:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   bool overflow = a == b && a == std::numeric_limits<std::int32_t>::min();
+  36              		.loc 2 330 3 view .LVU1
+  37              		.loc 2 330 26 is_stmt 0 view .LVU2
+  38 0000 8842     		cmp	r0, r1
+  39 0002 18D0     		beq	.L9
+  40              		.loc 2 330 26 discriminator 4 view .LVU3
+  41 0004 0022     		movs	r2, #0
+  42              	.L2:
+  43              	.LVL1:
+ 331:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t a_64(a);
+  44              		.loc 2 331 3 is_stmt 1 view .LVU4
+  45              		.loc 2 331 16 is_stmt 0 view .LVU5
+  46 0006 4FEAE07C 		asr	ip, r0, #31
+  47              	.LVL2:
+ 332:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t b_64(b);
+  48              		.loc 2 332 3 is_stmt 1 view .LVU6
+  49              		.loc 2 332 16 is_stmt 0 view .LVU7
+  50 000a CB17     		asrs	r3, r1, #31
+  51              	.LVL3:
+ 333:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t ab_64 = a_64 * b_64;
+  52              		.loc 2 333 3 is_stmt 1 view .LVU8
+  53              		.loc 2 333 16 is_stmt 0 view .LVU9
+  54 000c 00FB03F3 		mul	r3, r0, r3
+  55              	.LVL4:
+  56              		.loc 2 333 16 view .LVU10
+  57 0010 01FB0C33 		mla	r3, r1, ip, r3
+  58 0014 A0FB0101 		umull	r0, r1, r0, r1
+  59              	.LVL5:
+ 334:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t nudge = ab_64 >= 0 ? (1 << 30) : (1 - (1 << 30));
+  60              		.loc 2 334 3 is_stmt 1 view .LVU11
+  61              		.loc 2 334 35 is_stmt 0 view .LVU12
+  62 0018 5918     		adds	r1, r3, r1
+  63              	.LVL6:
+  64              		.loc 2 334 35 view .LVU13
+  65 001a 13D4     		bmi	.L8
+  66              		.loc 2 334 16 discriminator 1 view .LVU14
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 8
+
+
+  67 001c 4FF08043 		mov	r3, #1073741824
+  68              	.L3:
+  69              	.LVL7:
+ 335:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t ab_x2_high32 =
+  70              		.loc 2 335 3 is_stmt 1 view .LVU15
+ 336:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****       static_cast<std::int32_t>((ab_64 + nudge) / (1ll << 31));
+  71              		.loc 2 336 40 is_stmt 0 view .LVU16
+  72 0020 1818     		adds	r0, r3, r0
+  73              	.LVL8:
+  74              		.loc 2 336 40 view .LVU17
+  75 0022 41EBE371 		adc	r1, r1, r3, asr #31
+  76              	.LVL9:
+  77              		.loc 2 336 49 view .LVU18
+  78 0026 0B46     		mov	r3, r1
+  79              	.LVL10:
+  80              		.loc 2 336 49 view .LVU19
+  81 0028 0029     		cmp	r1, #0
+  82 002a 0DDB     		blt	.L10
+  83              	.L4:
+  84 002c C00F     		lsrs	r0, r0, #31
+ 335:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t ab_x2_high32 =
+  85              		.loc 2 335 16 view .LVU20
+  86 002e 40EA4300 		orr	r0, r0, r3, lsl #1
+  87              	.LVL11:
+ 337:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return overflow ? std::numeric_limits<std::int32_t>::max() : ab_x2_high32;
+  88              		.loc 2 337 3 is_stmt 1 view .LVU21
+  89              		.loc 2 337 19 is_stmt 0 view .LVU22
+  90 0032 7AB9     		cbnz	r2, .L11
+  91              	.LVL12:
+  92              	.L1:
+ 338:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+  93              		.loc 2 338 1 view .LVU23
+  94 0034 7047     		bx	lr
+  95              	.LVL13:
+  96              	.L9:
+ 330:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t a_64(a);
+  97              		.loc 2 330 26 discriminator 1 view .LVU24
+  98 0036 B0F1004F 		cmp	r0, #-2147483648
+  99 003a 01D0     		beq	.L7
+ 330:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t a_64(a);
+ 100              		.loc 2 330 26 discriminator 4 view .LVU25
+ 101 003c 0022     		movs	r2, #0
+ 102 003e E2E7     		b	.L2
+ 103              	.L7:
+ 330:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int64_t a_64(a);
+ 104              		.loc 2 330 26 discriminator 3 view .LVU26
+ 105 0040 0122     		movs	r2, #1
+ 106 0042 E0E7     		b	.L2
+ 107              	.LVL14:
+ 108              	.L8:
+ 334:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t ab_x2_high32 =
+ 109              		.loc 2 334 16 discriminator 2 view .LVU27
+ 110 0044 054B     		ldr	r3, .L12
+ 111 0046 EBE7     		b	.L3
+ 112              	.LVL15:
+ 113              	.L10:
+ 336:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return overflow ? std::numeric_limits<std::int32_t>::max() : ab_x2_high32;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 9
+
+
+ 114              		.loc 2 336 49 view .LVU28
+ 115 0048 6FF00043 		mvn	r3, #-2147483648
+ 116 004c C018     		adds	r0, r0, r3
+ 117 004e 41F10003 		adc	r3, r1, #0
+ 118 0052 EBE7     		b	.L4
+ 119              	.LVL16:
+ 120              	.L11:
+ 337:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 121              		.loc 2 337 64 discriminator 1 view .LVU29
+ 122 0054 6FF00040 		mvn	r0, #-2147483648
+ 123              	.LVL17:
+ 337:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 124              		.loc 2 337 64 view .LVU30
+ 125 0058 ECE7     		b	.L1
+ 126              	.L13:
+ 127 005a 00BF     		.align	2
+ 128              	.L12:
+ 129 005c 010000C0 		.word	-1073741823
+ 130              		.cfi_endproc
+ 131              	.LFE2735:
+ 133              		.section	.rodata._ZN6tflite5micro29MultiplyByQuantizedMultiplierExli.str1.4,"aMS",%progbits,1
+ 134              		.align	2
+ 135              	.LC0:
+ 136 0000 7175616E 		.ascii	"quantized_multiplier >= 0\000"
+ 136      74697A65 
+ 136      645F6D75 
+ 136      6C746970 
+ 136      6C696572 
+ 137 001a 0000     		.align	2
+ 138              	.LC1:
+ 139 001c 696E7433 		.ascii	"int32_t tflite::micro::MultiplyByQuantizedMultiplie"
+ 139      325F7420 
+ 139      74666C69 
+ 139      74653A3A 
+ 139      6D696372 
+ 140 004f 7228696E 		.ascii	"r(int64_t, int32_t, int)\000"
+ 140      7436345F 
+ 140      742C2069 
+ 140      6E743332 
+ 140      5F742C20 
+ 141              		.align	2
+ 142              	.LC2:
+ 143 0068 6C69622F 		.ascii	"lib/tflite-micro/tensorflow/lite/micro/kernels/inte"
+ 143      74666C69 
+ 143      74652D6D 
+ 143      6963726F 
+ 143      2F74656E 
+ 144 009b 726E616C 		.ascii	"rnal/common.cc\000"
+ 144      2F636F6D 
+ 144      6D6F6E2E 
+ 144      636300
+ 145 00aa 0000     		.align	2
+ 146              	.LC3:
+ 147 00ac 73686966 		.ascii	"shift >= -31 && shift < 8\000"
+ 147      74203E3D 
+ 147      202D3331 
+ 147      20262620 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 10
+
+
+ 147      73686966 
+ 148 00c6 0000     		.align	2
+ 149              	.LC4:
+ 150 00c8 78203E3D 		.ascii	"x >= -(static_cast<int64_t>(1) << 47) && x < (stati"
+ 150      202D2873 
+ 150      74617469 
+ 150      635F6361 
+ 150      73743C69 
+ 151 00fb 635F6361 		.ascii	"c_cast<int64_t>(1) << 47)\000"
+ 151      73743C69 
+ 151      6E743634 
+ 151      5F743E28 
+ 151      3129203C 
+ 152              		.section	.text._ZN6tflite5micro29MultiplyByQuantizedMultiplierExli,"ax",%progbits
+ 153              		.align	1
+ 154              		.global	_ZN6tflite5micro29MultiplyByQuantizedMultiplierExli
+ 155              		.syntax unified
+ 156              		.thumb
+ 157              		.thumb_func
+ 159              	_ZN6tflite5micro29MultiplyByQuantizedMultiplierExli:
+ 160              	.LVL18:
+ 161              	.LFB2933:
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** /* Copyright 2023 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** #include "tensorflow/lite/micro/kernels/internal/common.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** namespace tflite {
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** namespace micro {
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** // Note on TFLITE_NO_SANITIZE_INTEGER_OVERFLOW below:
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** //
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** // These MultiplyByQuantizedMultiplier overloads do not intentionally wrap, so
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** // they deliberately do NOT use WrappingMul/WrappingAdd. Under their documented
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** // input contract (asserted below) the arithmetic does not overflow; the
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** // attribute only silences UBSan reports at the contract's boundaries. Using
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** // wrapping here would be wrong -- it would mask a contract violation (a real
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** // bug) instead of letting it surface.
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** // Single-rounding MultiplyByQuantizedMultiplier
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** #if TFLITE_SINGLE_ROUNDING
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** TFLITE_NO_SANITIZE_INTEGER_OVERFLOW
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** int32_t MultiplyByQuantizedMultiplier(int32_t x, int32_t quantized_multiplier,
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                       int shift) {
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   TFLITE_DCHECK(quantized_multiplier >= 0);
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 11
+
+
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   TFLITE_DCHECK(shift >= -31 && shift <= 30);
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   const int64_t total_shift = 31 - shift;
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   const int64_t round = static_cast<int64_t>(1) << (total_shift - 1);
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int64_t result = x * static_cast<int64_t>(quantized_multiplier) + round;
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   result = result >> total_shift;
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   TFLITE_DCHECK(result >= std::numeric_limits<int32_t>::min() &&
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                 result <= std::numeric_limits<int32_t>::max());
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   return static_cast<int32_t>(result);
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** }
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** TFLITE_NO_SANITIZE_INTEGER_OVERFLOW
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** int32_t MultiplyByQuantizedMultiplier(int64_t x, int32_t quantized_multiplier,
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                       int shift) {
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // Inputs:
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - quantized_multiplier has fixed point at bit 31
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - shift is -31 to +7 (negative for right shift)
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   //
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // Assumptions: The following input ranges are assumed
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - quantize_scale>=0  (the usual range is (1<<30) to (1>>31)-1)
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - scaling is chosen so final scaled result fits in int32_t
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - input x is in the range -(1<<47) <= x < (1<<47)
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   TFLITE_DCHECK(quantized_multiplier >= 0);
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   TFLITE_DCHECK(shift >= -31 && shift < 8);
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   TFLITE_DCHECK(x >= -(static_cast<int64_t>(1) << 47) &&
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                 x < (static_cast<int64_t>(1) << 47));
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   const int32_t reduced_multiplier =
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****       (quantized_multiplier < 0x7FFF0000)
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****           ? ((quantized_multiplier + (1 << 15)) >> 16)
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****           : 0x7FFF;
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   const int64_t total_shift = 15 - shift;
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   const int64_t round = static_cast<int64_t>(1) << (total_shift - 1);
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int64_t result = x * static_cast<int64_t>(reduced_multiplier) + round;
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   result = result >> total_shift;
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   TFLITE_DCHECK(result >= std::numeric_limits<int32_t>::min() &&
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                 result <= std::numeric_limits<int32_t>::max());
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   return static_cast<int32_t>(result);
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** }
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** // Double-rounding MultiplyByQuantizedMultiplier
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** #else
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** TFLITE_NO_SANITIZE_INTEGER_OVERFLOW
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** int32_t MultiplyByQuantizedMultiplier(int32_t x, int32_t quantized_multiplier,
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                       int shift) {
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int left_shift = shift > 0 ? shift : 0;
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int right_shift = shift > 0 ? 0 : -shift;
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   return RoundingDivideByPOT(SaturatingRoundingDoublingHighMul(
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                  x * (1 << left_shift), quantized_multiplier),
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                              right_shift);
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** }
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** TFLITE_NO_SANITIZE_INTEGER_OVERFLOW
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** int32_t MultiplyByQuantizedMultiplier(int64_t x, int32_t quantized_multiplier,
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                       int shift) {
+ 162              		.loc 1 91 50 is_stmt 1 view -0
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 12
+
+
+ 163              		.cfi_startproc
+ 164              		@ args = 0, pretend = 0, frame = 0
+ 165              		@ frame_needed = 0, uses_anonymous_args = 0
+ 166              		.loc 1 91 50 is_stmt 0 view .LVU32
+ 167 0000 38B5     		push	{r3, r4, r5, lr}
+ 168              	.LCFI0:
+ 169              		.cfi_def_cfa_offset 16
+ 170              		.cfi_offset 3, -16
+ 171              		.cfi_offset 4, -12
+ 172              		.cfi_offset 5, -8
+ 173              		.cfi_offset 14, -4
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // Inputs:
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - quantized_multiplier has fixed point at bit 31
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - shift is -31 to +7 (negative for right shift)
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   //
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // Assumptions: The following input ranges are assumed
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - quantize_scale>=0  (the usual range is (1<<30) to (1>>31)-1)
+  98:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - scaling is chosen so final scaled result fits in int32_t
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   // - input x is in the range -(1<<47) <= x < (1<<47)
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(quantized_multiplier >= 0);
+ 174              		.loc 1 100 3 is_stmt 1 view .LVU33
+ 175 0002 002A     		cmp	r2, #0
+ 176              		.loc 1 100 3 is_stmt 0 view .LVU34
+ 177 0004 3BDB     		blt	.L22
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(shift >= -31 && shift < 8);
+ 178              		.loc 1 101 3 is_stmt 1 view .LVU35
+ 179 0006 03F11F04 		add	r4, r3, #31
+ 180 000a 262C     		cmp	r4, #38
+ 181 000c 3DD8     		bhi	.L23
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(x >= -(static_cast<int64_t>(1) << 47) &&
+ 182              		.loc 1 102 3 view .LVU36
+ 183 000e 01F50045 		add	r5, r1, #32768
+ 184 0012 4FF0FF34 		mov	r4, #-1
+ 185 0016 8442     		cmp	r4, r0
+ 186 0018 4FF6FF74 		movw	r4, #65535
+ 187 001c AC41     		sbcs	r4, r4, r5
+ 188 001e 3AD3     		bcc	.L24
+ 103:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****          x < (static_cast<int64_t>(1) << 47));
+ 104:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int32_t reduced_multiplier = (quantized_multiplier < 0x7FFF0000)
+ 189              		.loc 1 105 3 view .LVU37
+ 106:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                    ? ((quantized_multiplier + (1 << 15)) >> 16)
+ 190              		.loc 1 106 36 is_stmt 0 view .LVU38
+ 191 0020 214C     		ldr	r4, .L25
+ 192 0022 A242     		cmp	r2, r4
+ 193 0024 3DDC     		bgt	.L20
+ 194              		.loc 1 106 61 discriminator 1 view .LVU39
+ 195 0026 02F50042 		add	r2, r2, #32768
+ 196              	.LVL19:
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                    ? ((quantized_multiplier + (1 << 15)) >> 16)
+ 197              		.loc 1 105 11 view .LVU40
+ 198 002a 1214     		asrs	r2, r2, #16
+ 199              	.LVL20:
+ 200              	.L18:
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                    : 0x7FFF;
+ 108:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int total_shift = 15 - shift;
+ 201              		.loc 1 108 3 is_stmt 1 view .LVU41
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 13
+
+
+ 202              		.loc 1 108 7 is_stmt 0 view .LVU42
+ 203 002c C3F10F0C 		rsb	ip, r3, #15
+ 204              	.LVL21:
+ 109:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   x = (x * (int64_t)reduced_multiplier) + ((int64_t)1 << (total_shift - 1));
+ 205              		.loc 1 109 3 is_stmt 1 view .LVU43
+ 206              		.loc 1 109 12 is_stmt 0 view .LVU44
+ 207 0030 D417     		asrs	r4, r2, #31
+ 208              		.loc 1 109 10 view .LVU45
+ 209 0032 02FB01F1 		mul	r1, r2, r1
+ 210 0036 00FB0411 		mla	r1, r0, r4, r1
+ 211 003a A2FB0020 		umull	r2, r0, r2, r0
+ 212              	.LVL22:
+ 213              		.loc 1 109 10 view .LVU46
+ 214 003e 0144     		add	r1, r1, r0
+ 215              		.loc 1 109 71 view .LVU47
+ 216 0040 C3F10E04 		rsb	r4, r3, #14
+ 217              		.loc 1 109 55 view .LVU48
+ 218 0044 0120     		movs	r0, #1
+ 219 0046 A4F1200E 		sub	lr, r4, #32
+ 220 004a C4F12005 		rsb	r5, r4, #32
+ 221 004e 00FA0EFE 		lsl	lr, r0, lr
+ 222 0052 20FA05F5 		lsr	r5, r0, r5
+ 223 0056 4EEA050E 		orr	lr, lr, r5
+ 224 005a A040     		lsls	r0, r0, r4
+ 225              		.loc 1 109 5 view .LVU49
+ 226 005c 1218     		adds	r2, r2, r0
+ 227 005e 41EB0E01 		adc	r1, r1, lr
+ 228              	.LVL23:
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int32_t result = x >> total_shift;
+ 229              		.loc 1 110 3 is_stmt 1 view .LVU50
+ 230              		.loc 1 110 22 is_stmt 0 view .LVU51
+ 231 0062 1133     		adds	r3, r3, #17
+ 232              	.LVL24:
+ 233              		.loc 1 110 22 view .LVU52
+ 234 0064 BCF12004 		subs	r4, ip, #32
+ 235 0068 22FA0CF0 		lsr	r0, r2, ip
+ 236 006c 01FA03F3 		lsl	r3, r1, r3
+ 237              	.LVL25:
+ 238              		.loc 1 110 22 view .LVU53
+ 239 0070 40EA0300 		orr	r0, r0, r3
+ 240 0074 02D4     		bmi	.L19
+ 241 0076 41FA04F4 		asr	r4, r1, r4
+ 242 007a 2043     		orrs	r0, r0, r4
+ 243              	.L19:
+ 244              	.LVL26:
+ 111:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   return result;
+ 245              		.loc 1 111 3 is_stmt 1 view .LVU54
+ 112:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** }
+ 246              		.loc 1 112 1 is_stmt 0 view .LVU55
+ 247 007c 38BD     		pop	{r3, r4, r5, pc}
+ 248              	.LVL27:
+ 249              	.L22:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(shift >= -31 && shift < 8);
+ 250              		.loc 1 100 3 discriminator 1 view .LVU56
+ 251 007e 0B4B     		ldr	r3, .L25+4
+ 252              	.LVL28:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(shift >= -31 && shift < 8);
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 14
+
+
+ 253              		.loc 1 100 3 discriminator 1 view .LVU57
+ 254 0080 0B4A     		ldr	r2, .L25+8
+ 255              	.LVL29:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(shift >= -31 && shift < 8);
+ 256              		.loc 1 100 3 discriminator 1 view .LVU58
+ 257 0082 6421     		movs	r1, #100
+ 258 0084 0B48     		ldr	r0, .L25+12
+ 259              	.LVL30:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(shift >= -31 && shift < 8);
+ 260              		.loc 1 100 3 discriminator 1 view .LVU59
+ 261 0086 FFF7FEFF 		bl	__assert_func
+ 262              	.LVL31:
+ 263              	.L23:
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(x >= -(static_cast<int64_t>(1) << 47) &&
+ 264              		.loc 1 101 3 discriminator 1 view .LVU60
+ 265 008a 0B4B     		ldr	r3, .L25+16
+ 266              	.LVL32:
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(x >= -(static_cast<int64_t>(1) << 47) &&
+ 267              		.loc 1 101 3 discriminator 1 view .LVU61
+ 268 008c 084A     		ldr	r2, .L25+8
+ 269              	.LVL33:
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(x >= -(static_cast<int64_t>(1) << 47) &&
+ 270              		.loc 1 101 3 discriminator 1 view .LVU62
+ 271 008e 6521     		movs	r1, #101
+ 272 0090 0848     		ldr	r0, .L25+12
+ 273              	.LVL34:
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   assert(x >= -(static_cast<int64_t>(1) << 47) &&
+ 274              		.loc 1 101 3 discriminator 1 view .LVU63
+ 275 0092 FFF7FEFF 		bl	__assert_func
+ 276              	.LVL35:
+ 277              	.L24:
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****          x < (static_cast<int64_t>(1) << 47));
+ 278              		.loc 1 102 3 discriminator 1 view .LVU64
+ 279 0096 094B     		ldr	r3, .L25+20
+ 280              	.LVL36:
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****          x < (static_cast<int64_t>(1) << 47));
+ 281              		.loc 1 102 3 discriminator 1 view .LVU65
+ 282 0098 054A     		ldr	r2, .L25+8
+ 283              	.LVL37:
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****          x < (static_cast<int64_t>(1) << 47));
+ 284              		.loc 1 102 3 discriminator 1 view .LVU66
+ 285 009a 6621     		movs	r1, #102
+ 286 009c 0548     		ldr	r0, .L25+12
+ 287              	.LVL38:
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****          x < (static_cast<int64_t>(1) << 47));
+ 288              		.loc 1 102 3 discriminator 1 view .LVU67
+ 289 009e FFF7FEFF 		bl	__assert_func
+ 290              	.LVL39:
+ 291              	.L20:
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                    ? ((quantized_multiplier + (1 << 15)) >> 16)
+ 292              		.loc 1 105 11 view .LVU68
+ 293 00a2 47F6FF72 		movw	r2, #32767
+ 294              	.LVL40:
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                    ? ((quantized_multiplier + (1 << 15)) >> 16)
+ 295              		.loc 1 105 11 view .LVU69
+ 296 00a6 C1E7     		b	.L18
+ 297              	.L26:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 15
+
+
+ 298              		.align	2
+ 299              	.L25:
+ 300 00a8 FFFFFE7F 		.word	2147418111
+ 301 00ac 00000000 		.word	.LC0
+ 302 00b0 1C000000 		.word	.LC1
+ 303 00b4 68000000 		.word	.LC2
+ 304 00b8 AC000000 		.word	.LC3
+ 305 00bc C8000000 		.word	.LC4
+ 306              		.cfi_endproc
+ 307              	.LFE2933:
+ 309              		.section	.text._ZN6tflite5micro3DupIlEET_NS0_23FixedPointRawTypeTraitsIS2_E13ScalarRawTypeE,"axG",
+ 310              		.align	1
+ 311              		.weak	_ZN6tflite5micro3DupIlEET_NS0_23FixedPointRawTypeTraitsIS2_E13ScalarRawTypeE
+ 312              		.syntax unified
+ 313              		.thumb
+ 314              		.thumb_func
+ 316              	_ZN6tflite5micro3DupIlEET_NS0_23FixedPointRawTypeTraitsIS2_E13ScalarRawTypeE:
+ 317              	.LVL41:
+ 318              	.LFB3067:
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return x;
+ 319              		.loc 2 63 10 is_stmt 1 view -0
+ 320              		.cfi_startproc
+ 321              		@ args = 0, pretend = 0, frame = 0
+ 322              		@ frame_needed = 0, uses_anonymous_args = 0
+ 323              		@ link register save eliminated.
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 324              		.loc 2 65 1 is_stmt 0 view .LVU71
+ 325 0000 7047     		bx	lr
+ 326              		.cfi_endproc
+ 327              	.LFE3067:
+ 329              		.section	.text._ZN6tflite5micro6BitAndIlEET_S2_S2_,"axG",%progbits,_ZN6tflite5micro6BitAndIlEET_S2
+ 330              		.align	1
+ 331              		.weak	_ZN6tflite5micro6BitAndIlEET_S2_S2_
+ 332              		.syntax unified
+ 333              		.thumb
+ 334              		.thumb_func
+ 336              	_ZN6tflite5micro6BitAndIlEET_S2_S2_:
+ 337              	.LVL42:
+ 338              	.LFB3068:
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a & b;
+ 339              		.loc 2 69 14 is_stmt 1 view -0
+ 340              		.cfi_startproc
+ 341              		@ args = 0, pretend = 0, frame = 0
+ 342              		@ frame_needed = 0, uses_anonymous_args = 0
+ 343              		@ link register save eliminated.
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 344              		.loc 2 71 1 is_stmt 0 view .LVU73
+ 345 0000 0840     		ands	r0, r0, r1
+ 346              	.LVL43:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 347              		.loc 2 71 1 view .LVU74
+ 348 0002 7047     		bx	lr
+ 349              		.cfi_endproc
+ 350              	.LFE3068:
+ 352              		.section	.text._ZN6tflite5micro10ShiftRightIlEET_S2_i,"axG",%progbits,_ZN6tflite5micro10ShiftRight
+ 353              		.align	1
+ 354              		.weak	_ZN6tflite5micro10ShiftRightIlEET_S2_i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 16
+
+
+ 355              		.syntax unified
+ 356              		.thumb
+ 357              		.thumb_func
+ 359              	_ZN6tflite5micro10ShiftRightIlEET_S2_i:
+ 360              	.LVL44:
+ 361              	.LFB3069:
+ 139:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a >> offset;
+ 362              		.loc 2 139 14 is_stmt 1 view -0
+ 363              		.cfi_startproc
+ 364              		@ args = 0, pretend = 0, frame = 0
+ 365              		@ frame_needed = 0, uses_anonymous_args = 0
+ 366              		@ link register save eliminated.
+ 141:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 367              		.loc 2 141 1 is_stmt 0 view .LVU76
+ 368 0000 0841     		asrs	r0, r0, r1
+ 369              	.LVL45:
+ 141:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 370              		.loc 2 141 1 view .LVU77
+ 371 0002 7047     		bx	lr
+ 372              		.cfi_endproc
+ 373              	.LFE3069:
+ 375              		.section	.text._ZN6tflite5micro3AddIlEET_S2_S2_,"axG",%progbits,_ZN6tflite5micro3AddIlEET_S2_S2_,c
+ 376              		.align	1
+ 377              		.weak	_ZN6tflite5micro3AddIlEET_S2_S2_
+ 378              		.syntax unified
+ 379              		.thumb
+ 380              		.thumb_func
+ 382              	_ZN6tflite5micro3AddIlEET_S2_S2_:
+ 383              	.LVL46:
+ 384              	.LFB3071:
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return a + b;
+ 385              		.loc 2 93 14 is_stmt 1 view -0
+ 386              		.cfi_startproc
+ 387              		@ args = 0, pretend = 0, frame = 0
+ 388              		@ frame_needed = 0, uses_anonymous_args = 0
+ 389              		@ link register save eliminated.
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 390              		.loc 2 95 1 is_stmt 0 view .LVU79
+ 391 0000 0844     		add	r0, r0, r1
+ 392              	.LVL47:
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 393              		.loc 2 95 1 view .LVU80
+ 394 0002 7047     		bx	lr
+ 395              		.cfi_endproc
+ 396              	.LFE3071:
+ 398              		.section	.text._ZN6tflite5micro6BitNotIlEET_S2_,"axG",%progbits,_ZN6tflite5micro6BitNotIlEET_S2_,c
+ 399              		.align	1
+ 400              		.weak	_ZN6tflite5micro6BitNotIlEET_S2_
+ 401              		.syntax unified
+ 402              		.thumb
+ 403              		.thumb_func
+ 405              	_ZN6tflite5micro6BitNotIlEET_S2_:
+ 406              	.LVL48:
+ 407              	.LFB3147:
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return ~a;
+ 408              		.loc 2 87 14 is_stmt 1 view -0
+ 409              		.cfi_startproc
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 17
+
+
+ 410              		@ args = 0, pretend = 0, frame = 0
+ 411              		@ frame_needed = 0, uses_anonymous_args = 0
+ 412              		@ link register save eliminated.
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 413              		.loc 2 89 1 is_stmt 0 view .LVU82
+ 414 0000 C043     		mvns	r0, r0
+ 415              	.LVL49:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 416              		.loc 2 89 1 view .LVU83
+ 417 0002 7047     		bx	lr
+ 418              		.cfi_endproc
+ 419              	.LFE3147:
+ 421              		.section	.text._ZN6tflite5micro13MaskIfNonZeroIlEET_S2_,"axG",%progbits,_ZN6tflite5micro13MaskIfNo
+ 422              		.align	1
+ 423              		.weak	_ZN6tflite5micro13MaskIfNonZeroIlEET_S2_
+ 424              		.syntax unified
+ 425              		.thumb
+ 426              		.thumb_func
+ 428              	_ZN6tflite5micro13MaskIfNonZeroIlEET_S2_:
+ 429              	.LVL50:
+ 430              	.LFB3121:
+ 155:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static constexpr tIntegerType zero = 0;
+ 431              		.loc 2 155 14 is_stmt 1 view -0
+ 432              		.cfi_startproc
+ 433              		@ args = 0, pretend = 0, frame = 0
+ 434              		@ frame_needed = 0, uses_anonymous_args = 0
+ 155:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   static constexpr tIntegerType zero = 0;
+ 435              		.loc 2 155 14 is_stmt 0 view .LVU85
+ 436 0000 08B5     		push	{r3, lr}
+ 437              	.LCFI1:
+ 438              		.cfi_def_cfa_offset 8
+ 439              		.cfi_offset 3, -8
+ 440              		.cfi_offset 14, -4
+ 157:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 441              		.loc 2 157 12 view .LVU86
+ 442 0002 10B1     		cbz	r0, .L33
+ 157:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 443              		.loc 2 157 20 discriminator 1 view .LVU87
+ 444 0004 0020     		movs	r0, #0
+ 445              	.LVL51:
+ 157:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 446              		.loc 2 157 20 discriminator 1 view .LVU88
+ 447 0006 FFF7FEFF 		bl	_ZN6tflite5micro6BitNotIlEET_S2_
+ 448              	.LVL52:
+ 449              	.L33:
+ 158:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 450              		.loc 2 158 1 view .LVU89
+ 451 000a 08BD     		pop	{r3, pc}
+ 452              		.cfi_endproc
+ 453              	.LFE3121:
+ 455              		.section	.text._ZN6tflite5micro14MaskIfLessThanIlEET_S2_S2_,"axG",%progbits,_ZN6tflite5micro14Mask
+ 456              		.align	1
+ 457              		.weak	_ZN6tflite5micro14MaskIfLessThanIlEET_S2_S2_
+ 458              		.syntax unified
+ 459              		.thumb
+ 460              		.thumb_func
+ 462              	_ZN6tflite5micro14MaskIfLessThanIlEET_S2_S2_:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 18
+
+
+ 463              	.LVL53:
+ 464              	.LFB3070:
+ 198:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a < b);
+ 465              		.loc 2 198 14 is_stmt 1 view -0
+ 466              		.cfi_startproc
+ 467              		@ args = 0, pretend = 0, frame = 0
+ 468              		@ frame_needed = 0, uses_anonymous_args = 0
+ 198:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a < b);
+ 469              		.loc 2 198 14 is_stmt 0 view .LVU91
+ 470 0000 08B5     		push	{r3, lr}
+ 471              	.LCFI2:
+ 472              		.cfi_def_cfa_offset 8
+ 473              		.cfi_offset 3, -8
+ 474              		.cfi_offset 14, -4
+ 199:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 475              		.loc 2 199 37 view .LVU92
+ 476 0002 8842     		cmp	r0, r1
+ 477 0004 ACBF     		ite	ge
+ 478 0006 0020     		movge	r0, #0
+ 479              	.LVL54:
+ 199:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 480              		.loc 2 199 37 view .LVU93
+ 481 0008 0120     		movlt	r0, #1
+ 482 000a FFF7FEFF 		bl	_ZN6tflite5micro13MaskIfNonZeroIlEET_S2_
+ 483              	.LVL55:
+ 200:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 484              		.loc 2 200 1 view .LVU94
+ 485 000e 08BD     		pop	{r3, pc}
+ 486              		.cfi_endproc
+ 487              	.LFE3070:
+ 489              		.section	.text._ZN6tflite5micro17MaskIfGreaterThanIlEET_S2_S2_,"axG",%progbits,_ZN6tflite5micro17M
+ 490              		.align	1
+ 491              		.weak	_ZN6tflite5micro17MaskIfGreaterThanIlEET_S2_S2_
+ 492              		.syntax unified
+ 493              		.thumb
+ 494              		.thumb_func
+ 496              	_ZN6tflite5micro17MaskIfGreaterThanIlEET_S2_S2_:
+ 497              	.LVL56:
+ 498              	.LFB3072:
+ 184:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a > b);
+ 499              		.loc 2 184 14 is_stmt 1 view -0
+ 500              		.cfi_startproc
+ 501              		@ args = 0, pretend = 0, frame = 0
+ 502              		@ frame_needed = 0, uses_anonymous_args = 0
+ 184:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return MaskIfNonZero<tIntegerType>(a > b);
+ 503              		.loc 2 184 14 is_stmt 0 view .LVU96
+ 504 0000 08B5     		push	{r3, lr}
+ 505              	.LCFI3:
+ 506              		.cfi_def_cfa_offset 8
+ 507              		.cfi_offset 3, -8
+ 508              		.cfi_offset 14, -4
+ 185:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 509              		.loc 2 185 37 view .LVU97
+ 510 0002 8842     		cmp	r0, r1
+ 511 0004 D4BF     		ite	le
+ 512 0006 0020     		movle	r0, #0
+ 513              	.LVL57:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 19
+
+
+ 185:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 514              		.loc 2 185 37 view .LVU98
+ 515 0008 0120     		movgt	r0, #1
+ 516 000a FFF7FEFF 		bl	_ZN6tflite5micro13MaskIfNonZeroIlEET_S2_
+ 517              	.LVL58:
+ 186:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 518              		.loc 2 186 1 view .LVU99
+ 519 000e 08BD     		pop	{r3, pc}
+ 520              		.cfi_endproc
+ 521              	.LFE3072:
+ 523              		.section	.rodata._ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i.str1.4,"aMS",%progbits,1
+ 524              		.align	2
+ 525              	.LC5:
+ 526 0000 6578706F 		.ascii	"exponent >= 0\000"
+ 526      6E656E74 
+ 526      203E3D20 
+ 526      3000
+ 527 000e 0000     		.align	2
+ 528              	.LC6:
+ 529 0010 496E7465 		.ascii	"IntegerType tflite::micro::RoundingDivideByPOT(Inte"
+ 529      67657254 
+ 529      79706520 
+ 529      74666C69 
+ 529      74653A3A 
+ 530 0043 67657254 		.ascii	"gerType, int) [with IntegerType = long int]\000"
+ 530      7970652C 
+ 530      20696E74 
+ 530      29205B77 
+ 530      69746820 
+ 531 006f 00       		.align	2
+ 532              	.LC7:
+ 533 0070 6C69622F 		.ascii	"lib/tflite-micro/tensorflow/lite/micro/kernels/inte"
+ 533      74666C69 
+ 533      74652D6D 
+ 533      6963726F 
+ 533      2F74656E 
+ 534 00a3 726E616C 		.ascii	"rnal/fixedpoint.h\000"
+ 534      2F666978 
+ 534      6564706F 
+ 534      696E742E 
+ 534      6800
+ 535 00b5 000000   		.align	2
+ 536              	.LC8:
+ 537 00b8 6578706F 		.ascii	"exponent <= 31\000"
+ 537      6E656E74 
+ 537      203C3D20 
+ 537      333100
+ 538              		.section	.text._ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i,"axG",%progbits,_ZN6tflite5micro19R
+ 539              		.align	1
+ 540              		.weak	_ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i
+ 541              		.syntax unified
+ 542              		.thumb
+ 543              		.thumb_func
+ 545              	_ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i:
+ 546              	.LVL59:
+ 547              	.LFB2995:
+ 339:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 20
+
+
+ 340:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <>
+ 341:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** inline std::int16_t SaturatingRoundingDoublingHighMul(std::int16_t a,
+ 342:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****                                                       std::int16_t b) {
+ 343:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   bool overflow = a == b && a == std::numeric_limits<std::int16_t>::min();
+ 344:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t a_32(a);
+ 345:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t b_32(b);
+ 346:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int32_t ab_32 = a_32 * b_32;
+ 347:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int16_t nudge = ab_32 >= 0 ? (1 << 14) : (1 - (1 << 14));
+ 348:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   std::int16_t ab_x2_high16 =
+ 349:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****       static_cast<std::int16_t>((ab_32 + nudge) / (1 << 15));
+ 350:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return overflow ? std::numeric_limits<std::int16_t>::max() : ab_x2_high16;
+ 351:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 352:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** 
+ 353:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Correctly-rounded-to-nearest division by a power-of-two.
+ 354:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** // Also known as a rounding arithmetic right shift.
+ 355:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** template <typename IntegerType>
+ 356:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** inline IntegerType RoundingDivideByPOT(IntegerType x, int exponent) {
+ 548              		.loc 2 356 20 is_stmt 1 view -0
+ 549              		.cfi_startproc
+ 550              		@ args = 0, pretend = 0, frame = 0
+ 551              		@ frame_needed = 0, uses_anonymous_args = 0
+ 552              		.loc 2 356 20 is_stmt 0 view .LVU101
+ 553 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 554              	.LCFI4:
+ 555              		.cfi_def_cfa_offset 32
+ 556              		.cfi_offset 4, -32
+ 557              		.cfi_offset 5, -28
+ 558              		.cfi_offset 6, -24
+ 559              		.cfi_offset 7, -20
+ 560              		.cfi_offset 8, -16
+ 561              		.cfi_offset 9, -12
+ 562              		.cfi_offset 10, -8
+ 563              		.cfi_offset 14, -4
+ 357:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   assert(exponent >= 0);
+ 564              		.loc 2 357 3 view .LVU102
+ 565 0004 0C1E     		subs	r4, r1, #0
+ 566 0006 39DB     		blt	.L43
+ 567 0008 0546     		mov	r5, r0
+ 358:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   assert(exponent <= 31);
+ 568              		.loc 2 358 3 view .LVU103
+ 569 000a 1F2C     		cmp	r4, #31
+ 570 000c 3DDC     		bgt	.L44
+ 359:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const IntegerType mask = Dup<IntegerType>((1ll << exponent) - 1);
+ 571              		.loc 2 359 50 view .LVU104
+ 572 000e 0126     		movs	r6, #1
+ 573 0010 06FA04F0 		lsl	r0, r6, r4
+ 574              	.LVL60:
+ 575              		.loc 2 359 44 view .LVU105
+ 576 0014 0138     		subs	r0, r0, #1
+ 577 0016 FFF7FEFF 		bl	_ZN6tflite5micro3DupIlEET_NS0_23FixedPointRawTypeTraitsIS2_E13ScalarRawTypeE
+ 578              	.LVL61:
+ 579              		.loc 2 359 44 view .LVU106
+ 580 001a 8046     		mov	r8, r0
+ 581              	.LVL62:
+ 360:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const IntegerType zero = Dup<IntegerType>(0);
+ 582              		.loc 2 360 44 view .LVU107
+ 583 001c 0020     		movs	r0, #0
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 21
+
+
+ 584              	.LVL63:
+ 585              		.loc 2 360 44 view .LVU108
+ 586 001e FFF7FEFF 		bl	_ZN6tflite5micro3DupIlEET_NS0_23FixedPointRawTypeTraitsIS2_E13ScalarRawTypeE
+ 587              	.LVL64:
+ 588 0022 8246     		mov	r10, r0
+ 589              	.LVL65:
+ 361:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const IntegerType one = Dup<IntegerType>(1);
+ 590              		.loc 2 361 43 view .LVU109
+ 591 0024 3046     		mov	r0, r6
+ 592              	.LVL66:
+ 593              		.loc 2 361 43 view .LVU110
+ 594 0026 FFF7FEFF 		bl	_ZN6tflite5micro3DupIlEET_NS0_23FixedPointRawTypeTraitsIS2_E13ScalarRawTypeE
+ 595              	.LVL67:
+ 596 002a 0746     		mov	r7, r0
+ 597              	.LVL68:
+ 362:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const IntegerType remainder = BitAnd(x, mask);
+ 598              		.loc 2 362 39 view .LVU111
+ 599 002c 4146     		mov	r1, r8
+ 600 002e 2846     		mov	r0, r5
+ 601              	.LVL69:
+ 602              		.loc 2 362 39 view .LVU112
+ 603 0030 FFF7FEFF 		bl	_ZN6tflite5micro6BitAndIlEET_S2_S2_
+ 604              	.LVL70:
+ 605 0034 8146     		mov	r9, r0
+ 606              	.LVL71:
+ 363:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const IntegerType threshold =
+ 364:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****       Add(ShiftRight(mask, 1), BitAnd(MaskIfLessThan(x, zero), one));
+ 607              		.loc 2 364 10 view .LVU113
+ 608 0036 3146     		mov	r1, r6
+ 609 0038 4046     		mov	r0, r8
+ 610              	.LVL72:
+ 611              		.loc 2 364 10 view .LVU114
+ 612 003a FFF7FEFF 		bl	_ZN6tflite5micro10ShiftRightIlEET_S2_i
+ 613              	.LVL73:
+ 614 003e 0646     		mov	r6, r0
+ 615              		.loc 2 364 10 discriminator 1 view .LVU115
+ 616 0040 5146     		mov	r1, r10
+ 617 0042 2846     		mov	r0, r5
+ 618 0044 FFF7FEFF 		bl	_ZN6tflite5micro14MaskIfLessThanIlEET_S2_S2_
+ 619              	.LVL74:
+ 620              		.loc 2 364 10 discriminator 2 view .LVU116
+ 621 0048 3946     		mov	r1, r7
+ 622 004a FFF7FEFF 		bl	_ZN6tflite5micro6BitAndIlEET_S2_S2_
+ 623              	.LVL75:
+ 624 004e 0146     		mov	r1, r0
+ 625              		.loc 2 364 10 discriminator 3 view .LVU117
+ 626 0050 3046     		mov	r0, r6
+ 627 0052 FFF7FEFF 		bl	_ZN6tflite5micro3AddIlEET_S2_S2_
+ 628              	.LVL76:
+ 629 0056 0646     		mov	r6, r0
+ 630              	.LVL77:
+ 365:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   return Add(ShiftRight(x, exponent),
+ 631              		.loc 2 365 13 view .LVU118
+ 632 0058 2146     		mov	r1, r4
+ 633 005a 2846     		mov	r0, r5
+ 634              	.LVL78:
+ 635              		.loc 2 365 13 view .LVU119
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 22
+
+
+ 636 005c FFF7FEFF 		bl	_ZN6tflite5micro10ShiftRightIlEET_S2_i
+ 637              	.LVL79:
+ 638 0060 0446     		mov	r4, r0
+ 639              	.LVL80:
+ 640              		.loc 2 365 13 discriminator 1 view .LVU120
+ 641 0062 3146     		mov	r1, r6
+ 642 0064 4846     		mov	r0, r9
+ 643 0066 FFF7FEFF 		bl	_ZN6tflite5micro17MaskIfGreaterThanIlEET_S2_S2_
+ 644              	.LVL81:
+ 645              		.loc 2 365 13 discriminator 2 view .LVU121
+ 646 006a 3946     		mov	r1, r7
+ 647 006c FFF7FEFF 		bl	_ZN6tflite5micro6BitAndIlEET_S2_S2_
+ 648              	.LVL82:
+ 649 0070 0146     		mov	r1, r0
+ 650              		.loc 2 365 13 discriminator 3 view .LVU122
+ 651 0072 2046     		mov	r0, r4
+ 652 0074 FFF7FEFF 		bl	_ZN6tflite5micro3AddIlEET_S2_S2_
+ 653              	.LVL83:
+ 366:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****              BitAnd(MaskIfGreaterThan(remainder, threshold), one));
+ 367:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h **** }
+ 654              		.loc 2 367 1 view .LVU123
+ 655 0078 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 656              	.LVL84:
+ 657              	.L43:
+ 357:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   assert(exponent <= 31);
+ 658              		.loc 2 357 3 discriminator 1 view .LVU124
+ 659 007c 064B     		ldr	r3, .L45
+ 660 007e 074A     		ldr	r2, .L45+4
+ 661 0080 40F26511 		movw	r1, #357
+ 662              	.LVL85:
+ 357:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   assert(exponent <= 31);
+ 663              		.loc 2 357 3 discriminator 1 view .LVU125
+ 664 0084 0648     		ldr	r0, .L45+8
+ 665              	.LVL86:
+ 357:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   assert(exponent <= 31);
+ 666              		.loc 2 357 3 discriminator 1 view .LVU126
+ 667 0086 FFF7FEFF 		bl	__assert_func
+ 668              	.LVL87:
+ 669              	.L44:
+ 358:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const IntegerType mask = Dup<IntegerType>((1ll << exponent) - 1);
+ 670              		.loc 2 358 3 discriminator 1 view .LVU127
+ 671 008a 064B     		ldr	r3, .L45+12
+ 672 008c 034A     		ldr	r2, .L45+4
+ 673 008e 4FF4B371 		mov	r1, #358
+ 674              	.LVL88:
+ 358:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const IntegerType mask = Dup<IntegerType>((1ll << exponent) - 1);
+ 675              		.loc 2 358 3 discriminator 1 view .LVU128
+ 676 0092 0348     		ldr	r0, .L45+8
+ 677              	.LVL89:
+ 358:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/fixedpoint.h ****   const IntegerType mask = Dup<IntegerType>((1ll << exponent) - 1);
+ 678              		.loc 2 358 3 discriminator 1 view .LVU129
+ 679 0094 FFF7FEFF 		bl	__assert_func
+ 680              	.LVL90:
+ 681              	.L46:
+ 682              		.align	2
+ 683              	.L45:
+ 684 0098 00000000 		.word	.LC5
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 23
+
+
+ 685 009c 10000000 		.word	.LC6
+ 686 00a0 70000000 		.word	.LC7
+ 687 00a4 B8000000 		.word	.LC8
+ 688              		.cfi_endproc
+ 689              	.LFE2995:
+ 691              		.section	.text._ZN6tflite5micro29MultiplyByQuantizedMultiplierElli,"ax",%progbits
+ 692              		.align	1
+ 693              		.global	_ZN6tflite5micro29MultiplyByQuantizedMultiplierElli
+ 694              		.syntax unified
+ 695              		.thumb
+ 696              		.thumb_func
+ 698              	_ZN6tflite5micro29MultiplyByQuantizedMultiplierElli:
+ 699              	.LVL91:
+ 700              	.LFB2932:
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int left_shift = shift > 0 ? shift : 0;
+ 701              		.loc 1 81 50 is_stmt 1 view -0
+ 702              		.cfi_startproc
+ 703              		@ args = 0, pretend = 0, frame = 0
+ 704              		@ frame_needed = 0, uses_anonymous_args = 0
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int left_shift = shift > 0 ? shift : 0;
+ 705              		.loc 1 81 50 is_stmt 0 view .LVU131
+ 706 0000 10B5     		push	{r4, lr}
+ 707              	.LCFI5:
+ 708              		.cfi_def_cfa_offset 8
+ 709              		.cfi_offset 4, -8
+ 710              		.cfi_offset 14, -4
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int right_shift = shift > 0 ? 0 : -shift;
+ 711              		.loc 1 82 3 is_stmt 1 view .LVU132
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   int right_shift = shift > 0 ? 0 : -shift;
+ 712              		.loc 1 82 7 is_stmt 0 view .LVU133
+ 713 0002 22EAE273 		bic	r3, r2, r2, asr #31
+ 714              	.LVL92:
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   return RoundingDivideByPOT(SaturatingRoundingDoublingHighMul(
+ 715              		.loc 1 83 3 is_stmt 1 view .LVU134
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   return RoundingDivideByPOT(SaturatingRoundingDoublingHighMul(
+ 716              		.loc 1 83 37 is_stmt 0 view .LVU135
+ 717 0006 5242     		rsbs	r2, r2, #0
+ 718              	.LVL93:
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   return RoundingDivideByPOT(SaturatingRoundingDoublingHighMul(
+ 719              		.loc 1 83 7 view .LVU136
+ 720 0008 22EAE272 		bic	r2, r2, r2, asr #31
+ 721              	.LVL94:
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****   return RoundingDivideByPOT(SaturatingRoundingDoublingHighMul(
+ 722              		.loc 1 83 7 view .LVU137
+ 723 000c 1446     		mov	r4, r2
+ 724              	.LVL95:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                  x * (1 << left_shift), quantized_multiplier),
+ 725              		.loc 1 84 3 is_stmt 1 view .LVU138
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                  x * (1 << left_shift), quantized_multiplier),
+ 726              		.loc 1 84 29 is_stmt 0 view .LVU139
+ 727 000e 9840     		lsls	r0, r0, r3
+ 728              	.LVL96:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                  x * (1 << left_shift), quantized_multiplier),
+ 729              		.loc 1 84 29 view .LVU140
+ 730 0010 FFF7FEFF 		bl	_ZN6tflite5micro33SaturatingRoundingDoublingHighMulIlEET_S2_S2_
+ 731              	.LVL97:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc ****                                  x * (1 << left_shift), quantized_multiplier),
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 24
+
+
+ 732              		.loc 1 84 29 discriminator 1 view .LVU141
+ 733 0014 2146     		mov	r1, r4
+ 734 0016 FFF7FEFF 		bl	_ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i
+ 735              	.LVL98:
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+ 736              		.loc 1 87 1 view .LVU142
+ 737 001a 10BD     		pop	{r4, pc}
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.cc **** 
+ 738              		.loc 1 87 1 view .LVU143
+ 739              		.cfi_endproc
+ 740              	.LFE2932:
+ 742              		.text
+ 743              	.Letext0:
+ 744              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 745              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 746              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 747              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 748              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 749              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 750              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 751              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 752              		.file 11 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 753              		.file 12 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 754              		.file 13 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 755              		.file 14 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 756              		.file 15 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 757              		.file 16 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 758              		.file 17 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 759              		.file 18 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 760              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 761              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 762              		.file 21 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 763              		.file 22 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 764              		.file 23 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 765              		.file 24 "lib/tflite-micro/tensorflow/lite/micro/micro_log.h"
+ 766              		.file 25 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h"
+ 767              		.file 26 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/types.h"
+ 768              		.file 27 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.h"
+ 769              		.file 28 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 770              		.file 29 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 771              		.file 30 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 772              		.file 31 "<built-in>"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s 			page 25
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 common.cc
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:21     .text._ZN6tflite5micro33SaturatingRoundingDoublingHighMulIlEET_S2_S2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:27     .text._ZN6tflite5micro33SaturatingRoundingDoublingHighMulIlEET_S2_S2_:00000000 _ZN6tflite5micro33SaturatingRoundingDoublingHighMulIlEET_S2_S2_
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:129    .text._ZN6tflite5micro33SaturatingRoundingDoublingHighMulIlEET_S2_S2_:0000005c $d
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:134    .rodata._ZN6tflite5micro29MultiplyByQuantizedMultiplierExli.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:153    .text._ZN6tflite5micro29MultiplyByQuantizedMultiplierExli:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:159    .text._ZN6tflite5micro29MultiplyByQuantizedMultiplierExli:00000000 _ZN6tflite5micro29MultiplyByQuantizedMultiplierExli
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:300    .text._ZN6tflite5micro29MultiplyByQuantizedMultiplierExli:000000a8 $d
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:310    .text._ZN6tflite5micro3DupIlEET_NS0_23FixedPointRawTypeTraitsIS2_E13ScalarRawTypeE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:316    .text._ZN6tflite5micro3DupIlEET_NS0_23FixedPointRawTypeTraitsIS2_E13ScalarRawTypeE:00000000 _ZN6tflite5micro3DupIlEET_NS0_23FixedPointRawTypeTraitsIS2_E13ScalarRawTypeE
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:330    .text._ZN6tflite5micro6BitAndIlEET_S2_S2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:336    .text._ZN6tflite5micro6BitAndIlEET_S2_S2_:00000000 _ZN6tflite5micro6BitAndIlEET_S2_S2_
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:353    .text._ZN6tflite5micro10ShiftRightIlEET_S2_i:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:359    .text._ZN6tflite5micro10ShiftRightIlEET_S2_i:00000000 _ZN6tflite5micro10ShiftRightIlEET_S2_i
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:376    .text._ZN6tflite5micro3AddIlEET_S2_S2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:382    .text._ZN6tflite5micro3AddIlEET_S2_S2_:00000000 _ZN6tflite5micro3AddIlEET_S2_S2_
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:399    .text._ZN6tflite5micro6BitNotIlEET_S2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:405    .text._ZN6tflite5micro6BitNotIlEET_S2_:00000000 _ZN6tflite5micro6BitNotIlEET_S2_
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:422    .text._ZN6tflite5micro13MaskIfNonZeroIlEET_S2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:428    .text._ZN6tflite5micro13MaskIfNonZeroIlEET_S2_:00000000 _ZN6tflite5micro13MaskIfNonZeroIlEET_S2_
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:456    .text._ZN6tflite5micro14MaskIfLessThanIlEET_S2_S2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:462    .text._ZN6tflite5micro14MaskIfLessThanIlEET_S2_S2_:00000000 _ZN6tflite5micro14MaskIfLessThanIlEET_S2_S2_
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:490    .text._ZN6tflite5micro17MaskIfGreaterThanIlEET_S2_S2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:496    .text._ZN6tflite5micro17MaskIfGreaterThanIlEET_S2_S2_:00000000 _ZN6tflite5micro17MaskIfGreaterThanIlEET_S2_S2_
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:524    .rodata._ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:539    .text._ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:545    .text._ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i:00000000 _ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:684    .text._ZN6tflite5micro19RoundingDivideByPOTIlEET_S2_i:00000098 $d
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:692    .text._ZN6tflite5micro29MultiplyByQuantizedMultiplierElli:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccIwGUjJ.s:698    .text._ZN6tflite5micro29MultiplyByQuantizedMultiplierElli:00000000 _ZN6tflite5micro29MultiplyByQuantizedMultiplierElli
+
+UNDEFINED SYMBOLS
+__assert_func

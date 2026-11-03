@@ -1,0 +1,115 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccCOcHul.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"ethosu.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc"
+  20              		.section	.text._ZN6tflite5micro15Register_ETHOSUEv,"ax",%progbits
+  21              		.align	1
+  22              		.global	_ZN6tflite5micro15Register_ETHOSUEv
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro15Register_ETHOSUEv:
+  28              	.LFB7:
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** //
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** // This is a stub file for non-Ethos platforms
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** //
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** #include "tensorflow/lite/micro/micro_common.h"
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** namespace tflite {
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** namespace micro {
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** TFLMRegistration* Register_ETHOSU() { return nullptr; }
+  29              		.loc 1 23 37 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34              		.loc 1 23 39 view .LVU1
+  35              		.loc 1 23 55 is_stmt 0 view .LVU2
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccCOcHul.s 			page 2
+
+
+  36 0000 0020     		movs	r0, #0
+  37 0002 7047     		bx	lr
+  38              		.cfi_endproc
+  39              	.LFE7:
+  41              		.section	.rodata._ZN6tflite5micro16GetString_ETHOSUEv.str1.4,"aMS",%progbits,1
+  42              		.align	2
+  43              	.LC0:
+  44 0000 00       		.ascii	"\000"
+  45              		.section	.text._ZN6tflite5micro16GetString_ETHOSUEv,"ax",%progbits
+  46              		.align	1
+  47              		.global	_ZN6tflite5micro16GetString_ETHOSUEv
+  48              		.syntax unified
+  49              		.thumb
+  50              		.thumb_func
+  52              	_ZN6tflite5micro16GetString_ETHOSUEv:
+  53              	.LFB8:
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** 
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/ethosu.cc **** const char* GetString_ETHOSU() { return ""; }
+  54              		.loc 1 25 32 is_stmt 1 view -0
+  55              		.cfi_startproc
+  56              		@ args = 0, pretend = 0, frame = 0
+  57              		@ frame_needed = 0, uses_anonymous_args = 0
+  58              		@ link register save eliminated.
+  59              		.loc 1 25 34 view .LVU4
+  60              		.loc 1 25 45 is_stmt 0 view .LVU5
+  61 0000 0048     		ldr	r0, .L3
+  62 0002 7047     		bx	lr
+  63              	.L4:
+  64              		.align	2
+  65              	.L3:
+  66 0004 00000000 		.word	.LC0
+  67              		.cfi_endproc
+  68              	.LFE8:
+  70              		.text
+  71              	.Letext0:
+  72              		.file 2 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none
+  73              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  74              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  75              		.file 5 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccCOcHul.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 ethosu.cc
+C:\Users\Chetan\AppData\Local\Temp\ccCOcHul.s:21     .text._ZN6tflite5micro15Register_ETHOSUEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccCOcHul.s:27     .text._ZN6tflite5micro15Register_ETHOSUEv:00000000 _ZN6tflite5micro15Register_ETHOSUEv
+C:\Users\Chetan\AppData\Local\Temp\ccCOcHul.s:42     .rodata._ZN6tflite5micro16GetString_ETHOSUEv.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccCOcHul.s:46     .text._ZN6tflite5micro16GetString_ETHOSUEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccCOcHul.s:52     .text._ZN6tflite5micro16GetString_ETHOSUEv:00000000 _ZN6tflite5micro16GetString_ETHOSUEv
+C:\Users\Chetan\AppData\Local\Temp\ccCOcHul.s:66     .text._ZN6tflite5micro16GetString_ETHOSUEv:00000004 $d
+
+NO UNDEFINED SYMBOLS

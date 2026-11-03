@@ -1,0 +1,2243 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"squeeze.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc"
+  20              		.section	.text._ZN6tflite5micro12_GLOBAL__N_114SqueezeContextD2Ev,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	_ZN6tflite5micro12_GLOBAL__N_114SqueezeContextD2Ev:
+  27              	.LVL0:
+  28              	.LFB10569:
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** #include "tensorflow/lite/micro/builtin_op_data.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** #include "tensorflow/lite/micro/compatibility.h"
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** #include "tensorflow/lite/micro/kernels/internal/quantization_util.h"
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** #include "tensorflow/lite/micro/kernels/internal/reference/process_broadcast_shapes.h"
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** #include "tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** #include "tensorflow/lite/micro/kernels/kernel_util.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** #include "tensorflow/lite/micro/memory_helpers.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** #include "tensorflow/lite/micro/micro_common.h"
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** #include "tensorflow/lite/micro/micro_log.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** namespace tflite {
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** namespace micro {
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** namespace {
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** struct SqueezeContext {
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 2
+
+
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   SqueezeContext(TfLiteContext* context, TfLiteNode* node) {
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     params = reinterpret_cast<TfLiteSqueezeParams*>(node->builtin_data);
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     micro_context = GetMicroContext(context);
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     input = micro_context->AllocateTempInputTensor(node, 0);
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     output = micro_context->AllocateTempOutputTensor(node, 0);
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   ~SqueezeContext() {
+  29              		.loc 1 37 3 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 37 3 is_stmt 0 view .LVU1
+  34 0000 10B5     		push	{r4, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 4, -8
+  38              		.cfi_offset 14, -4
+  39 0002 0446     		mov	r4, r0
+  40              	.LBB34:
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     micro_context->DeallocateTempTfLiteTensor(input);
+  41              		.loc 1 38 5 is_stmt 1 view .LVU2
+  42 0004 0068     		ldr	r0, [r0]
+  43              	.LVL1:
+  44              		.loc 1 38 46 is_stmt 0 view .LVU3
+  45 0006 0368     		ldr	r3, [r0]
+  46 0008 9B69     		ldr	r3, [r3, #24]
+  47 000a A168     		ldr	r1, [r4, #8]
+  48 000c 9847     		blx	r3
+  49              	.LVL2:
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     micro_context->DeallocateTempTfLiteTensor(output);
+  50              		.loc 1 39 5 is_stmt 1 view .LVU4
+  51 000e 2068     		ldr	r0, [r4]
+  52              		.loc 1 39 46 is_stmt 0 view .LVU5
+  53 0010 0368     		ldr	r3, [r0]
+  54 0012 9B69     		ldr	r3, [r3, #24]
+  55 0014 E168     		ldr	r1, [r4, #12]
+  56 0016 9847     		blx	r3
+  57              	.LVL3:
+  58              	.LBE34:
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+  59              		.loc 1 40 3 view .LVU6
+  60 0018 2046     		mov	r0, r4
+  61 001a 10BD     		pop	{r4, pc}
+  62              		.loc 1 40 3 view .LVU7
+  63              		.cfi_endproc
+  64              	.LFE10569:
+  66              		.thumb_set _ZN6tflite5micro12_GLOBAL__N_114SqueezeContextD1Ev,_ZN6tflite5micro12_GLOBAL__N_114Sque
+  67              		.section	.rodata._ZN6tflite5micro12_GLOBAL__N_1L11SqueezeEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNo
+  68              		.align	2
+  69              	.LC0:
+  70 0000 54797065 		.ascii	"Type %s (%d) not supported.\000"
+  70      20257320 
+  70      28256429 
+  70      206E6F74 
+  70      20737570 
+  71              		.align	2
+  72              	.LC1:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 3
+
+
+  73 001c 6C69622F 		.ascii	"lib/tflite-micro/tensorflow/lite/micro/kernels/sque"
+  73      74666C69 
+  73      74652D6D 
+  73      6963726F 
+  73      2F74656E 
+  74 004f 657A652E 		.ascii	"eze.cc\000"
+  74      636300
+  75 0056 0000     		.align	2
+  76              	.LC2:
+  77 0058 25733A25 		.ascii	"%s:%d %s != %s (%d != %d)\000"
+  77      64202573 
+  77      20213D20 
+  77      25732028 
+  77      25642021 
+  78 0072 0000     		.align	2
+  79              	.LC3:
+  80 0074 6F757470 		.ascii	"output_byte_size\000"
+  80      75745F62 
+  80      7974655F 
+  80      73697A65 
+  80      00
+  81 0085 000000   		.align	2
+  82              	.LC4:
+  83 0088 696E7075 		.ascii	"input_byte_size\000"
+  83      745F6279 
+  83      74655F73 
+  83      697A6500 
+  84              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L11SqueezeEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNode
+  85              		.align	1
+  86              		.syntax unified
+  87              		.thumb
+  88              		.thumb_func
+  90              	_ZN6tflite5micro12_GLOBAL__N_1L11SqueezeEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:
+  91              	.LVL4:
+  92              	.LFB10574:
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   MicroContext* micro_context;
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TfLiteSqueezeParams* params;
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TfLiteTensor* input;
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TfLiteTensor* output;
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** };
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** TfLiteStatus SqueezePrepare(TfLiteContext* context, TfLiteNode* node) {
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumInputs(node), 1);
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   SqueezeContext op_context(context, node);
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int input_num_dims = NumDimensions(op_context.input);
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int num_squeeze_dims = op_context.params->num_squeeze_dims;
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   // Determines number of dimensions of output tensor after squeeze.
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const TfLiteIntArray* input_dims = op_context.input->dims;
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const TfLiteIntArray* output_dims = op_context.output->dims;
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int32_t* squeeze_dims = op_context.params->squeeze_dims;
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   constexpr int max_squeeze_dims = 8;
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE(context, input_num_dims <= max_squeeze_dims);
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   bool should_squeeze[max_squeeze_dims] = {};
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 4
+
+
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   if (num_squeeze_dims == 0) {
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     for (int idx = 0; idx < input_num_dims; ++idx) {
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       if (input_dims->data[idx] == 1) {
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****         should_squeeze[idx] = true;
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       }
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   } else {
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     for (int idx = 0; idx < num_squeeze_dims; ++idx) {
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       int current = squeeze_dims[idx] < 0 ? squeeze_dims[idx] + input_num_dims
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                           : squeeze_dims[idx];
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       TF_LITE_ENSURE(context, current >= 0 && current < input_num_dims &&
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       should_squeeze[current] = true;
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   // Ensure output dimensions are big enough.
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   for (int in_idx = 0, out_idx = 0; in_idx < input_num_dims; ++in_idx) {
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     if (!should_squeeze[in_idx]) {
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       TF_LITE_ENSURE(
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                        output_dims->data[out_idx] >= input_dims->data[in_idx]);
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       ++out_idx;
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   return kTfLiteOk;
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** }
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** TfLiteStatus SqueezeEval(TfLiteContext* context, TfLiteNode* node) {
+  93              		.loc 1 93 68 is_stmt 1 view -0
+  94              		.cfi_startproc
+  95              		@ args = 0, pretend = 0, frame = 8
+  96              		@ frame_needed = 0, uses_anonymous_args = 0
+  97              		.loc 1 93 68 is_stmt 0 view .LVU9
+  98 0000 F0B5     		push	{r4, r5, r6, r7, lr}
+  99              	.LCFI1:
+ 100              		.cfi_def_cfa_offset 20
+ 101              		.cfi_offset 4, -20
+ 102              		.cfi_offset 5, -16
+ 103              		.cfi_offset 6, -12
+ 104              		.cfi_offset 7, -8
+ 105              		.cfi_offset 14, -4
+ 106 0002 87B0     		sub	sp, sp, #28
+ 107              	.LCFI2:
+ 108              		.cfi_def_cfa_offset 48
+ 109 0004 0546     		mov	r5, r0
+ 110 0006 0E46     		mov	r6, r1
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const TfLiteEvalTensor* input = tflite::micro::GetEvalInput(context, node, 0);
+ 111              		.loc 1 94 3 is_stmt 1 view .LVU10
+ 112              		.loc 1 94 62 is_stmt 0 view .LVU11
+ 113 0008 0022     		movs	r2, #0
+ 114 000a FFF7FEFF 		bl	_ZN6tflite5micro12GetEvalInputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+ 115              	.LVL5:
+ 116              		.loc 1 94 62 view .LVU12
+ 117 000e 0446     		mov	r4, r0
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 5
+
+
+ 118              	.LVL6:
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   if (input->type == kTfLiteString) {
+ 119              		.loc 1 96 3 is_stmt 1 view .LVU13
+ 120              		.loc 1 96 14 is_stmt 0 view .LVU14
+ 121 0010 007A     		ldrb	r0, [r0, #8]	@ zero_extendqisi2
+ 122              	.LVL7:
+ 123              		.loc 1 96 3 view .LVU15
+ 124 0012 0528     		cmp	r0, #5
+ 125 0014 0FD0     		beq	.L8
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     MicroPrintf("Type %s (%d) not supported.", TfLiteTypeGetName(input->type),
+  98:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                 input->type);
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     return kTfLiteError;
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TfLiteEvalTensor* output = tflite::micro::GetEvalOutput(context, node, 0);
+ 126              		.loc 1 102 3 is_stmt 1 view .LVU16
+ 127              		.loc 1 102 58 is_stmt 0 view .LVU17
+ 128 0016 0022     		movs	r2, #0
+ 129 0018 3146     		mov	r1, r6
+ 130 001a 2E46     		mov	r6, r5
+ 131              	.LVL8:
+ 132              		.loc 1 102 58 view .LVU18
+ 133 001c 2846     		mov	r0, r5
+ 134 001e FFF7FEFF 		bl	_ZN6tflite5micro13GetEvalOutputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+ 135              	.LVL9:
+ 136              		.loc 1 102 58 view .LVU19
+ 137 0022 0546     		mov	r5, r0
+ 138              	.LVL10:
+ 103:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   size_t input_byte_size;
+ 139              		.loc 1 103 3 is_stmt 1 view .LVU20
+ 104:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   size_t output_byte_size;
+ 140              		.loc 1 104 3 view .LVU21
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_OK(context,
+ 141              		.loc 1 105 3 view .LVU22
+ 142              	.LBB35:
+ 143              		.loc 1 105 3 view .LVU23
+ 144 0024 05A9     		add	r1, sp, #20
+ 145 0026 2046     		mov	r0, r4
+ 146              	.LVL11:
+ 147              		.loc 1 105 3 is_stmt 0 view .LVU24
+ 148 0028 FFF7FEFF 		bl	_ZN6tflite5micro26TfLiteEvalTensorByteLengthEPKNS0_16TfLiteEvalTensorEPj
+ 149              	.LVL12:
+ 150              		.loc 1 105 3 is_stmt 1 discriminator 1 view .LVU25
+ 151 002c 0746     		mov	r7, r0
+ 152 002e 60B1     		cbz	r0, .L9
+ 153              	.LVL13:
+ 154              	.L5:
+ 155              		.loc 1 105 3 is_stmt 0 discriminator 1 view .LVU26
+ 156              	.LBE35:
+ 106:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                     TfLiteEvalTensorByteLength(input, &input_byte_size));
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_OK(context,
+ 108:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                     TfLiteEvalTensorByteLength(output, &output_byte_size));
+ 109:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, input_byte_size, output_byte_size);
+ 111:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   memcpy(output->data.raw, input->data.raw, input_byte_size);
+ 112:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   return kTfLiteOk;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 6
+
+
+ 113:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** }
+ 157              		.loc 1 113 1 view .LVU27
+ 158 0030 3846     		mov	r0, r7
+ 159 0032 07B0     		add	sp, sp, #28
+ 160              	.LCFI3:
+ 161              		.cfi_remember_state
+ 162              		.cfi_def_cfa_offset 20
+ 163              		@ sp needed
+ 164 0034 F0BD     		pop	{r4, r5, r6, r7, pc}
+ 165              	.LVL14:
+ 166              	.L8:
+ 167              	.LCFI4:
+ 168              		.cfi_restore_state
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                 input->type);
+ 169              		.loc 1 97 5 is_stmt 1 view .LVU28
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                 input->type);
+ 170              		.loc 1 97 16 is_stmt 0 view .LVU29
+ 171 0036 FFF7FEFF 		bl	_ZN6tflite5micro17TfLiteTypeGetNameENS0_10TfLiteTypeE
+ 172              	.LVL15:
+ 173 003a 0146     		mov	r1, r0
+ 174 003c 227A     		ldrb	r2, [r4, #8]	@ zero_extendqisi2
+ 175 003e 1248     		ldr	r0, .L10
+ 176 0040 FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 177              	.LVL16:
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+ 178              		.loc 1 99 5 is_stmt 1 view .LVU30
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+ 179              		.loc 1 99 12 is_stmt 0 view .LVU31
+ 180 0044 0123     		movs	r3, #1
+ 181 0046 1F46     		mov	r7, r3
+ 182 0048 F2E7     		b	.L5
+ 183              	.LVL17:
+ 184              	.L9:
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                     TfLiteEvalTensorByteLength(input, &input_byte_size));
+ 185              		.loc 1 105 3 is_stmt 1 view .LVU32
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                     TfLiteEvalTensorByteLength(output, &output_byte_size));
+ 186              		.loc 1 107 3 view .LVU33
+ 187              	.LBB36:
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                     TfLiteEvalTensorByteLength(output, &output_byte_size));
+ 188              		.loc 1 107 3 view .LVU34
+ 189 004a 04A9     		add	r1, sp, #16
+ 190 004c 2846     		mov	r0, r5
+ 191              	.LVL18:
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                     TfLiteEvalTensorByteLength(output, &output_byte_size));
+ 192              		.loc 1 107 3 is_stmt 0 view .LVU35
+ 193 004e FFF7FEFF 		bl	_ZN6tflite5micro26TfLiteEvalTensorByteLengthEPKNS0_16TfLiteEvalTensorEPj
+ 194              	.LVL19:
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                     TfLiteEvalTensorByteLength(output, &output_byte_size));
+ 195              		.loc 1 107 3 is_stmt 1 discriminator 1 view .LVU36
+ 196 0052 0746     		mov	r7, r0
+ 197              	.LVL20:
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                     TfLiteEvalTensorByteLength(output, &output_byte_size));
+ 198              		.loc 1 107 3 is_stmt 0 discriminator 1 view .LVU37
+ 199 0054 0028     		cmp	r0, #0
+ 200 0056 EBD1     		bne	.L5
+ 201              	.LBE36:
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                     TfLiteEvalTensorByteLength(output, &output_byte_size));
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 7
+
+
+ 202              		.loc 1 107 3 is_stmt 1 view .LVU38
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   memcpy(output->data.raw, input->data.raw, input_byte_size);
+ 203              		.loc 1 110 3 view .LVU39
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   memcpy(output->data.raw, input->data.raw, input_byte_size);
+ 204              		.loc 1 110 3 view .LVU40
+ 205 0058 059A     		ldr	r2, [sp, #20]
+ 206 005a 049B     		ldr	r3, [sp, #16]
+ 207 005c 9A42     		cmp	r2, r3
+ 208 005e 0ED0     		beq	.L6
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   memcpy(output->data.raw, input->data.raw, input_byte_size);
+ 209              		.loc 1 110 3 discriminator 1 view .LVU41
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   memcpy(output->data.raw, input->data.raw, input_byte_size);
+ 210              		.loc 1 110 3 discriminator 1 view .LVU42
+ 211              	.LVL21:
+ 212              	.LBB37:
+ 213              	.LBI37:
+ 214              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** /* Copyright 2026 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TENSORFLOW_LITE_MICRO_MICRO_COMMON_H_
+  16:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TENSORFLOW_LITE_MICRO_MICRO_COMMON_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #include <stdbool.h>
+  19:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #include <stddef.h>
+  20:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #include <stdint.h>
+  21:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef kTfLiteOptionalTensor
+  23:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define kTfLiteOptionalTensor (-1)
+  24:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+  25:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+  26:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_KERNEL_LOG
+  27:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  28:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_KERNEL_LOG(context, ...)            \
+  29:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   do {                                              \
+  30:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     (context)->ReportError((context), __VA_ARGS__); \
+  31:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   } while (false)
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #else
+  33:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_KERNEL_LOG(context, ...)
+  34:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+  35:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif  // TF_LITE_KERNEL_LOG
+  36:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+  37:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_MAYBE_KERNEL_LOG
+  38:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  39:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_MAYBE_KERNEL_LOG(context, ...)        \
+  40:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   do {                                                \
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 8
+
+
+  41:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     if ((context) != nullptr) {                       \
+  42:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       (context)->ReportError((context), __VA_ARGS__); \
+  43:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }                                                 \
+  44:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   } while (false)
+  45:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #else
+  46:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_MAYBE_KERNEL_LOG(context, ...)
+  47:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+  48:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif  // TF_LITE_MAYBE_KERNEL_LOG
+  49:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+  50:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_ENSURE_STATUS
+  51:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_ENSURE_STATUS(a) \
+  52:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   do {                           \
+  53:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     TfLiteStatus s = (a);        \
+  54:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     if (s != kTfLiteOk) {        \
+  55:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return s;                  \
+  56:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }                            \
+  57:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   } while (0)
+  58:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+  59:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+  60:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_ENSURE
+  61:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_ENSURE(context, a)                                      \
+  62:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   do {                                                                  \
+  63:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     if (!(a)) {                                                         \
+  64:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       TF_LITE_KERNEL_LOG((context), "%s:%d %s was not true.", __FILE__, \
+  65:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                          __LINE__, #a);                                 \
+  66:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return kTfLiteError;                                              \
+  67:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }                                                                   \
+  68:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   } while (0)
+  69:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+  70:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+  71:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_ENSURE_MSG
+  72:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_ENSURE_MSG(context, value, ...)                \
+  73:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   do {                                                         \
+  74:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     if (!(value)) {                                            \
+  75:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       TF_LITE_KERNEL_LOG((context), __FILE__ " " __VA_ARGS__); \
+  76:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return kTfLiteError;                                     \
+  77:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }                                                          \
+  78:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   } while (0)
+  79:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+  80:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+  81:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_ENSURE_OK
+  82:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_ENSURE_OK(context, a) \
+  83:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   do {                                \
+  84:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     TfLiteStatus s = (a);             \
+  85:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     if (s != kTfLiteOk) {             \
+  86:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return s;                       \
+  87:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }                                 \
+  88:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   } while (0)
+  89:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+  90:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+  91:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_ENSURE_EQ
+  92:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_ENSURE_EQ(context, a, b)                                   \
+  93:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   do {                                                                     \
+  94:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     if ((a) != (b)) {                                                      \
+  95:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       TF_LITE_KERNEL_LOG((context), "%s:%d %s != %s (%d != %d)", __FILE__, \
+  96:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                          __LINE__, #a, #b, (a), (b));                      \
+  97:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return kTfLiteError;                                                 \
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 9
+
+
+  98:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }                                                                      \
+  99:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   } while (0)
+ 100:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+ 101:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 102:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_ENSURE_TYPES_EQ
+ 103:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_ENSURE_TYPES_EQ(context, a, b)                             \
+ 104:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   do {                                                                     \
+ 105:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     if ((a) != (b)) {                                                      \
+ 106:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       TF_LITE_KERNEL_LOG((context), "%s:%d %s != %s (%s != %s)", __FILE__, \
+ 107:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                          __LINE__, #a, #b, TfLiteTypeGetName(a),           \
+ 108:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                          TfLiteTypeGetName(b));                            \
+ 109:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return kTfLiteError;                                                 \
+ 110:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }                                                                      \
+ 111:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   } while (0)
+ 112:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+ 113:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 114:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifndef TF_LITE_ENSURE_NEAR
+ 115:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #define TF_LITE_ENSURE_NEAR(context, a, b, epsilon)                          \
+ 116:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   do {                                                                       \
+ 117:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     auto delta = ((a) > (b)) ? ((a) - (b)) : ((b) - (a));                    \
+ 118:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     if (delta > (epsilon)) {                                                 \
+ 119:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       TF_LITE_KERNEL_LOG((context), "%s:%d %s not near %s (%f != %f)",       \
+ 120:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                          __FILE__, __LINE__, #a, #b, static_cast<double>(a), \
+ 121:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                          static_cast<double>(b));                            \
+ 122:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return kTfLiteError;                                                   \
+ 123:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }                                                                        \
+ 124:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   } while (0)
+ 125:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+ 126:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 127:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifdef __cplusplus
+ 128:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** namespace tflite {
+ 129:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** namespace micro {
+ 130:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+ 131:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 132:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** // Synced with LiteRT (also update `TfLiteTypeGetName` in `micro_common.cc`):
+ 133:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** // https://github.com/google-ai-edge/LiteRT/blob/main/tflite/converter/core/c/tflite_types.h
+ 134:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef enum {
+ 135:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteNoType = 0,
+ 136:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteFloat32 = 1,
+ 137:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteInt32 = 2,
+ 138:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteUInt8 = 3,
+ 139:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteInt64 = 4,
+ 140:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteString = 5,
+ 141:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteBool = 6,
+ 142:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteInt16 = 7,
+ 143:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteComplex64 = 8,
+ 144:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteInt8 = 9,
+ 145:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteFloat16 = 10,
+ 146:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteFloat64 = 11,
+ 147:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteComplex128 = 12,
+ 148:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteUInt64 = 13,
+ 149:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteResource = 14,
+ 150:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteVariant = 15,
+ 151:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteUInt32 = 16,
+ 152:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteUInt16 = 17,
+ 153:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteInt4 = 18,
+ 154:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteBFloat16 = 19,
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 10
+
+
+ 155:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteInt2 = 20,
+ 156:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteUInt4 = 21,
+ 157:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteFloat8E4M3FN = 22,
+ 158:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteFloat8E5M2 = 23,
+ 159:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteType;
+ 160:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 161:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteQuantizationParams {
+ 162:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   float scale;
+ 163:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t zero_point;
+ 164:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteQuantizationParams;
+ 165:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 166:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef enum TfLiteStatus {
+ 167:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteOk = 0,
+ 168:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteError = 1,
+ 169:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteAbort = 15,
+ 170:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteStatus;
+ 171:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 172:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** // Forward declarations
+ 173:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** struct TfLiteContext;
+ 174:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteContext TfLiteContext;
+ 175:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** struct TfLiteNode;
+ 176:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteNode TfLiteNode;
+ 177:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 178:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteIntArray {
+ 179:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int size;
+ 180:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #if defined(_MSC_VER)
+ 181:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int data[1];
+ 182:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #elif (!defined(__clang__) && defined(__GNUC__) && __GNUC__ == 6 && \
+ 183:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****        __GNUC_MINOR__ >= 1) ||                                      \
+ 184:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     defined(HEXAGON) ||                                             \
+ 185:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     (defined(__clang__) && __clang_major__ == 7 && __clang_minor__ == 1)
+ 186:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int data[0];
+ 187:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #else
+ 188:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int data[];
+ 189:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+ 190:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteIntArray;
+ 191:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 192:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** size_t TfLiteIntArrayGetSizeInBytes(int size);
+ 193:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** int TfLiteIntArrayEqual(const TfLiteIntArray* a, const TfLiteIntArray* b);
+ 194:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** int TfLiteIntArrayEqualsArray(const TfLiteIntArray* a, int b_size,
+ 195:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                               const int b_data[]);
+ 196:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 197:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteFloatArray {
+ 198:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int size;
+ 199:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #if defined(_MSC_VER)
+ 200:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   float data[1];
+ 201:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #elif (!defined(__clang__) && defined(__GNUC__) && __GNUC__ == 6 && \
+ 202:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****        __GNUC_MINOR__ >= 1) ||                                      \
+ 203:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     defined(HEXAGON) ||                                             \
+ 204:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     (defined(__clang__) && __clang_major__ == 7 && __clang_minor__ == 1)
+ 205:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   float data[0];
+ 206:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #else
+ 207:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   float data[];
+ 208:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif
+ 209:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteFloatArray;
+ 210:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 211:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteComplex64 {
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 11
+
+
+ 212:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   float re, im;
+ 213:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteComplex64;
+ 214:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 215:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteComplex128 {
+ 216:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   double re, im;
+ 217:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteComplex128;
+ 218:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 219:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteFloat16 {
+ 220:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   uint16_t data;
+ 221:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteFloat16;
+ 222:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 223:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteBFloat16 {
+ 224:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   uint16_t data;
+ 225:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteBFloat16;
+ 226:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 227:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** const char* TfLiteTypeGetName(TfLiteType type);
+ 228:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 229:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** // Return the size of given type in bytes. Return 0 in case of string or
+ 230:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** // sub-byte types.
+ 231:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** int TfLiteTypeGetSize(TfLiteType type);
+ 232:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 233:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** // Return the size of given type in bits. Returns 0 in case of string.
+ 234:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** int TfLiteTypeGetSizeBits(TfLiteType type);
+ 235:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 236:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef enum TfLiteQuantizationType {
+ 237:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteNoQuantization = 0,
+ 238:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteAffineQuantization = 1,
+ 239:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteBlockwiseQuantization = 2,
+ 240:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteMultiAxisQuantization = 3,
+ 241:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteQuantizationType;
+ 242:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 243:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteQuantization {
+ 244:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteQuantizationType type;
+ 245:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   void* params;
+ 246:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteQuantization;
+ 247:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 248:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteAffineQuantization {
+ 249:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteFloatArray* scale;
+ 250:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteIntArray* zero_point;
+ 251:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t quantized_dimension;
+ 252:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteAffineQuantization;
+ 253:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 254:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteBlockwiseQuantization {
+ 255:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t scale;
+ 256:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t zero_point;
+ 257:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t blocksize;
+ 258:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t quantized_dimension;
+ 259:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteBlockwiseQuantization;
+ 260:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 261:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteMultiAxisQuantization {
+ 262:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t scales;
+ 263:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t zero_points;
+ 264:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t blocksize;
+ 265:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteIntArray* quantized_dimensions;
+ 266:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteMultiAxisQuantization;
+ 267:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 268:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef union TfLitePtrUnion {
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 12
+
+
+ 269:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t* i32;
+ 270:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   uint32_t* u32;
+ 271:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int64_t* i64;
+ 272:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   uint64_t* u64;
+ 273:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   float* f;
+ 274:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteFloat16* f16;
+ 275:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteBFloat16* bf16;
+ 276:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   double* f64;
+ 277:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   char* raw;
+ 278:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   const char* raw_const;
+ 279:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   uint8_t* uint8;
+ 280:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   bool* b;
+ 281:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int16_t* i16;
+ 282:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   uint16_t* ui16;
+ 283:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteComplex64* c64;
+ 284:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteComplex128* c128;
+ 285:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int8_t* int8;
+ 286:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   void* data;
+ 287:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLitePtrUnion;
+ 288:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 289:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef enum TfLiteAllocationType {
+ 290:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteMemNone = 0,
+ 291:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteMmapRo,
+ 292:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteArenaRw,
+ 293:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLiteArenaRwPersistent,
+ 294:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   kTfLitePersistentRo,
+ 295:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteAllocationType;
+ 296:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 297:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteTensor {
+ 298:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteQuantization quantization;
+ 299:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteQuantizationParams params;
+ 300:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLitePtrUnion data;
+ 301:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteIntArray* dims;
+ 302:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   size_t bytes;
+ 303:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteType type;
+ 304:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteAllocationType allocation_type;
+ 305:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   bool is_variable;
+ 306:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteTensor;
+ 307:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 308:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteEvalTensor {
+ 309:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLitePtrUnion data;
+ 310:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteIntArray* dims;
+ 311:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteType type;
+ 312:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteEvalTensor;
+ 313:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 314:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteNode {
+ 315:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteIntArray* inputs;
+ 316:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteIntArray* outputs;
+ 317:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteIntArray* intermediates;
+ 318:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   void* user_data;
+ 319:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   void* builtin_data;
+ 320:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   const void* custom_initial_data;
+ 321:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int custom_initial_data_size;
+ 322:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TfLiteNode;
+ 323:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 324:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** // TFLMRegistration defines the API that TFLM kernels need to implement.
+ 325:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TFLMRegistration {
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 13
+
+
+ 326:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   void* (*init)(TfLiteContext* context, const char* buffer, size_t length);
+ 327:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   void (*free)(TfLiteContext* context, void* buffer);
+ 328:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteStatus (*prepare)(TfLiteContext* context, TfLiteNode* node);
+ 329:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteStatus (*invoke)(TfLiteContext* context, TfLiteNode* node);
+ 330:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   void (*reset)(TfLiteContext* context, void* buffer);
+ 331:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   int32_t builtin_code;
+ 332:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   const char* custom_name;
+ 333:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TFLMRegistration;
+ 334:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 335:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TFLMInferenceRegistration {
+ 336:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   TfLiteStatus (*invoke)(TfLiteContext* context, TfLiteNode* node);
+ 337:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   void (*reset)(TfLiteContext* context, void* buffer);
+ 338:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** } TFLMInferenceRegistration;
+ 339:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 340:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifdef __cplusplus
+ 341:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** void* MicroContextAllocatePersistentBuffer(TfLiteContext* ctx, size_t bytes);
+ 342:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** TfLiteStatus MicroContextRequestScratchBufferInArena(TfLiteContext* ctx,
+ 343:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                                                      size_t bytes,
+ 344:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                                                      int* buffer_idx);
+ 345:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** void* MicroContextGetScratchBuffer(TfLiteContext* ctx, int buffer_idx);
+ 346:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** TfLiteEvalTensor* MicroContextGetEvalTensor(const TfLiteContext* context,
+ 347:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****                                             int tensor_idx);
+ 348:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** void MicroContextReportOpError(TfLiteContext* context, const char* format, ...);
+ 349:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #endif  // __cplusplus
+ 350:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 351:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** typedef struct TfLiteContext {
+ 352:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** #ifdef __cplusplus
+ 353:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   void* impl_ = nullptr;
+ 354:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 355:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   template <auto Fn>
+ 356:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   struct Method {
+ 357:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     using FnType = decltype(Fn);
+ 358:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     template <typename... Args>
+ 359:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     auto operator()(Args... args) const {
+ 215              		.loc 2 359 10 view .LVU43
+ 216              	.LBB38:
+ 360:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return Fn(args...);
+ 361:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }
+ 362:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     constexpr operator FnType() const noexcept { return Fn; }
+ 363:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     constexpr bool operator!=(decltype(nullptr)) const noexcept { return true; }
+ 364:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     constexpr bool operator==(decltype(nullptr)) const noexcept {
+ 365:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return false;
+ 366:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }
+ 367:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     friend constexpr bool operator!=(decltype(nullptr), Method) noexcept {
+ 368:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return true;
+ 369:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }
+ 370:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     friend constexpr bool operator==(decltype(nullptr), Method) noexcept {
+ 371:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return false;
+ 372:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     }
+ 373:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****     explicit constexpr operator bool() const noexcept { return true; }
+ 374:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   };
+ 375:lib/tflite-micro/tensorflow/lite/micro/micro_common.h **** 
+ 376:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****   static constexpr Method<&MicroContextReportOpError> ReportError{};
+ 217              		.loc 2 376 27 is_stmt 0 view .LVU44
+ 218 0060 0393     		str	r3, [sp, #12]
+ 219 0062 0292     		str	r2, [sp, #8]
+ 220 0064 094B     		ldr	r3, .L10+4
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 14
+
+
+ 221              	.LVL22:
+ 222              		.loc 2 376 27 view .LVU45
+ 223 0066 0193     		str	r3, [sp, #4]
+ 224 0068 094B     		ldr	r3, .L10+8
+ 225 006a 0093     		str	r3, [sp]
+ 226 006c 6E23     		movs	r3, #110
+ 227 006e 094A     		ldr	r2, .L10+12
+ 228              	.LVL23:
+ 229              		.loc 2 376 27 view .LVU46
+ 230 0070 0949     		ldr	r1, .L10+16
+ 231 0072 3046     		mov	r0, r6
+ 232              	.LVL24:
+ 233              		.loc 2 376 27 view .LVU47
+ 234 0074 FFF7FEFF 		bl	_ZN6tflite5micro25MicroContextReportOpErrorEPNS0_13TfLiteContextEPKcz
+ 235              	.LVL25:
+ 236              		.loc 2 376 27 view .LVU48
+ 237              	.LBE38:
+ 238              	.LBE37:
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   memcpy(output->data.raw, input->data.raw, input_byte_size);
+ 239              		.loc 1 110 3 is_stmt 1 discriminator 2 view .LVU49
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   memcpy(output->data.raw, input->data.raw, input_byte_size);
+ 240              		.loc 1 110 3 discriminator 2 view .LVU50
+ 241 0078 0123     		movs	r3, #1
+ 242 007a 1F46     		mov	r7, r3
+ 243              	.LVL26:
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   memcpy(output->data.raw, input->data.raw, input_byte_size);
+ 244              		.loc 1 110 3 is_stmt 0 view .LVU51
+ 245 007c D8E7     		b	.L5
+ 246              	.LVL27:
+ 247              	.L6:
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   memcpy(output->data.raw, input->data.raw, input_byte_size);
+ 248              		.loc 1 110 3 is_stmt 1 view .LVU52
+ 111:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   return kTfLiteOk;
+ 249              		.loc 1 111 3 view .LVU53
+ 111:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   return kTfLiteOk;
+ 250              		.loc 1 111 9 is_stmt 0 view .LVU54
+ 251 007e 2168     		ldr	r1, [r4]
+ 252 0080 2868     		ldr	r0, [r5]
+ 253              	.LVL28:
+ 111:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   return kTfLiteOk;
+ 254              		.loc 1 111 9 view .LVU55
+ 255 0082 FFF7FEFF 		bl	memcpy
+ 256              	.LVL29:
+ 112:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** }
+ 257              		.loc 1 112 3 is_stmt 1 view .LVU56
+ 112:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** }
+ 258              		.loc 1 112 10 is_stmt 0 view .LVU57
+ 259 0086 D3E7     		b	.L5
+ 260              	.L11:
+ 261              		.align	2
+ 262              	.L10:
+ 263 0088 00000000 		.word	.LC0
+ 264 008c 74000000 		.word	.LC3
+ 265 0090 88000000 		.word	.LC4
+ 266 0094 1C000000 		.word	.LC1
+ 267 0098 58000000 		.word	.LC2
+ 268              		.cfi_endproc
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 15
+
+
+ 269              	.LFE10574:
+ 271              		.section	.text._ZN6tflite5micro12_GLOBAL__N_114SqueezeContextC2EPNS0_13TfLiteContextEPNS0_10TfLite
+ 272              		.align	1
+ 273              		.syntax unified
+ 274              		.thumb
+ 275              		.thumb_func
+ 277              	_ZN6tflite5micro12_GLOBAL__N_114SqueezeContextC2EPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:
+ 278              	.LVL30:
+ 279              	.LFB10566:
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     params = reinterpret_cast<TfLiteSqueezeParams*>(node->builtin_data);
+ 280              		.loc 1 31 3 is_stmt 1 view -0
+ 281              		.cfi_startproc
+ 282              		@ args = 0, pretend = 0, frame = 0
+ 283              		@ frame_needed = 0, uses_anonymous_args = 0
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     params = reinterpret_cast<TfLiteSqueezeParams*>(node->builtin_data);
+ 284              		.loc 1 31 3 is_stmt 0 view .LVU59
+ 285 0000 38B5     		push	{r3, r4, r5, lr}
+ 286              	.LCFI5:
+ 287              		.cfi_def_cfa_offset 16
+ 288              		.cfi_offset 3, -16
+ 289              		.cfi_offset 4, -12
+ 290              		.cfi_offset 5, -8
+ 291              		.cfi_offset 14, -4
+ 292 0002 0446     		mov	r4, r0
+ 293 0004 1546     		mov	r5, r2
+ 294              	.LBB39:
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     micro_context = GetMicroContext(context);
+ 295              		.loc 1 32 5 is_stmt 1 view .LVU60
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     micro_context = GetMicroContext(context);
+ 296              		.loc 1 32 59 is_stmt 0 view .LVU61
+ 297 0006 1369     		ldr	r3, [r2, #16]
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     micro_context = GetMicroContext(context);
+ 298              		.loc 1 32 12 view .LVU62
+ 299 0008 4360     		str	r3, [r0, #4]
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     input = micro_context->AllocateTempInputTensor(node, 0);
+ 300              		.loc 1 33 5 is_stmt 1 view .LVU63
+ 301              	.LVL31:
+ 302              	.LBB40:
+ 303              	.LBI40:
+ 304              		.file 3 "lib/tflite-micro/tensorflow/lite/micro/micro_context.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** /* Copyright 2024 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #ifndef TENSORFLOW_LITE_MICRO_MICRO_CONTEXT_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #define TENSORFLOW_LITE_MICRO_MICRO_CONTEXT_H_
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 16
+
+
+  18:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include <cstddef>
+  20:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include <utility>
+  21:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include "tensorflow/lite/micro/micro_common.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include "tensorflow/lite/micro/micro_graph.h"
+  24:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include "tensorflow/lite/micro/micro_profiler_interface.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  26:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #ifdef USE_TFLM_COMPRESSION
+  27:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  28:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include "tensorflow/lite/micro/compression.h"
+  29:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  30:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #endif  // USE_TFLM_COMPRESSION
+  31:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** namespace tflite {
+  33:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** namespace micro {
+  34:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** class DecodeState;  // can't use decode_state.h due to circular include
+  36:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  37:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** // MicroContext is the API between TFLM and the kernels.
+  38:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** class MicroContext {
+  39:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****  public:
+  40:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual ~MicroContext() = default;
+  41:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  42:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Allocate persistent buffer which has the same life time as the interpreter.
+  43:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns nullptr on failure.
+  44:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The memory is allocated from the tail.
+  45:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This method is only available in Init or Prepare stage.
+  46:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* AllocatePersistentBuffer(size_t bytes) = 0;
+  47:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  48:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Request a scratch buffer in the arena through static memory planning.
+  49:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This method is only available in Prepare stage and the buffer is allocated
+  50:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // by the interpreter between Prepare and Eval stage. In Eval stage,
+  51:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // GetScratchBuffer API can be used to fetch the address.
+  52:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus RequestScratchBufferInArena(size_t bytes,
+  53:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                    int* buffer_idx) = 0;
+  54:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  55:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Get the scratch buffer pointer.
+  56:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This method is only available in Eval stage.
+  57:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* GetScratchBuffer(int buffer_idx) = 0;
+  58:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  59:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a temporary TfLiteTensor struct for a given index.
+  60:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteTensor* AllocateTempTfLiteTensor(int tensor_idx) = 0;
+  61:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  62:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a temporary TfLiteTensor struct for the specified input tensor of a
+  63:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // given mode. This is the recommended API over the deprecated
+  64:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // GetInput/GetInputSafe to get a temp input tensor. The returned tensor shall
+  65:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // be freed via calling DeallocateTempTfLiteTensor.
+  66:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   TfLiteTensor* AllocateTempInputTensor(const TfLiteNode* node, int index);
+  67:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  68:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a temporary TfLiteTensor struct for the specified output tensor of
+  69:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // a given mode. This is the recommended API over the deprecated
+  70:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // GetOutput/GetOutputSafe to get a temp output tensor. The returned tensor
+  71:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // shall be freed via calling DeallocateTempTfLiteTensor.
+  72:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   TfLiteTensor* AllocateTempOutputTensor(const TfLiteNode* node, int index);
+  73:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  74:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a temporary TfLiteTensor struct for the specified intermediate
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 17
+
+
+  75:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // tensor of a given mode. This is the recommended API over the deprecated
+  76:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // GetIntermediates/GetIntermediatesSafe to get a temp intermediate tensor.
+  77:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The returned tensor shall be freed via calling DeallocateTempTfLiteTensor.
+  78:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   TfLiteTensor* AllocateTempIntermediateTensor(const TfLiteNode* node,
+  79:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                int index);
+  80:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  81:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Deallocates a temp TfLiteTensor.
+  82:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void DeallocateTempTfLiteTensor(TfLiteTensor* tensor) = 0;
+  83:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  84:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a pointer to a temporary buffer (from the arena).
+  85:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This API is only valid from the kernel's Prepare function and
+  86:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // the buffer's lifetime is also that of the Prepare function.
+  87:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual uint8_t* AllocateTempBuffer(size_t size, size_t alignment) = 0;
+  88:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  89:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Signals that the temporary buffer is no longer needed.
+  90:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void DeallocateTempBuffer(uint8_t* buffer) = 0;
+  91:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  92:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a TfLiteEvalTensor struct for a given index.
+  93:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteEvalTensor* GetEvalTensor(int tensor_idx) = 0;
+  94:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  95:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Does not take ownership of the pointer and the pointer must refer to valid
+  96:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // an object that outlive this class instance.
+  97:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This can only be called once to set one external context.
+  98:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus set_external_context(void* external_context_payload) = 0;
+  99:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 100:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* external_context() = 0;
+ 101:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 102:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual MicroGraph& graph() = 0;
+ 103:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 104:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #ifdef USE_TFLM_COMPRESSION
+ 105:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 106:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Available during Prepare & Eval. Returns false if tensor is not
+ 107:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // compressed.
+ 108:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual bool IsTensorCompressed(const TfLiteNode* node, int tensor_idx) = 0;
+ 109:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 110:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Only available during Prepare. The kernel is responsible for storing the
+ 111:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // scratch buffer handle.
+ 112:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual int AllocateDecompressionScratchBuffer(const TfLiteNode* node,
+ 113:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                  int tensor_idx) = 0;
+ 114:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 115:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Available during Prepare & Eval. Returns nullptr if tensor is not
+ 116:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // compressed.
+ 117:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual const CompressionTensorData* GetTensorCompressionData(
+ 118:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const TfLiteNode* node, int tensor_idx) = 0;
+ 119:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 120:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Only available during Prepare & Eval. Returns nullptr on failure, otherwise
+ 121:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // returns a pointer to the buffer.
+ 122:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* DecompressTensorToBuffer(
+ 123:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const TfLiteEvalTensor& tensor,
+ 124:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const CompressionTensorData& compression_data, void* buffer);
+ 125:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 126:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #endif  // USE_TFLM_COMPRESSION
+ 127:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 128:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Used for configuring alternate decompression memory
+ 129:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   struct AlternateMemoryRegion {
+ 130:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     void* address;
+ 131:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     size_t bytes;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 18
+
+
+ 132:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   };
+ 133:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 134:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Set the alternate decompression memory regions.
+ 135:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Can only be called during the kInit state.
+ 136:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus SetDecompressionMemory(
+ 137:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const AlternateMemoryRegion* regions, size_t count);
+ 138:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 139:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Return a pointer to memory that can be used for decompression.
+ 140:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The pointer will be aligned to the <alignment> value.
+ 141:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Return nullptr if the requested size is not available.
+ 142:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Can be called during kPrepare state.
+ 143:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* AllocateDecompressionMemory(size_t bytes, size_t alignment);
+ 144:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 145:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Reset all allocation tracking.
+ 146:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Can be called during kPrepare state.
+ 147:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void ResetDecompressionMemoryAllocations();
+ 148:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 149:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Set the alternate MicroProfilerInterface.
+ 150:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This can be used to profile subsystems simultaneously with the profiling
+ 151:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // of kernels during the Eval phase.  See (b/379584353).
+ 152:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The alternate MicroProfilerInterface is currently used by the tensor
+ 153:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // decompression subsystem.
+ 154:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus SetAlternateProfiler(
+ 155:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       MicroProfilerInterface* alt_profiler) {
+ 156:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     return kTfLiteError;
+ 157:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   }
+ 158:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 159:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Get the alternate MicroProfilerInterface.
+ 160:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This can be used to profile subsystems simultaneously with the profiling
+ 161:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // of kernels during the Eval phase.  See (b/379584353).
+ 162:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The alternate MicroProfilerInterface is currently used by the tensor
+ 163:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // decompression subsystem.
+ 164:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual MicroProfilerInterface* GetAlternateProfiler() const {
+ 165:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     return nullptr;
+ 166:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   }
+ 167:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 168:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   struct CustomDecodeRegistration {
+ 169:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     tflite::micro::DecodeState* (*create_state)(const CustomDecodeRegistration&,
+ 170:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                 const TfLiteContext&,
+ 171:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                 MicroProfilerInterface*);
+ 172:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     uint8_t type;  // custom decode type
+ 173:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   };
+ 174:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 175:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Set the DECODE operator custom registrations.
+ 176:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Can only be called during the kInit state.
+ 177:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus SetCustomDecodeRegistrations(
+ 178:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const CustomDecodeRegistration* registrations, size_t count);
+ 179:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 180:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Get the custom DECODE operator registrations.
+ 181:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   std::pair<const CustomDecodeRegistration*, size_t /*count*/>
+ 182:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   GetCustomDecodeRegistrations() const {
+ 183:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     return std::make_pair(custom_decode_registrations_,
+ 184:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                           custom_decode_registrations_size_);
+ 185:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   }
+ 186:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 187:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Initializes the TfLiteContext impl_ pointer to bind to this MicroContext
+ 188:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // instance.
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 19
+
+
+ 189:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   void InitTfLiteContext(TfLiteContext* context);
+ 190:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 191:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****  private:
+ 192:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   const AlternateMemoryRegion* decompress_regions_ = nullptr;
+ 193:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   size_t decompress_regions_size_ = 0;
+ 194:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // array of size_t elements with length equal to decompress_regions_size_
+ 195:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   size_t* decompress_regions_allocations_ = nullptr;
+ 196:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 197:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   const CustomDecodeRegistration* custom_decode_registrations_ = nullptr;
+ 198:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   size_t custom_decode_registrations_size_ = 0;
+ 199:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 200:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   TF_LITE_REMOVE_VIRTUAL_DELETE
+ 201:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** };
+ 202:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 203:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** inline MicroContext* GetMicroContext(const TfLiteContext* context) {
+ 305              		.loc 3 203 22 view .LVU64
+ 306              	.LBB41:
+ 204:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   return reinterpret_cast<MicroContext*>(context->impl_);
+ 307              		.loc 3 204 3 view .LVU65
+ 308              		.loc 3 204 56 is_stmt 0 view .LVU66
+ 309 000a 0868     		ldr	r0, [r1]
+ 310              	.LVL32:
+ 311              		.loc 3 204 56 view .LVU67
+ 312              	.LBE41:
+ 313              	.LBE40:
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     input = micro_context->AllocateTempInputTensor(node, 0);
+ 314              		.loc 1 33 19 discriminator 1 view .LVU68
+ 315 000c 2060     		str	r0, [r4]
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     output = micro_context->AllocateTempOutputTensor(node, 0);
+ 316              		.loc 1 34 5 is_stmt 1 view .LVU69
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     output = micro_context->AllocateTempOutputTensor(node, 0);
+ 317              		.loc 1 34 51 is_stmt 0 view .LVU70
+ 318 000e 0022     		movs	r2, #0
+ 319              	.LVL33:
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     output = micro_context->AllocateTempOutputTensor(node, 0);
+ 320              		.loc 1 34 51 view .LVU71
+ 321 0010 2946     		mov	r1, r5
+ 322              	.LVL34:
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     output = micro_context->AllocateTempOutputTensor(node, 0);
+ 323              		.loc 1 34 51 view .LVU72
+ 324 0012 FFF7FEFF 		bl	_ZN6tflite5micro12MicroContext23AllocateTempInputTensorEPKNS0_10TfLiteNodeEi
+ 325              	.LVL35:
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     output = micro_context->AllocateTempOutputTensor(node, 0);
+ 326              		.loc 1 34 11 discriminator 1 view .LVU73
+ 327 0016 A060     		str	r0, [r4, #8]
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+ 328              		.loc 1 35 5 is_stmt 1 view .LVU74
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+ 329              		.loc 1 35 53 is_stmt 0 view .LVU75
+ 330 0018 0022     		movs	r2, #0
+ 331 001a 2946     		mov	r1, r5
+ 332 001c 2068     		ldr	r0, [r4]
+ 333 001e FFF7FEFF 		bl	_ZN6tflite5micro12MicroContext24AllocateTempOutputTensorEPKNS0_10TfLiteNodeEi
+ 334              	.LVL36:
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   }
+ 335              		.loc 1 35 12 discriminator 1 view .LVU76
+ 336 0022 E060     		str	r0, [r4, #12]
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 20
+
+
+ 337              	.LBE39:
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   ~SqueezeContext() {
+ 338              		.loc 1 36 3 view .LVU77
+ 339 0024 2046     		mov	r0, r4
+ 340 0026 38BD     		pop	{r3, r4, r5, pc}
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   ~SqueezeContext() {
+ 341              		.loc 1 36 3 view .LVU78
+ 342              		.cfi_endproc
+ 343              	.LFE10566:
+ 345              		.thumb_set _ZN6tflite5micro12_GLOBAL__N_114SqueezeContextC1EPNS0_13TfLiteContextEPNS0_10TfLiteNode
+ 346              		.section	.rodata._ZN6tflite5micro12_GLOBAL__N_1L14SqueezePrepareEPNS0_13TfLiteContextEPNS0_10TfLit
+ 347              		.align	2
+ 348              	.LC5:
+ 349 0000 3100     		.ascii	"1\000"
+ 350 0002 0000     		.align	2
+ 351              	.LC6:
+ 352 0004 4E756D49 		.ascii	"NumInputs(node)\000"
+ 352      6E707574 
+ 352      73286E6F 
+ 352      64652900 
+ 353              		.align	2
+ 354              	.LC7:
+ 355 0014 4E756D4F 		.ascii	"NumOutputs(node)\000"
+ 355      75747075 
+ 355      7473286E 
+ 355      6F646529 
+ 355      00
+ 356 0025 000000   		.align	2
+ 357              	.LC8:
+ 358 0028 25733A25 		.ascii	"%s:%d %s was not true.\000"
+ 358      64202573 
+ 358      20776173 
+ 358      206E6F74 
+ 358      20747275 
+ 359 003f 00       		.align	2
+ 360              	.LC9:
+ 361 0040 696E7075 		.ascii	"input_num_dims <= max_squeeze_dims\000"
+ 361      745F6E75 
+ 361      6D5F6469 
+ 361      6D73203C 
+ 361      3D206D61 
+ 362 0063 00       		.align	2
+ 363              	.LC10:
+ 364 0064 63757272 		.ascii	"current >= 0 && current < input_num_dims && input_d"
+ 364      656E7420 
+ 364      3E3D2030 
+ 364      20262620 
+ 364      63757272 
+ 365 0097 696D732D 		.ascii	"ims->data[current] == 1\000"
+ 365      3E646174 
+ 365      615B6375 
+ 365      7272656E 
+ 365      745D203D 
+ 366 00af 00       		.align	2
+ 367              	.LC11:
+ 368 00b0 6F75745F 		.ascii	"out_idx < output_dims->size && output_dims->data[ou"
+ 368      69647820 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 21
+
+
+ 368      3C206F75 
+ 368      74707574 
+ 368      5F64696D 
+ 369 00e3 745F6964 		.ascii	"t_idx] >= input_dims->data[in_idx]\000"
+ 369      785D203E 
+ 369      3D20696E 
+ 369      7075745F 
+ 369      64696D73 
+ 370              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L14SqueezePrepareEPNS0_13TfLiteContextEPNS0_10TfLiteN
+ 371              		.align	1
+ 372              		.syntax unified
+ 373              		.thumb
+ 374              		.thumb_func
+ 376              	_ZN6tflite5micro12_GLOBAL__N_1L14SqueezePrepareEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:
+ 377              	.LVL37:
+ 378              	.LFB10571:
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumInputs(node), 1);
+ 379              		.loc 1 47 71 is_stmt 1 view -0
+ 380              		.cfi_startproc
+ 381              		@ args = 0, pretend = 0, frame = 24
+ 382              		@ frame_needed = 0, uses_anonymous_args = 0
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumInputs(node), 1);
+ 383              		.loc 1 47 71 is_stmt 0 view .LVU80
+ 384 0000 70B5     		push	{r4, r5, r6, lr}
+ 385              	.LCFI6:
+ 386              		.cfi_def_cfa_offset 16
+ 387              		.cfi_offset 4, -16
+ 388              		.cfi_offset 5, -12
+ 389              		.cfi_offset 6, -8
+ 390              		.cfi_offset 14, -4
+ 391 0002 8AB0     		sub	sp, sp, #40
+ 392              	.LCFI7:
+ 393              		.cfi_def_cfa_offset 56
+ 394 0004 0546     		mov	r5, r0
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
+ 395              		.loc 1 48 3 is_stmt 1 view .LVU81
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
+ 396              		.loc 1 48 3 view .LVU82
+ 397              	.LVL38:
+ 398              	.LBB42:
+ 399              	.LBI42:
+ 400              		.file 4 "lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** /* Copyright 2024 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 22
+
+
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_KERNEL_UTIL_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_KERNEL_UTIL_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include <cstddef>
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include <cstdint>
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include <initializer_list>
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include <limits>
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/builtin_op_data.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/compatibility.h"
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/kernels/internal/types.h"
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/micro_common.h"
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/micro_context.h"
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #ifdef USE_TFLM_COMPRESSION
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/micro_arena_constants.h"
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/micro_utils.h"
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #endif  // USE_TFLM_COMPRESSION
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** namespace tflite {
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** namespace micro {
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TFLMRegistration RegisterOp(
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     void* (*init)(TfLiteContext* context, const char* buffer, size_t length),
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     TfLiteStatus (*prepare)(TfLiteContext* context, TfLiteNode* node),
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     TfLiteStatus (*invoke)(TfLiteContext* context, TfLiteNode* node),
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     void (*free)(TfLiteContext* context, void* buffer) = nullptr,
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     void (*reset)(TfLiteContext* context, void* buffer) = nullptr);
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TFLMInferenceRegistration RegisterOp(
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     TfLiteStatus (*invoke)(TfLiteContext* context, TfLiteNode* node),
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     void (*reset)(TfLiteContext* context, void* buffer) = nullptr);
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Prints out n bytes in a int8_t buffer as hex
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** void PrintNBytes(const int8_t* tensor_data, int n_bytes,
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                  const char* prefix = nullptr);
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Prints out the n bytes in a TfLiteEvalTensor as hex
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** void PrintNBytes(const TfLiteEvalTensor* tensor, int n_bytes,
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                  const char* prefix = nullptr);
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Prints out n bytes in a TfLiteTensor as hex
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** void PrintNBytes(const TfLiteTensor* tensor, int n_bytes,
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                  const char* prefix = nullptr);
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns a mutable tensor for a given input index. is_variable must be checked
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // during prepare when the full TfLiteTensor is available.
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteEvalTensor* GetMutableEvalInput(const TfLiteContext* context,
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                       const TfLiteNode* node, int index);
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns the TfLiteEvalTensor struct for a given input index in a node.
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** const TfLiteEvalTensor* GetEvalInput(const TfLiteContext* context,
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                      const TfLiteNode* node, int index);
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 23
+
+
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns the TfLiteEvalTensor struct for a given output index in a node.
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteEvalTensor* GetEvalOutput(const TfLiteContext* context,
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                 const TfLiteNode* node, int index);
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns data for a TfLiteEvalTensor struct that are expected to exist.
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** template <typename T>
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** T* GetTensorData(TfLiteEvalTensor* tensor) {
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<T*>(tensor->data.raw);
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns const data for a TfLiteEvalTensor struct that are expected to exist.
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** template <typename T>
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** const T* GetTensorData(const TfLiteEvalTensor* tensor) {
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<const T*>(tensor->data.raw);
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns data for a TfLiteEvalTensor struct that could be null.
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** template <typename T>
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** T* GetOptionalTensorData(TfLiteEvalTensor* tensor) {
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return tensor == nullptr ? nullptr : reinterpret_cast<T*>(tensor->data.raw);
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns const data for a TfLiteEvalTensor struct that could be null.
+  98:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** template <typename T>
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** const T* GetOptionalTensorData(const TfLiteEvalTensor* tensor) {
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return tensor == nullptr ? nullptr
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                            : reinterpret_cast<const T*>(tensor->data.raw);
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+ 103:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 104:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #ifdef USE_TFLM_COMPRESSION
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 106:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Overloads existing GetOptionalTensorData. If not compressed, this will return
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // tensor->data.
+ 108:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** template <typename T>
+ 109:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** const T* GetOptionalTensorData(MicroContext* micro_context,
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                const TfLiteEvalTensor* tensor,
+ 111:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                const CompressionTensorData* compression_data,
+ 112:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                int scratch_buffer_handle) {
+ 113:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   if (tensor == nullptr) {
+ 114:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     return nullptr;
+ 115:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   }
+ 116:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   if (compression_data == nullptr) {
+ 117:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     return reinterpret_cast<const T*>(tensor->data.data);
+ 118:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   }
+ 119:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 120:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   void* scratch_buffer = nullptr;
+ 121:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   if (scratch_buffer_handle != -1) {
+ 122:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     scratch_buffer = micro_context->GetScratchBuffer(scratch_buffer_handle);
+ 123:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   } else {
+ 124:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     size_t bytes_to_allocate = EvalTensorBytes(tensor);
+ 125:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     scratch_buffer = micro_context->AllocateDecompressionMemory(
+ 126:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****         bytes_to_allocate, MicroArenaBufferAlignment());
+ 127:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   }
+ 128:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(scratch_buffer != nullptr);
+ 129:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   void* uncompressed_data = micro_context->DecompressTensorToBuffer(
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 24
+
+
+ 130:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****       *tensor, *compression_data, scratch_buffer);
+ 131:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<const T*>(uncompressed_data);
+ 132:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+ 133:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 134:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Overloads existing GetTensorData. If not compressed, this will return
+ 135:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // tensor->data.
+ 136:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** template <typename T>
+ 137:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** const T* GetTensorData(MicroContext* micro_context,
+ 138:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                        const TfLiteEvalTensor* tensor,
+ 139:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                        const CompressionTensorData* compression_data,
+ 140:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                        int scratch_buffer_handle) {
+ 141:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 142:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return GetOptionalTensorData<T>(micro_context, tensor, compression_data,
+ 143:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                   scratch_buffer_handle);
+ 144:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+ 145:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 146:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #endif  // USE_TFLM_COMPRESSION
+ 147:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 148:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns the shape of a TfLiteEvalTensor struct.
+ 149:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** const RuntimeShape GetTensorShape(const TfLiteEvalTensor* tensor);
+ 150:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 151:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Return true if the given tensors have the same shape.
+ 152:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** bool HaveSameShapes(const TfLiteEvalTensor* input1,
+ 153:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                     const TfLiteEvalTensor* input2);
+ 154:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 155:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** PaddingType RuntimePaddingType(TfLitePadding padding);
+ 156:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 157:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Relocate tensor dims from FlatBuffer to the persistent storage arena.
+ 158:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // The old dims data is copied to the new storage area.
+ 159:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // The tensor and eval_tensor must be the same tensor.
+ 160:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Only use during Prepare phase.
+ 161:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteStatus CreateWritableTensorDimsWithCopy(TfLiteContext* context,
+ 162:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                               TfLiteTensor* tensor,
+ 163:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                               TfLiteEvalTensor* eval_tensor);
+ 164:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 165:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Copy all op input tensors to op output tensors. Requires all op input tensor
+ 166:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // shapes and types to be identical to op output tensor shapes and types.
+ 167:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteStatus CopyOpInputsToOpOutputs(TfLiteContext* context, TfLiteNode* node);
+ 168:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 169:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Copy all op input tensors to subgraph input tensors. Requires all op input
+ 170:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // tensor shapes and types to be identical to subgraph input tensor shapes and
+ 171:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // types.
+ 172:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteStatus CopyOpInputsToSubgraphInputs(TfLiteContext* context,
+ 173:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                           TfLiteNode* node,
+ 174:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                           MicroGraph* graph_info,
+ 175:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                           int subgraph_idx,
+ 176:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                           int first_tensor_idx);
+ 177:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 178:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Copy all op output tensors to subgraph input tensors. Requires all op output
+ 179:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // tensor shapes and types to be identical to subgraph input tensor shapes and
+ 180:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // types.
+ 181:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteStatus CopyOpOutputsToSubgraphInputs(TfLiteContext* context,
+ 182:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                            TfLiteNode* node,
+ 183:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                            MicroGraph* graph_info,
+ 184:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                            int subgraph_idx);
+ 185:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 186:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Copy all subgraph output tensors to op outputs. Requires all subgraph output
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 25
+
+
+ 187:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // tensor shapes and types to be identical to op output tensor shapes and types.
+ 188:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteStatus CopySubgraphOutputsToOpOutputs(TfLiteContext* context,
+ 189:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                             TfLiteNode* node,
+ 190:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                             MicroGraph* graph_info,
+ 191:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                             int subgraph_idx);
+ 192:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 193:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // If tensor is INT4, make a new TfLiteEvalTensor with data unpacked into
+ 194:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // a scratch buffer. The returned tensor will have the kTfLiteInt8 type.
+ 195:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Assume scratch buffer is previously requested in Prepare, and
+ 196:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // scratch_buffer_index can be used to retrieve that buffer.
+ 197:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // If the tensor is not INT4, a shallow copy is returned.
+ 198:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteEvalTensor MakeUnpackedInt4Tensor(TfLiteContext* context,
+ 199:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                         int scratch_buffer_index,
+ 200:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                         const TfLiteEvalTensor* tensor);
+ 201:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 202:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** inline int NumDimensions(const TfLiteTensor* t) { return t->dims->size; }
+ 203:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** inline int SizeOfDimension(const TfLiteTensor* t, int dim) {
+ 204:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return t->dims->data[dim];
+ 205:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+ 206:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 207:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** inline int NumInputs(const TfLiteNode* node) {
+ 401              		.loc 4 207 12 view .LVU83
+ 402              	.LBB43:
+ 208:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return node->inputs == nullptr ? 0 : node->inputs->size;
+ 403              		.loc 4 208 3 view .LVU84
+ 404              		.loc 4 208 16 is_stmt 0 view .LVU85
+ 405 0006 0B68     		ldr	r3, [r1]
+ 406              		.loc 4 208 34 view .LVU86
+ 407 0008 13B1     		cbz	r3, .L15
+ 408              		.loc 4 208 54 discriminator 1 view .LVU87
+ 409 000a 1A68     		ldr	r2, [r3]
+ 410              	.LVL39:
+ 411              		.loc 4 208 54 discriminator 1 view .LVU88
+ 412              	.LBE43:
+ 413              	.LBE42:
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
+ 414              		.loc 1 48 3 discriminator 1 view .LVU89
+ 415 000c 012A     		cmp	r2, #1
+ 416 000e 13D0     		beq	.L16
+ 417              	.L15:
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
+ 418              		.loc 1 48 3 is_stmt 1 discriminator 2 view .LVU90
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
+ 419              		.loc 1 48 3 discriminator 2 view .LVU91
+ 420              	.LVL40:
+ 421              	.LBB44:
+ 422              	.LBI44:
+ 207:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return node->inputs == nullptr ? 0 : node->inputs->size;
+ 423              		.loc 4 207 12 view .LVU92
+ 424              	.LBB45:
+ 425              		.loc 4 208 3 view .LVU93
+ 426              		.loc 4 208 34 is_stmt 0 view .LVU94
+ 427 0010 03B1     		cbz	r3, .L17
+ 428              		.loc 4 208 54 discriminator 1 view .LVU95
+ 429 0012 1B68     		ldr	r3, [r3]
+ 430              	.L17:
+ 431              	.LVL41:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 26
+
+
+ 432              		.loc 4 208 54 discriminator 1 view .LVU96
+ 433              	.LBE45:
+ 434              	.LBE44:
+ 435              	.LBB46:
+ 436              	.LBI46:
+ 359:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return Fn(args...);
+ 437              		.loc 2 359 10 is_stmt 1 view .LVU97
+ 438              	.LBB47:
+ 439              		.loc 2 376 27 is_stmt 0 view .LVU98
+ 440 0014 0122     		movs	r2, #1
+ 441 0016 0392     		str	r2, [sp, #12]
+ 442 0018 0293     		str	r3, [sp, #8]
+ 443 001a 534B     		ldr	r3, .L44
+ 444              	.LVL42:
+ 445              		.loc 2 376 27 view .LVU99
+ 446 001c 0193     		str	r3, [sp, #4]
+ 447 001e 534B     		ldr	r3, .L44+4
+ 448 0020 0093     		str	r3, [sp]
+ 449 0022 3023     		movs	r3, #48
+ 450 0024 524A     		ldr	r2, .L44+8
+ 451 0026 5349     		ldr	r1, .L44+12
+ 452              	.LVL43:
+ 453              		.loc 2 376 27 view .LVU100
+ 454 0028 2846     		mov	r0, r5
+ 455              	.LVL44:
+ 456              		.loc 2 376 27 view .LVU101
+ 457 002a FFF7FEFF 		bl	_ZN6tflite5micro25MicroContextReportOpErrorEPNS0_13TfLiteContextEPKcz
+ 458              	.LVL45:
+ 459              		.loc 2 376 27 view .LVU102
+ 460              	.LBE47:
+ 461              	.LBE46:
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
+ 462              		.loc 1 48 3 is_stmt 1 discriminator 4 view .LVU103
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
+ 463              		.loc 1 48 3 discriminator 4 view .LVU104
+ 464 002e 0123     		movs	r3, #1
+ 465 0030 1C46     		mov	r4, r3
+ 466              	.L18:
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 467              		.loc 1 91 1 is_stmt 0 view .LVU105
+ 468 0032 2046     		mov	r0, r4
+ 469 0034 0AB0     		add	sp, sp, #40
+ 470              	.LCFI8:
+ 471              		.cfi_remember_state
+ 472              		.cfi_def_cfa_offset 16
+ 473              		@ sp needed
+ 474 0036 70BD     		pop	{r4, r5, r6, pc}
+ 475              	.LVL46:
+ 476              	.L16:
+ 477              	.LCFI9:
+ 478              		.cfi_restore_state
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE_EQ(context, NumOutputs(node), 1);
+ 479              		.loc 1 48 3 is_stmt 1 view .LVU106
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 480              		.loc 1 49 3 view .LVU107
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 481              		.loc 1 49 3 view .LVU108
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 27
+
+
+ 482              	.LBB48:
+ 483              	.LBI48:
+ 209:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+ 210:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** inline int NumOutputs(const TfLiteNode* node) {
+ 484              		.loc 4 210 12 view .LVU109
+ 485              	.LBB49:
+ 211:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return node->outputs == nullptr ? 0 : node->outputs->size;
+ 486              		.loc 4 211 3 view .LVU110
+ 487              		.loc 4 211 16 is_stmt 0 view .LVU111
+ 488 0038 4B68     		ldr	r3, [r1, #4]
+ 489              		.loc 4 211 35 view .LVU112
+ 490 003a 13B1     		cbz	r3, .L19
+ 491              		.loc 4 211 56 discriminator 1 view .LVU113
+ 492 003c 1A68     		ldr	r2, [r3]
+ 493              	.LVL47:
+ 494              		.loc 4 211 56 discriminator 1 view .LVU114
+ 495              	.LBE49:
+ 496              	.LBE48:
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 497              		.loc 1 49 3 discriminator 1 view .LVU115
+ 498 003e 012A     		cmp	r2, #1
+ 499 0040 11D0     		beq	.L20
+ 500              	.L19:
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 501              		.loc 1 49 3 is_stmt 1 discriminator 2 view .LVU116
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 502              		.loc 1 49 3 discriminator 2 view .LVU117
+ 503              	.LVL48:
+ 504              	.LBB50:
+ 505              	.LBI50:
+ 210:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return node->outputs == nullptr ? 0 : node->outputs->size;
+ 506              		.loc 4 210 12 view .LVU118
+ 507              	.LBB51:
+ 508              		.loc 4 211 3 view .LVU119
+ 509              		.loc 4 211 35 is_stmt 0 view .LVU120
+ 510 0042 03B1     		cbz	r3, .L21
+ 511              		.loc 4 211 56 discriminator 1 view .LVU121
+ 512 0044 1B68     		ldr	r3, [r3]
+ 513              	.L21:
+ 514              	.LVL49:
+ 515              		.loc 4 211 56 discriminator 1 view .LVU122
+ 516              	.LBE51:
+ 517              	.LBE50:
+ 518              	.LBB52:
+ 519              	.LBI52:
+ 359:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return Fn(args...);
+ 520              		.loc 2 359 10 is_stmt 1 view .LVU123
+ 521              	.LBB53:
+ 522              		.loc 2 376 27 is_stmt 0 view .LVU124
+ 523 0046 0122     		movs	r2, #1
+ 524 0048 0392     		str	r2, [sp, #12]
+ 525 004a 0293     		str	r3, [sp, #8]
+ 526 004c 464B     		ldr	r3, .L44
+ 527              	.LVL50:
+ 528              		.loc 2 376 27 view .LVU125
+ 529 004e 0193     		str	r3, [sp, #4]
+ 530 0050 494B     		ldr	r3, .L44+16
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 28
+
+
+ 531 0052 0093     		str	r3, [sp]
+ 532 0054 3123     		movs	r3, #49
+ 533 0056 464A     		ldr	r2, .L44+8
+ 534 0058 4649     		ldr	r1, .L44+12
+ 535              	.LVL51:
+ 536              		.loc 2 376 27 view .LVU126
+ 537 005a 2846     		mov	r0, r5
+ 538              	.LVL52:
+ 539              		.loc 2 376 27 view .LVU127
+ 540 005c FFF7FEFF 		bl	_ZN6tflite5micro25MicroContextReportOpErrorEPNS0_13TfLiteContextEPKcz
+ 541              	.LVL53:
+ 542              		.loc 2 376 27 view .LVU128
+ 543              	.LBE53:
+ 544              	.LBE52:
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 545              		.loc 1 49 3 is_stmt 1 discriminator 4 view .LVU129
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 546              		.loc 1 49 3 discriminator 4 view .LVU130
+ 547 0060 0123     		movs	r3, #1
+ 548 0062 1C46     		mov	r4, r3
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 549              		.loc 1 49 3 is_stmt 0 view .LVU131
+ 550 0064 E5E7     		b	.L18
+ 551              	.LVL54:
+ 552              	.L20:
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 553              		.loc 1 49 3 is_stmt 1 view .LVU132
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int input_num_dims = NumDimensions(op_context.input);
+ 554              		.loc 1 51 3 view .LVU133
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int input_num_dims = NumDimensions(op_context.input);
+ 555              		.loc 1 51 42 is_stmt 0 view .LVU134
+ 556 0066 0A46     		mov	r2, r1
+ 557 0068 0146     		mov	r1, r0
+ 558              	.LVL55:
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int input_num_dims = NumDimensions(op_context.input);
+ 559              		.loc 1 51 42 view .LVU135
+ 560 006a 06A8     		add	r0, sp, #24
+ 561              	.LVL56:
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int input_num_dims = NumDimensions(op_context.input);
+ 562              		.loc 1 51 42 view .LVU136
+ 563 006c FFF7FEFF 		bl	_ZN6tflite5micro12_GLOBAL__N_114SqueezeContextC1EPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ 564              	.LVL57:
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int num_squeeze_dims = op_context.params->num_squeeze_dims;
+ 565              		.loc 1 52 3 is_stmt 1 view .LVU137
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int num_squeeze_dims = op_context.params->num_squeeze_dims;
+ 566              		.loc 1 52 55 is_stmt 0 view .LVU138
+ 567 0070 089B     		ldr	r3, [sp, #32]
+ 568              	.LVL58:
+ 569              	.LBB54:
+ 570              	.LBI54:
+ 202:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** inline int SizeOfDimension(const TfLiteTensor* t, int dim) {
+ 571              		.loc 4 202 12 is_stmt 1 view .LVU139
+ 572              	.LBB55:
+ 202:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** inline int SizeOfDimension(const TfLiteTensor* t, int dim) {
+ 573              		.loc 4 202 51 view .LVU140
+ 202:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** inline int SizeOfDimension(const TfLiteTensor* t, int dim) {
+ 574              		.loc 4 202 61 is_stmt 0 view .LVU141
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 29
+
+
+ 575 0072 D3F814C0 		ldr	ip, [r3, #20]
+ 202:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** inline int SizeOfDimension(const TfLiteTensor* t, int dim) {
+ 576              		.loc 4 202 67 view .LVU142
+ 577 0076 DCF80010 		ldr	r1, [ip]
+ 578              	.LVL59:
+ 202:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** inline int SizeOfDimension(const TfLiteTensor* t, int dim) {
+ 579              		.loc 4 202 67 view .LVU143
+ 580              	.LBE55:
+ 581              	.LBE54:
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 582              		.loc 1 53 3 is_stmt 1 view .LVU144
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 583              		.loc 1 53 43 is_stmt 0 view .LVU145
+ 584 007a 079B     		ldr	r3, [sp, #28]
+ 585 007c 1E46     		mov	r6, r3
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 586              		.loc 1 53 13 view .LVU146
+ 587 007e 1A6A     		ldr	r2, [r3, #32]
+ 588              	.LVL60:
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const TfLiteIntArray* output_dims = op_context.output->dims;
+ 589              		.loc 1 56 3 is_stmt 1 view .LVU147
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int32_t* squeeze_dims = op_context.params->squeeze_dims;
+ 590              		.loc 1 57 3 view .LVU148
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int32_t* squeeze_dims = op_context.params->squeeze_dims;
+ 591              		.loc 1 57 50 is_stmt 0 view .LVU149
+ 592 0080 099B     		ldr	r3, [sp, #36]
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   const int32_t* squeeze_dims = op_context.params->squeeze_dims;
+ 593              		.loc 1 57 25 view .LVU150
+ 594 0082 D3F814E0 		ldr	lr, [r3, #20]
+ 595              	.LVL61:
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 596              		.loc 1 58 3 is_stmt 1 view .LVU151
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   TF_LITE_ENSURE(context, input_num_dims <= max_squeeze_dims);
+ 597              		.loc 1 60 3 view .LVU152
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   bool should_squeeze[max_squeeze_dims] = {};
+ 598              		.loc 1 61 3 view .LVU153
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   bool should_squeeze[max_squeeze_dims] = {};
+ 599              		.loc 1 61 3 view .LVU154
+ 600 0086 0829     		cmp	r1, #8
+ 601 0088 05DC     		bgt	.L41
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   bool should_squeeze[max_squeeze_dims] = {};
+ 602              		.loc 1 61 3 view .LVU155
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 603              		.loc 1 62 3 view .LVU156
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 604              		.loc 1 62 8 is_stmt 0 view .LVU157
+ 605 008a 0023     		movs	r3, #0
+ 606 008c 0493     		str	r3, [sp, #16]
+ 607 008e 0593     		str	r3, [sp, #20]
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     for (int idx = 0; idx < input_num_dims; ++idx) {
+ 608              		.loc 1 64 3 is_stmt 1 view .LVU158
+ 609              	.LBB56:
+ 610 0090 9AB1     		cbz	r2, .L24
+ 611              	.LBB57:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       int current = squeeze_dims[idx] < 0 ? squeeze_dims[idx] + input_num_dims
+ 612              		.loc 1 71 14 is_stmt 0 view .LVU159
+ 613 0092 1846     		mov	r0, r3
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 30
+
+
+ 614 0094 29E0     		b	.L25
+ 615              	.L41:
+ 616              	.LBE57:
+ 617              	.LBE56:
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   bool should_squeeze[max_squeeze_dims] = {};
+ 618              		.loc 1 61 3 is_stmt 1 discriminator 1 view .LVU160
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   bool should_squeeze[max_squeeze_dims] = {};
+ 619              		.loc 1 61 3 discriminator 1 view .LVU161
+ 620              	.LVL62:
+ 621              	.LBB64:
+ 622              	.LBI64:
+ 359:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return Fn(args...);
+ 623              		.loc 2 359 10 view .LVU162
+ 624              	.LBB65:
+ 625              		.loc 2 376 27 is_stmt 0 view .LVU163
+ 626 0096 394B     		ldr	r3, .L44+20
+ 627 0098 0093     		str	r3, [sp]
+ 628 009a 3D23     		movs	r3, #61
+ 629 009c 344A     		ldr	r2, .L44+8
+ 630              	.LVL63:
+ 631              		.loc 2 376 27 view .LVU164
+ 632 009e 3849     		ldr	r1, .L44+24
+ 633              	.LVL64:
+ 634              		.loc 2 376 27 view .LVU165
+ 635 00a0 2846     		mov	r0, r5
+ 636 00a2 FFF7FEFF 		bl	_ZN6tflite5micro25MicroContextReportOpErrorEPNS0_13TfLiteContextEPKcz
+ 637              	.LVL65:
+ 638              		.loc 2 376 27 view .LVU166
+ 639              	.LBE65:
+ 640              	.LBE64:
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   bool should_squeeze[max_squeeze_dims] = {};
+ 641              		.loc 1 61 3 is_stmt 1 discriminator 2 view .LVU167
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   bool should_squeeze[max_squeeze_dims] = {};
+ 642              		.loc 1 61 3 discriminator 2 view .LVU168
+ 643 00a6 0123     		movs	r3, #1
+ 644 00a8 1C46     		mov	r4, r3
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   bool should_squeeze[max_squeeze_dims] = {};
+ 645              		.loc 1 61 3 is_stmt 0 view .LVU169
+ 646 00aa 30E0     		b	.L23
+ 647              	.LVL66:
+ 648              	.L42:
+ 649              	.LBB66:
+ 650              	.LBB62:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       }
+ 651              		.loc 1 67 9 is_stmt 1 view .LVU170
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       }
+ 652              		.loc 1 67 29 is_stmt 0 view .LVU171
+ 653 00ac 0120     		movs	r0, #1
+ 654 00ae 02F12803 		add	r3, r2, #40
+ 655 00b2 6B44     		add	r3, sp, r3
+ 656 00b4 03F8180C 		strb	r0, [r3, #-24]
+ 657              	.L26:
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       if (input_dims->data[idx] == 1) {
+ 658              		.loc 1 65 5 is_stmt 1 discriminator 2 view .LVU172
+ 659 00b8 0132     		adds	r2, r2, #1
+ 660              	.LVL67:
+ 661              	.L24:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 31
+
+
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       if (input_dims->data[idx] == 1) {
+ 662              		.loc 1 65 27 discriminator 1 view .LVU173
+ 663 00ba 8A42     		cmp	r2, r1
+ 664 00bc 2BDA     		bge	.L28
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****         should_squeeze[idx] = true;
+ 665              		.loc 1 66 7 view .LVU174
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****         should_squeeze[idx] = true;
+ 666              		.loc 1 66 31 is_stmt 0 view .LVU175
+ 667 00be 0CEB8203 		add	r3, ip, r2, lsl #2
+ 668 00c2 5B68     		ldr	r3, [r3, #4]
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****         should_squeeze[idx] = true;
+ 669              		.loc 1 66 7 view .LVU176
+ 670 00c4 012B     		cmp	r3, #1
+ 671 00c6 F7D1     		bne	.L26
+ 672 00c8 F0E7     		b	.L42
+ 673              	.LVL68:
+ 674              	.L29:
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****         should_squeeze[idx] = true;
+ 675              		.loc 1 66 7 view .LVU177
+ 676              	.LBE62:
+ 677              	.LBB63:
+ 678              	.LBB58:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 679              		.loc 1 74 7 is_stmt 1 view .LVU178
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 680              		.loc 1 74 7 view .LVU179
+ 681 00ca 002B     		cmp	r3, #0
+ 682 00cc 15DB     		blt	.L30
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 683              		.loc 1 74 7 is_stmt 0 discriminator 2 view .LVU180
+ 684 00ce 8B42     		cmp	r3, r1
+ 685 00d0 13DA     		bge	.L30
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 686              		.loc 1 74 7 discriminator 4 view .LVU181
+ 687 00d2 0CEB8304 		add	r4, ip, r3, lsl #2
+ 688 00d6 6468     		ldr	r4, [r4, #4]
+ 689 00d8 012C     		cmp	r4, #1
+ 690 00da 0ED1     		bne	.L30
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 691              		.loc 1 74 7 is_stmt 1 view .LVU182
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+ 692              		.loc 1 76 7 view .LVU183
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+ 693              		.loc 1 76 31 is_stmt 0 view .LVU184
+ 694 00dc 2833     		adds	r3, r3, #40
+ 695              	.LVL69:
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+ 696              		.loc 1 76 31 view .LVU185
+ 697 00de 6B44     		add	r3, sp, r3
+ 698              	.LVL70:
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+ 699              		.loc 1 76 31 view .LVU186
+ 700 00e0 4FF00104 		mov	r4, #1
+ 701 00e4 03F8184C 		strb	r4, [r3, #-24]
+ 702              	.LBE58:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       int current = squeeze_dims[idx] < 0 ? squeeze_dims[idx] + input_num_dims
+ 703              		.loc 1 71 5 is_stmt 1 discriminator 2 view .LVU187
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 32
+
+
+ 704 00e8 0130     		adds	r0, r0, #1
+ 705              	.LVL71:
+ 706              	.L25:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       int current = squeeze_dims[idx] < 0 ? squeeze_dims[idx] + input_num_dims
+ 707              		.loc 1 71 27 discriminator 1 view .LVU188
+ 708 00ea 9042     		cmp	r0, r2
+ 709 00ec 13DA     		bge	.L28
+ 710              	.LBB61:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                           : squeeze_dims[idx];
+ 711              		.loc 1 72 7 view .LVU189
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                           : squeeze_dims[idx];
+ 712              		.loc 1 72 37 is_stmt 0 view .LVU190
+ 713 00ee 56F82030 		ldr	r3, [r6, r0, lsl #2]
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                           : squeeze_dims[idx];
+ 714              		.loc 1 72 43 view .LVU191
+ 715 00f2 002B     		cmp	r3, #0
+ 716 00f4 E9DA     		bge	.L29
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                           : squeeze_dims[idx];
+ 717              		.loc 1 72 11 discriminator 1 view .LVU192
+ 718 00f6 0B44     		add	r3, r3, r1
+ 719 00f8 E7E7     		b	.L29
+ 720              	.LVL72:
+ 721              	.L30:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 722              		.loc 1 74 7 is_stmt 1 discriminator 5 view .LVU193
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 723              		.loc 1 74 7 discriminator 5 view .LVU194
+ 724              	.LBB59:
+ 725              	.LBI59:
+ 359:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return Fn(args...);
+ 726              		.loc 2 359 10 view .LVU195
+ 727              	.LBB60:
+ 728              		.loc 2 376 27 is_stmt 0 view .LVU196
+ 729 00fa 224B     		ldr	r3, .L44+28
+ 730              	.LVL73:
+ 731              		.loc 2 376 27 view .LVU197
+ 732 00fc 0093     		str	r3, [sp]
+ 733 00fe 4A23     		movs	r3, #74
+ 734 0100 1B4A     		ldr	r2, .L44+8
+ 735              	.LVL74:
+ 736              		.loc 2 376 27 view .LVU198
+ 737 0102 1F49     		ldr	r1, .L44+24
+ 738              	.LVL75:
+ 739              		.loc 2 376 27 view .LVU199
+ 740 0104 2846     		mov	r0, r5
+ 741              	.LVL76:
+ 742              		.loc 2 376 27 view .LVU200
+ 743 0106 FFF7FEFF 		bl	_ZN6tflite5micro25MicroContextReportOpErrorEPNS0_13TfLiteContextEPKcz
+ 744              	.LVL77:
+ 745              		.loc 2 376 27 view .LVU201
+ 746              	.LBE60:
+ 747              	.LBE59:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 748              		.loc 1 74 7 is_stmt 1 discriminator 6 view .LVU202
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 749              		.loc 1 74 7 discriminator 6 view .LVU203
+ 750 010a 0123     		movs	r3, #1
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 33
+
+
+ 751 010c 1C46     		mov	r4, r3
+ 752              	.LVL78:
+ 753              	.L23:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****                                   input_dims->data[current] == 1);
+ 754              		.loc 1 74 7 is_stmt 0 discriminator 6 view .LVU204
+ 755              	.LBE61:
+ 756              	.LBE63:
+ 757              	.LBE66:
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 758              		.loc 1 91 1 view .LVU205
+ 759 010e 06A8     		add	r0, sp, #24
+ 760 0110 FFF7FEFF 		bl	_ZN6tflite5micro12_GLOBAL__N_114SqueezeContextD1Ev
+ 761              	.LVL79:
+ 762 0114 8DE7     		b	.L18
+ 763              	.LVL80:
+ 764              	.L28:
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     if (!should_squeeze[in_idx]) {
+ 765              		.loc 1 81 3 is_stmt 1 view .LVU206
+ 766              	.LBB67:
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     if (!should_squeeze[in_idx]) {
+ 767              		.loc 1 81 24 is_stmt 0 view .LVU207
+ 768 0116 0022     		movs	r2, #0
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     if (!should_squeeze[in_idx]) {
+ 769              		.loc 1 81 12 view .LVU208
+ 770 0118 1346     		mov	r3, r2
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     if (!should_squeeze[in_idx]) {
+ 771              		.loc 1 81 3 view .LVU209
+ 772 011a 0BE0     		b	.L33
+ 773              	.LVL81:
+ 774              	.L35:
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+ 775              		.loc 1 83 7 is_stmt 1 discriminator 3 view .LVU210
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+ 776              		.loc 1 83 7 discriminator 3 view .LVU211
+ 777              	.LBB68:
+ 778              	.LBI68:
+ 359:lib/tflite-micro/tensorflow/lite/micro/micro_common.h ****       return Fn(args...);
+ 779              		.loc 2 359 10 view .LVU212
+ 780              	.LBB69:
+ 781              		.loc 2 376 27 is_stmt 0 view .LVU213
+ 782 011c 1A4B     		ldr	r3, .L44+32
+ 783              	.LVL82:
+ 784              		.loc 2 376 27 view .LVU214
+ 785 011e 0093     		str	r3, [sp]
+ 786              	.LVL83:
+ 787              		.loc 2 376 27 view .LVU215
+ 788 0120 5323     		movs	r3, #83
+ 789 0122 134A     		ldr	r2, .L44+8
+ 790              	.LVL84:
+ 791              		.loc 2 376 27 view .LVU216
+ 792 0124 1649     		ldr	r1, .L44+24
+ 793              	.LVL85:
+ 794              		.loc 2 376 27 view .LVU217
+ 795 0126 2846     		mov	r0, r5
+ 796 0128 FFF7FEFF 		bl	_ZN6tflite5micro25MicroContextReportOpErrorEPNS0_13TfLiteContextEPKcz
+ 797              	.LVL86:
+ 798              		.loc 2 376 27 view .LVU218
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 34
+
+
+ 799              	.LBE69:
+ 800              	.LBE68:
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+ 801              		.loc 1 83 7 is_stmt 1 discriminator 4 view .LVU219
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+ 802              		.loc 1 83 7 discriminator 4 view .LVU220
+ 803 012c 0123     		movs	r3, #1
+ 804 012e 1C46     		mov	r4, r3
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+ 805              		.loc 1 83 7 is_stmt 0 view .LVU221
+ 806 0130 EDE7     		b	.L23
+ 807              	.LVL87:
+ 808              	.L34:
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     if (!should_squeeze[in_idx]) {
+ 809              		.loc 1 81 3 is_stmt 1 discriminator 2 view .LVU222
+ 810 0132 0133     		adds	r3, r3, #1
+ 811              	.LVL88:
+ 812              	.L33:
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     if (!should_squeeze[in_idx]) {
+ 813              		.loc 1 81 44 discriminator 1 view .LVU223
+ 814 0134 8B42     		cmp	r3, r1
+ 815 0136 14DA     		bge	.L43
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       TF_LITE_ENSURE(
+ 816              		.loc 1 82 5 view .LVU224
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       TF_LITE_ENSURE(
+ 817              		.loc 1 82 31 is_stmt 0 view .LVU225
+ 818 0138 03F12800 		add	r0, r3, #40
+ 819 013c 6844     		add	r0, sp, r0
+ 820 013e 10F8180C 		ldrb	r0, [r0, #-24]	@ zero_extendqisi2
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****       TF_LITE_ENSURE(
+ 821              		.loc 1 82 5 view .LVU226
+ 822 0142 0028     		cmp	r0, #0
+ 823 0144 F5D1     		bne	.L34
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+ 824              		.loc 1 83 7 is_stmt 1 view .LVU227
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+ 825              		.loc 1 83 7 view .LVU228
+ 826 0146 DEF80000 		ldr	r0, [lr]
+ 827 014a 9042     		cmp	r0, r2
+ 828 014c E6DD     		ble	.L35
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+ 829              		.loc 1 83 7 is_stmt 0 discriminator 2 view .LVU229
+ 830 014e 0EEB8200 		add	r0, lr, r2, lsl #2
+ 831 0152 4468     		ldr	r4, [r0, #4]
+ 832 0154 0CEB8300 		add	r0, ip, r3, lsl #2
+ 833 0158 4068     		ldr	r0, [r0, #4]
+ 834 015a 8442     		cmp	r4, r0
+ 835 015c DEDB     		blt	.L35
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****           context, out_idx < output_dims->size &&
+ 836              		.loc 1 83 7 is_stmt 1 view .LVU230
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+ 837              		.loc 1 86 7 view .LVU231
+ 838 015e 0132     		adds	r2, r2, #1
+ 839              	.LVL89:
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+ 840              		.loc 1 86 7 is_stmt 0 view .LVU232
+ 841 0160 E7E7     		b	.L34
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 35
+
+
+ 842              	.LVL90:
+ 843              	.L43:
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****     }
+ 844              		.loc 1 86 7 view .LVU233
+ 845              	.LBE67:
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** }
+ 846              		.loc 1 90 10 view .LVU234
+ 847 0162 0023     		movs	r3, #0
+ 848              	.LVL91:
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** }
+ 849              		.loc 1 90 10 view .LVU235
+ 850 0164 1C46     		mov	r4, r3
+ 851 0166 D2E7     		b	.L23
+ 852              	.L45:
+ 853              		.align	2
+ 854              	.L44:
+ 855 0168 00000000 		.word	.LC5
+ 856 016c 04000000 		.word	.LC6
+ 857 0170 1C000000 		.word	.LC1
+ 858 0174 58000000 		.word	.LC2
+ 859 0178 14000000 		.word	.LC7
+ 860 017c 40000000 		.word	.LC9
+ 861 0180 28000000 		.word	.LC8
+ 862 0184 64000000 		.word	.LC10
+ 863 0188 B0000000 		.word	.LC11
+ 864              		.cfi_endproc
+ 865              	.LFE10571:
+ 867              		.section	.text._ZN6tflite5micro16Register_SQUEEZEEv,"ax",%progbits
+ 868              		.align	1
+ 869              		.global	_ZN6tflite5micro16Register_SQUEEZEEv
+ 870              		.syntax unified
+ 871              		.thumb
+ 872              		.thumb_func
+ 874              	_ZN6tflite5micro16Register_SQUEEZEEv:
+ 875              	.LVL92:
+ 876              	.LFB10576:
+ 114:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 115:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** }  // namespace
+ 116:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** 
+ 117:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** TFLMRegistration Register_SQUEEZE() {
+ 877              		.loc 1 117 37 is_stmt 1 view -0
+ 878              		.cfi_startproc
+ 879              		@ args = 0, pretend = 0, frame = 0
+ 880              		@ frame_needed = 0, uses_anonymous_args = 0
+ 881              		.loc 1 117 37 is_stmt 0 view .LVU237
+ 882 0000 10B5     		push	{r4, lr}
+ 883              	.LCFI10:
+ 884              		.cfi_def_cfa_offset 8
+ 885              		.cfi_offset 4, -8
+ 886              		.cfi_offset 14, -4
+ 887 0002 82B0     		sub	sp, sp, #8
+ 888              	.LCFI11:
+ 889              		.cfi_def_cfa_offset 16
+ 890 0004 0446     		mov	r4, r0
+ 118:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc ****   return tflite::micro::RegisterOp(nullptr, SqueezePrepare, SqueezeEval);
+ 891              		.loc 1 118 3 is_stmt 1 view .LVU238
+ 892              		.loc 1 118 35 is_stmt 0 view .LVU239
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 36
+
+
+ 893 0006 0021     		movs	r1, #0
+ 894 0008 0191     		str	r1, [sp, #4]
+ 895 000a 0091     		str	r1, [sp]
+ 896 000c 034B     		ldr	r3, .L48
+ 897 000e 044A     		ldr	r2, .L48+4
+ 898 0010 FFF7FEFF 		bl	_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLit
+ 899              	.LVL93:
+ 119:lib/tflite-micro/tensorflow/lite/micro/kernels/squeeze.cc **** }
+ 900              		.loc 1 119 1 view .LVU240
+ 901 0014 2046     		mov	r0, r4
+ 902 0016 02B0     		add	sp, sp, #8
+ 903              	.LCFI12:
+ 904              		.cfi_def_cfa_offset 8
+ 905              		@ sp needed
+ 906 0018 10BD     		pop	{r4, pc}
+ 907              	.LVL94:
+ 908              	.L49:
+ 909              		.loc 1 119 1 view .LVU241
+ 910 001a 00BF     		.align	2
+ 911              	.L48:
+ 912 001c 00000000 		.word	_ZN6tflite5micro12_GLOBAL__N_1L11SqueezeEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ 913 0020 00000000 		.word	_ZN6tflite5micro12_GLOBAL__N_1L14SqueezePrepareEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ 914              		.cfi_endproc
+ 915              	.LFE10576:
+ 917              		.text
+ 918              	.Letext0:
+ 919              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none
+ 920              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 921              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 922              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 923              		.file 9 "lib/tflite-micro/tensorflow/lite/micro/builtin_op_data.h"
+ 924              		.file 10 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h"
+ 925              		.file 11 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/types.h"
+ 926              		.file 12 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/quantization_util.h"
+ 927              		.file 13 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+ 928              		.file 14 "lib/tflite-micro/tensorflow/lite/micro/micro_profiler_interface.h"
+ 929              		.file 15 "lib/tflite-micro/tensorflow/lite/micro/memory_helpers.h"
+ 930              		.file 16 "lib/tflite-micro/tensorflow/lite/micro/micro_graph.h"
+ 931              		.file 17 "lib/tflite-micro/tensorflow/lite/micro/schema/schema_generated.h"
+ 932              		.file 18 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 933              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 934              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 935              		.file 21 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 936              		.file 22 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 937              		.file 23 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 938              		.file 24 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 939              		.file 25 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 940              		.file 26 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 941              		.file 27 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 942              		.file 28 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 943              		.file 29 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 944              		.file 30 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 945              		.file 31 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 946              		.file 32 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 947              		.file 33 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 948              		.file 34 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 949              		.file 35 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 37
+
+
+ 950              		.file 36 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 951              		.file 37 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 952              		.file 38 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 953              		.file 39 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 954              		.file 40 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 955              		.file 41 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 956              		.file 42 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 957              		.file 43 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 958              		.file 44 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 959              		.file 45 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 960              		.file 46 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 961              		.file 47 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 962              		.file 48 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 963              		.file 49 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 964              		.file 50 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 965              		.file 51 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 966              		.file 52 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 967              		.file 53 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 968              		.file 54 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 969              		.file 55 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 970              		.file 56 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 971              		.file 57 "<built-in>"
+ 972              		.file 58 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 973              		.file 59 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 974              		.file 60 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 975              		.file 61 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 976              		.file 62 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 977              		.file 63 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 978              		.file 64 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 979              		.file 65 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 980              		.file 66 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 981              		.file 67 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 982              		.file 68 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/base.h"
+ 983              		.file 69 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/stl_emulation.h"
+ 984              		.file 70 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/buffer.h"
+ 985              		.file 71 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/string.h"
+ 986              		.file 72 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/vector.h"
+ 987              		.file 73 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/verifier.h"
+ 988              		.file 74 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/detached_buffer.h"
+ 989              		.file 75 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/allocator.h"
+ 990              		.file 76 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/table.h"
+ 991              		.file 77 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/vector_downward.h"
+ 992              		.file 78 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/flatbuffer_builder.h"
+ 993              		.file 79 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/flatbuffers.h"
+ 994              		.file 80 "lib/tflite-micro/tensorflow/lite/micro/micro_log.h"
+ 995              		.file 81 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s 			page 38
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 squeeze.cc
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:21     .text._ZN6tflite5micro12_GLOBAL__N_114SqueezeContextD2Ev:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:26     .text._ZN6tflite5micro12_GLOBAL__N_114SqueezeContextD2Ev:00000000 _ZN6tflite5micro12_GLOBAL__N_114SqueezeContextD2Ev
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:26     .text._ZN6tflite5micro12_GLOBAL__N_114SqueezeContextD2Ev:00000000 _ZN6tflite5micro12_GLOBAL__N_114SqueezeContextD1Ev
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:68     .rodata._ZN6tflite5micro12_GLOBAL__N_1L11SqueezeEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:85     .text._ZN6tflite5micro12_GLOBAL__N_1L11SqueezeEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:90     .text._ZN6tflite5micro12_GLOBAL__N_1L11SqueezeEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 _ZN6tflite5micro12_GLOBAL__N_1L11SqueezeEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:263    .text._ZN6tflite5micro12_GLOBAL__N_1L11SqueezeEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000088 $d
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:272    .text._ZN6tflite5micro12_GLOBAL__N_114SqueezeContextC2EPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:277    .text._ZN6tflite5micro12_GLOBAL__N_114SqueezeContextC2EPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 _ZN6tflite5micro12_GLOBAL__N_114SqueezeContextC2EPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:277    .text._ZN6tflite5micro12_GLOBAL__N_114SqueezeContextC2EPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 _ZN6tflite5micro12_GLOBAL__N_114SqueezeContextC1EPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:347    .rodata._ZN6tflite5micro12_GLOBAL__N_1L14SqueezePrepareEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:371    .text._ZN6tflite5micro12_GLOBAL__N_1L14SqueezePrepareEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:376    .text._ZN6tflite5micro12_GLOBAL__N_1L14SqueezePrepareEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 _ZN6tflite5micro12_GLOBAL__N_1L14SqueezePrepareEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:855    .text._ZN6tflite5micro12_GLOBAL__N_1L14SqueezePrepareEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000168 $d
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:868    .text._ZN6tflite5micro16Register_SQUEEZEEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:874    .text._ZN6tflite5micro16Register_SQUEEZEEv:00000000 _ZN6tflite5micro16Register_SQUEEZEEv
+C:\Users\Chetan\AppData\Local\Temp\ccQBiBbo.s:912    .text._ZN6tflite5micro16Register_SQUEEZEEv:0000001c $d
+
+UNDEFINED SYMBOLS
+_ZN6tflite5micro12GetEvalInputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+_ZN6tflite5micro13GetEvalOutputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+_ZN6tflite5micro26TfLiteEvalTensorByteLengthEPKNS0_16TfLiteEvalTensorEPj
+_ZN6tflite5micro17TfLiteTypeGetNameENS0_10TfLiteTypeE
+_Z11MicroPrintfPKcz
+_ZN6tflite5micro25MicroContextReportOpErrorEPNS0_13TfLiteContextEPKcz
+memcpy
+_ZN6tflite5micro12MicroContext23AllocateTempInputTensorEPKNS0_10TfLiteNodeEi
+_ZN6tflite5micro12MicroContext24AllocateTempOutputTensorEPKNS0_10TfLiteNodeEi
+_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLiteNodeEESC_PFvS3_S1_ESE_

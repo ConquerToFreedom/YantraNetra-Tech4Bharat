@@ -1,0 +1,375 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"micro_log.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/micro_log.cc"
+  20              		.section	.text._ZN12_GLOBAL__N_1L9VDebugLogEPKcz,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	_ZN12_GLOBAL__N_1L9VDebugLogEPKcz:
+  27              	.LVL0:
+  28              	.LFB17:
+   1:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** /* Copyright 2023 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** #include "tensorflow/lite/micro/micro_log.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** #include <cstdarg>
+  19:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** #include <cstdint>
+  20:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** #if !defined(TF_LITE_STRIP_ERROR_STRINGS)
+  22:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** #include "tensorflow/lite/micro/debug_log.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** #endif
+  24:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  25:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** #if !defined(TF_LITE_STRIP_ERROR_STRINGS)
+  26:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** namespace {
+  27:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  28:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** void VDebugLog(const char* format, ...) {
+  29              		.loc 1 28 41 view -0
+  30              		.cfi_startproc
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s 			page 2
+
+
+  31              		@ args = 4, pretend = 16, frame = 8
+  32              		@ frame_needed = 0, uses_anonymous_args = 1
+  33              		.loc 1 28 41 is_stmt 0 view .LVU1
+  34 0000 0FB4     		push	{r0, r1, r2, r3}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 16
+  37              		.cfi_offset 0, -16
+  38              		.cfi_offset 1, -12
+  39              		.cfi_offset 2, -8
+  40              		.cfi_offset 3, -4
+  41 0002 00B5     		push	{lr}
+  42              	.LCFI1:
+  43              		.cfi_def_cfa_offset 20
+  44              		.cfi_offset 14, -20
+  45 0004 83B0     		sub	sp, sp, #12
+  46              	.LCFI2:
+  47              		.cfi_def_cfa_offset 32
+  48 0006 04A9     		add	r1, sp, #16
+  49 0008 51F8040B 		ldr	r0, [r1], #4
+  29:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_list args;
+  50              		.loc 1 29 3 is_stmt 1 view .LVU2
+  30:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_start(args, format);
+  51              		.loc 1 30 3 view .LVU3
+  52 000c 0191     		str	r1, [sp, #4]
+  31:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   DebugLog(format, args);
+  53              		.loc 1 31 3 view .LVU4
+  54              		.loc 1 31 11 is_stmt 0 view .LVU5
+  55 000e FFF7FEFF 		bl	DebugLog
+  56              	.LVL1:
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_end(args);
+  57              		.loc 1 32 3 is_stmt 1 view .LVU6
+  33:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** }
+  58              		.loc 1 33 1 is_stmt 0 view .LVU7
+  59 0012 03B0     		add	sp, sp, #12
+  60              	.LCFI3:
+  61              		.cfi_def_cfa_offset 20
+  62              		@ sp needed
+  63 0014 5DF804EB 		ldr	lr, [sp], #4
+  64              	.LCFI4:
+  65              		.cfi_restore 14
+  66              		.cfi_def_cfa_offset 16
+  67 0018 04B0     		add	sp, sp, #16
+  68              	.LCFI5:
+  69              		.cfi_restore 3
+  70              		.cfi_restore 2
+  71              		.cfi_restore 1
+  72              		.cfi_restore 0
+  73              		.cfi_def_cfa_offset 0
+  74 001a 7047     		bx	lr
+  75              		.cfi_endproc
+  76              	.LFE17:
+  78              		.section	.rodata._Z12VMicroPrintfPKcSt9__va_list.str1.4,"aMS",%progbits,1
+  79              		.align	2
+  80              	.LC0:
+  81 0000 0D0A00   		.ascii	"\015\012\000"
+  82              		.section	.text._Z12VMicroPrintfPKcSt9__va_list,"ax",%progbits
+  83              		.align	1
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s 			page 3
+
+
+  84              		.global	_Z12VMicroPrintfPKcSt9__va_list
+  85              		.syntax unified
+  86              		.thumb
+  87              		.thumb_func
+  89              	_Z12VMicroPrintfPKcSt9__va_list:
+  90              	.LVL2:
+  91              	.LFB18:
+  34:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** }  // namespace
+  36:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  37:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** void VMicroPrintf(const char* format, va_list args) {
+  92              		.loc 1 37 53 is_stmt 1 view -0
+  93              		.cfi_startproc
+  94              		@ args = 0, pretend = 0, frame = 0
+  95              		@ frame_needed = 0, uses_anonymous_args = 0
+  96              		.loc 1 37 53 is_stmt 0 view .LVU9
+  97 0000 08B5     		push	{r3, lr}
+  98              	.LCFI6:
+  99              		.cfi_def_cfa_offset 8
+ 100              		.cfi_offset 3, -8
+ 101              		.cfi_offset 14, -4
+  38:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   DebugLog(format, args);
+ 102              		.loc 1 38 3 is_stmt 1 view .LVU10
+ 103              		.loc 1 38 11 is_stmt 0 view .LVU11
+ 104 0002 FFF7FEFF 		bl	DebugLog
+ 105              	.LVL3:
+  39:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   // TODO(b/290051015): remove "\r\n"
+  40:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   VDebugLog("\r\n");
+ 106              		.loc 1 40 3 is_stmt 1 view .LVU12
+ 107              		.loc 1 40 12 is_stmt 0 view .LVU13
+ 108 0006 0248     		ldr	r0, .L5
+ 109 0008 FFF7FEFF 		bl	_ZN12_GLOBAL__N_1L9VDebugLogEPKcz
+ 110              	.LVL4:
+  41:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** }
+ 111              		.loc 1 41 1 view .LVU14
+ 112 000c 08BD     		pop	{r3, pc}
+ 113              	.L6:
+ 114 000e 00BF     		.align	2
+ 115              	.L5:
+ 116 0010 00000000 		.word	.LC0
+ 117              		.cfi_endproc
+ 118              	.LFE18:
+ 120              		.section	.text._Z11MicroPrintfPKcz,"ax",%progbits
+ 121              		.align	1
+ 122              		.global	_Z11MicroPrintfPKcz
+ 123              		.syntax unified
+ 124              		.thumb
+ 125              		.thumb_func
+ 127              	_Z11MicroPrintfPKcz:
+ 128              	.LVL5:
+ 129              	.LFB19:
+  42:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  43:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** void MicroPrintf(const char* format, ...) {
+ 130              		.loc 1 43 43 is_stmt 1 view -0
+ 131              		.cfi_startproc
+ 132              		@ args = 4, pretend = 16, frame = 8
+ 133              		@ frame_needed = 0, uses_anonymous_args = 1
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s 			page 4
+
+
+ 134              		.loc 1 43 43 is_stmt 0 view .LVU16
+ 135 0000 0FB4     		push	{r0, r1, r2, r3}
+ 136              	.LCFI7:
+ 137              		.cfi_def_cfa_offset 16
+ 138              		.cfi_offset 0, -16
+ 139              		.cfi_offset 1, -12
+ 140              		.cfi_offset 2, -8
+ 141              		.cfi_offset 3, -4
+ 142 0002 00B5     		push	{lr}
+ 143              	.LCFI8:
+ 144              		.cfi_def_cfa_offset 20
+ 145              		.cfi_offset 14, -20
+ 146 0004 83B0     		sub	sp, sp, #12
+ 147              	.LCFI9:
+ 148              		.cfi_def_cfa_offset 32
+ 149 0006 04A9     		add	r1, sp, #16
+ 150 0008 51F8040B 		ldr	r0, [r1], #4
+  44:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_list args;
+ 151              		.loc 1 44 3 is_stmt 1 view .LVU17
+  45:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_start(args, format);
+ 152              		.loc 1 45 3 view .LVU18
+ 153 000c 0191     		str	r1, [sp, #4]
+  46:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   VMicroPrintf(format, args);
+ 154              		.loc 1 46 3 view .LVU19
+ 155              		.loc 1 46 15 is_stmt 0 view .LVU20
+ 156 000e FFF7FEFF 		bl	_Z12VMicroPrintfPKcSt9__va_list
+ 157              	.LVL6:
+  47:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_end(args);
+ 158              		.loc 1 47 3 is_stmt 1 view .LVU21
+  48:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** }
+ 159              		.loc 1 48 1 is_stmt 0 view .LVU22
+ 160 0012 03B0     		add	sp, sp, #12
+ 161              	.LCFI10:
+ 162              		.cfi_def_cfa_offset 20
+ 163              		@ sp needed
+ 164 0014 5DF804EB 		ldr	lr, [sp], #4
+ 165              	.LCFI11:
+ 166              		.cfi_restore 14
+ 167              		.cfi_def_cfa_offset 16
+ 168 0018 04B0     		add	sp, sp, #16
+ 169              	.LCFI12:
+ 170              		.cfi_restore 3
+ 171              		.cfi_restore 2
+ 172              		.cfi_restore 1
+ 173              		.cfi_restore 0
+ 174              		.cfi_def_cfa_offset 0
+ 175 001a 7047     		bx	lr
+ 176              		.cfi_endproc
+ 177              	.LFE19:
+ 179              		.section	.text._Z14MicroVsnprintfPcjPKcSt9__va_list,"ax",%progbits
+ 180              		.align	1
+ 181              		.global	_Z14MicroVsnprintfPcjPKcSt9__va_list
+ 182              		.syntax unified
+ 183              		.thumb
+ 184              		.thumb_func
+ 186              	_Z14MicroVsnprintfPcjPKcSt9__va_list:
+ 187              	.LVL7:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s 			page 5
+
+
+ 188              	.LFB21:
+  49:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  50:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** int MicroSnprintf(char* buffer, size_t buf_size, const char* format, ...) {
+  51:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_list args;
+  52:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_start(args, format);
+  53:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   int result = MicroVsnprintf(buffer, buf_size, format, args);
+  54:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_end(args);
+  55:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   return result;
+  56:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** }
+  57:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+  58:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** int MicroVsnprintf(char* buffer, size_t buf_size, const char* format,
+  59:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****                    va_list vlist) {
+ 189              		.loc 1 59 35 is_stmt 1 view -0
+ 190              		.cfi_startproc
+ 191              		@ args = 0, pretend = 0, frame = 0
+ 192              		@ frame_needed = 0, uses_anonymous_args = 0
+ 193              		.loc 1 59 35 is_stmt 0 view .LVU24
+ 194 0000 08B5     		push	{r3, lr}
+ 195              	.LCFI13:
+ 196              		.cfi_def_cfa_offset 8
+ 197              		.cfi_offset 3, -8
+ 198              		.cfi_offset 14, -4
+  60:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   return DebugVsnprintf(buffer, buf_size, format, vlist);
+ 199              		.loc 1 60 3 is_stmt 1 view .LVU25
+ 200              		.loc 1 60 24 is_stmt 0 view .LVU26
+ 201 0002 FFF7FEFF 		bl	DebugVsnprintf
+ 202              	.LVL8:
+  61:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** }
+ 203              		.loc 1 61 1 view .LVU27
+ 204 0006 08BD     		pop	{r3, pc}
+ 205              		.cfi_endproc
+ 206              	.LFE21:
+ 208              		.section	.text._Z13MicroSnprintfPcjPKcz,"ax",%progbits
+ 209              		.align	1
+ 210              		.global	_Z13MicroSnprintfPcjPKcz
+ 211              		.syntax unified
+ 212              		.thumb
+ 213              		.thumb_func
+ 215              	_Z13MicroSnprintfPcjPKcz:
+ 216              	.LVL9:
+ 217              	.LFB20:
+  50:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_list args;
+ 218              		.loc 1 50 75 is_stmt 1 view -0
+ 219              		.cfi_startproc
+ 220              		@ args = 4, pretend = 8, frame = 8
+ 221              		@ frame_needed = 0, uses_anonymous_args = 1
+  50:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_list args;
+ 222              		.loc 1 50 75 is_stmt 0 view .LVU29
+ 223 0000 0CB4     		push	{r2, r3}
+ 224              	.LCFI14:
+ 225              		.cfi_def_cfa_offset 8
+ 226              		.cfi_offset 2, -8
+ 227              		.cfi_offset 3, -4
+ 228 0002 00B5     		push	{lr}
+ 229              	.LCFI15:
+ 230              		.cfi_def_cfa_offset 12
+ 231              		.cfi_offset 14, -12
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s 			page 6
+
+
+ 232 0004 83B0     		sub	sp, sp, #12
+ 233              	.LCFI16:
+ 234              		.cfi_def_cfa_offset 24
+ 235 0006 04AB     		add	r3, sp, #16
+ 236 0008 53F8042B 		ldr	r2, [r3], #4
+  51:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_start(args, format);
+ 237              		.loc 1 51 3 is_stmt 1 view .LVU30
+  52:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   int result = MicroVsnprintf(buffer, buf_size, format, args);
+ 238              		.loc 1 52 3 view .LVU31
+ 239 000c 0193     		str	r3, [sp, #4]
+  53:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_end(args);
+ 240              		.loc 1 53 3 view .LVU32
+  53:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   va_end(args);
+ 241              		.loc 1 53 30 is_stmt 0 view .LVU33
+ 242 000e FFF7FEFF 		bl	_Z14MicroVsnprintfPcjPKcSt9__va_list
+ 243              	.LVL10:
+  54:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc ****   return result;
+ 244              		.loc 1 54 3 is_stmt 1 view .LVU34
+  55:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** }
+ 245              		.loc 1 55 3 view .LVU35
+  56:lib/tflite-micro/tensorflow/lite/micro/micro_log.cc **** 
+ 246              		.loc 1 56 1 is_stmt 0 view .LVU36
+ 247 0012 03B0     		add	sp, sp, #12
+ 248              	.LCFI17:
+ 249              		.cfi_def_cfa_offset 12
+ 250              		@ sp needed
+ 251 0014 5DF804EB 		ldr	lr, [sp], #4
+ 252              	.LCFI18:
+ 253              		.cfi_restore 14
+ 254              		.cfi_def_cfa_offset 8
+ 255 0018 02B0     		add	sp, sp, #8
+ 256              	.LCFI19:
+ 257              		.cfi_restore 3
+ 258              		.cfi_restore 2
+ 259              		.cfi_def_cfa_offset 0
+ 260 001a 7047     		bx	lr
+ 261              		.cfi_endproc
+ 262              	.LFE20:
+ 264              		.text
+ 265              	.Letext0:
+ 266              		.file 2 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 267              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 268              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 269              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 270              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none
+ 271              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none
+ 272              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 273              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 274              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 275              		.file 11 "<built-in>"
+ 276              		.file 12 "lib/tflite-micro/tensorflow/lite/micro/debug_log.h"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s 			page 7
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 micro_log.cc
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:21     .text._ZN12_GLOBAL__N_1L9VDebugLogEPKcz:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:26     .text._ZN12_GLOBAL__N_1L9VDebugLogEPKcz:00000000 _ZN12_GLOBAL__N_1L9VDebugLogEPKcz
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:79     .rodata._Z12VMicroPrintfPKcSt9__va_list.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:83     .text._Z12VMicroPrintfPKcSt9__va_list:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:89     .text._Z12VMicroPrintfPKcSt9__va_list:00000000 _Z12VMicroPrintfPKcSt9__va_list
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:116    .text._Z12VMicroPrintfPKcSt9__va_list:00000010 $d
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:121    .text._Z11MicroPrintfPKcz:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:127    .text._Z11MicroPrintfPKcz:00000000 _Z11MicroPrintfPKcz
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:180    .text._Z14MicroVsnprintfPcjPKcSt9__va_list:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:186    .text._Z14MicroVsnprintfPcjPKcSt9__va_list:00000000 _Z14MicroVsnprintfPcjPKcSt9__va_list
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:209    .text._Z13MicroSnprintfPcjPKcz:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccy5D7O4.s:215    .text._Z13MicroSnprintfPcjPKcz:00000000 _Z13MicroSnprintfPcjPKcz
+
+UNDEFINED SYMBOLS
+DebugLog
+DebugVsnprintf

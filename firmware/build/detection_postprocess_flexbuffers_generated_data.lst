@@ -1,0 +1,148 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"detection_postprocess_flexbuffers_generated_data.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/detection_postprocess_flexbuffers_generate
+  20              		.global	g_gen_data_regular_nms
+  21              		.section	.rodata.g_gen_data_regular_nms,"a"
+  22              		.align	2
+  25              	g_gen_data_regular_nms:
+  26 0000 6D61785F 		.ascii	"max_detections\000max_classes_per_detection\000dete"
+  26      64657465 
+  26      6374696F 
+  26      6E73006D 
+  26      61785F63 
+  27 002d 6374696F 		.ascii	"ctions_per_class\000use_regular_nms\000nms_score_th"
+  27      6E735F70 
+  27      65725F63 
+  27      6C617373 
+  27      00757365 
+  28 005a 72657368 		.ascii	"reshold\000nms_iou_threshold\000num_classes\000y_sc"
+  28      6F6C6400 
+  28      6E6D735F 
+  28      696F755F 
+  28      74687265 
+  29 0084 616C6500 		.ascii	"ale\000x_scale\000h_scale\000w_scale\000\013x\022\224"
+  29      785F7363 
+  29      616C6500 
+  29      685F7363 
+  29      616C6500 
+  30 00a4 A4435833 		.ascii	"\244CX3j\021\"+\013\000\000\000\001\000\000\000\013"
+  30      6A11222B 
+  30      0B000000 
+  30      01000000 
+  30      0B
+  31 00b5 00000001 		.ascii	"\000\000\000\001\000\000\000\000\000\240@\001\000\000"
+  31      00000000 
+  31      00A04001 
+  31      0000
+  32 00c3 00030000 		.ascii	"\000\003\000\000\000\000\000\000?\000\000\000\000\002"
+  32      00000000 
+  32      3F000000 
+  32      0002
+  33 00d1 00000001 		.ascii	"\000\000\000\001\000\000\000\000\000\240@\000\000 A"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s 			page 2
+
+
+  33      00000000 
+  33      00A04000 
+  33      002041
+  34 00e0 00002041 		.ascii	"\000\000 A\006\016\006\006\016\016\006j\016\016\016"
+  34      060E0606 
+  34      0E0E066A 
+  34      0E0E0E
+  35 00ef 372601   		.ascii	"7&\001"
+  36              		.global	g_gen_data_size_regular_nms
+  37              		.section	.rodata.g_gen_data_size_regular_nms,"a"
+  38              		.align	2
+  41              	g_gen_data_size_regular_nms:
+  42 0000 F2000000 		.word	242
+  43              		.global	g_gen_data_none_regular_nms
+  44              		.section	.rodata.g_gen_data_none_regular_nms,"a"
+  45              		.align	2
+  48              	g_gen_data_none_regular_nms:
+  49 0000 6D61785F 		.ascii	"max_detections\000max_classes_per_detection\000dete"
+  49      64657465 
+  49      6374696F 
+  49      6E73006D 
+  49      61785F63 
+  50 002d 6374696F 		.ascii	"ctions_per_class\000use_regular_nms\000nms_score_th"
+  50      6E735F70 
+  50      65725F63 
+  50      6C617373 
+  50      00757365 
+  51 005a 72657368 		.ascii	"reshold\000nms_iou_threshold\000num_classes\000y_sc"
+  51      6F6C6400 
+  51      6E6D735F 
+  51      696F755F 
+  51      74687265 
+  52 0084 616C6500 		.ascii	"ale\000x_scale\000h_scale\000w_scale\000\013x\022\224"
+  52      785F7363 
+  52      616C6500 
+  52      685F7363 
+  52      616C6500 
+  53 00a4 A4435833 		.ascii	"\244CX3j\021\"+\013\000\000\000\001\000\000\000\013"
+  53      6A11222B 
+  53      0B000000 
+  53      01000000 
+  53      0B
+  54 00b5 00000001 		.ascii	"\000\000\000\001\000\000\000\000\000\240@\001\000\000"
+  54      00000000 
+  54      00A04001 
+  54      0000
+  55 00c3 00030000 		.ascii	"\000\003\000\000\000\000\000\000?\000\000\000\000\002"
+  55      00000000 
+  55      3F000000 
+  55      0002
+  56 00d1 00000000 		.ascii	"\000\000\000\000\000\000\000\000\000\240@\000\000 A"
+  56      00000000 
+  56      00A04000 
+  56      002041
+  57 00e0 00002041 		.ascii	"\000\000 A\006\016\006\006\016\016\006j\016\016\016"
+  57      060E0606 
+  57      0E0E066A 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s 			page 3
+
+
+  57      0E0E0E
+  58 00ef 372601   		.ascii	"7&\001"
+  59              		.global	g_gen_data_size_none_regular_nms
+  60              		.section	.rodata.g_gen_data_size_none_regular_nms,"a"
+  61              		.align	2
+  64              	g_gen_data_size_none_regular_nms:
+  65 0000 F2000000 		.word	242
+  66              		.text
+  67              	.Letext0:
+  68              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/kernels/detection_postprocess_flexbuffers_generate
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 detection_postprocess_flexbuffers_generated_data.cc
+C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s:25     .rodata.g_gen_data_regular_nms:00000000 g_gen_data_regular_nms
+C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s:22     .rodata.g_gen_data_regular_nms:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s:41     .rodata.g_gen_data_size_regular_nms:00000000 g_gen_data_size_regular_nms
+C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s:38     .rodata.g_gen_data_size_regular_nms:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s:48     .rodata.g_gen_data_none_regular_nms:00000000 g_gen_data_none_regular_nms
+C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s:45     .rodata.g_gen_data_none_regular_nms:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s:64     .rodata.g_gen_data_size_none_regular_nms:00000000 g_gen_data_size_none_regular_nms
+C:\Users\Chetan\AppData\Local\Temp\ccAUF4Th.s:61     .rodata.g_gen_data_size_none_regular_nms:00000000 $d
+
+NO UNDEFINED SYMBOLS

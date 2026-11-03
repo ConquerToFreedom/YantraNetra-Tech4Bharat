@@ -1,0 +1,389 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"tensor_ctypes.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc"
+  20              		.section	.text._ZN6tflite5micro12RuntimeShape11ReplaceWithEiPKl,"axG",%progbits,_ZN6tflite5micro12
+  21              		.align	1
+  22              		.weak	_ZN6tflite5micro12RuntimeShape11ReplaceWithEiPKl
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro12RuntimeShape11ReplaceWithEiPKl:
+  28              	.LVL0:
+  29              	.LFB875:
+  30              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** /* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_INTERNAL_RUNTIME_SHAPE_H_
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_INTERNAL_RUNTIME_SHAPE_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #include <cstring>
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #include "tensorflow/lite/micro/compatibility.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** namespace tflite {
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** namespace micro {
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** template <int N>
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** struct Dims {
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int sizes[N];
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int strides[N];
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s 			page 2
+
+
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** };
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** class RuntimeShape {
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****  public:
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape& operator=(RuntimeShape const&) = delete;
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   // RuntimeShape in TFLM supports up to 6 dimensions.
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   // The name kMaxSmallSize comes from the same file of the upstream
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   // tensorflow lite repo and need to be kept the same for max reuse.
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   static constexpr int kMaxSmallSize = 6;
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape() : size_(0) {}
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   explicit RuntimeShape(int dimensions_count) : size_(dimensions_count) {
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LE(dimensions_count, kMaxSmallSize);
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape(int shape_size, int32_t value) : size_(shape_size) {
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LE(shape_size, kMaxSmallSize);
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     for (int i = 0; i < shape_size; ++i) {
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****       SetDim(i, value);
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     }
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape(int dimensions_count, const int32_t* dims_data)
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****       : size_(dimensions_count) {
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     // check of dimensions_count handled by ReplaceWith()
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     ReplaceWith(dimensions_count, dims_data);
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #ifdef TENSORFLOW_LITE_KERNELS_INTERNAL_RUNTIME_SHAPE_H_
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape(const ::tflite::RuntimeShape& other)
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****       : RuntimeShape(other.DimensionsCount(), other.DimsData()) {}
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   operator ::tflite::RuntimeShape() const {
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     return ::tflite::RuntimeShape(DimensionsCount(), DimsData());
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #endif
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   bool operator==(const RuntimeShape& comp) const {
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     return this->size_ == comp.size_ &&
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****            std::memcmp(DimsData(), comp.DimsData(), size_ * sizeof(int32_t)) ==
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****                0;
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   ~RuntimeShape() {}
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t DimensionsCount() const { return size_; }
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_GE(i, 0);
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LT(i, size_);
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     return dims_[i];
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   void SetDim(int i, int32_t val) {
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_GE(i, 0);
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LT(i, size_);
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     dims_[i] = val;
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s 			page 3
+
+
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   static RuntimeShape ExtendedShape(int new_shape_size,
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****                                     const RuntimeShape& shape) {
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LE(new_shape_size, kMaxSmallSize);
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     return RuntimeShape(new_shape_size, shape, 1);
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t* DimsData() { return dims_; }
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   const int32_t* DimsData() const { return dims_; }
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   const int32_t* DimsDataUpTo5D() const { return dims_; }
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   void ReplaceWith(int dimensions_count, const int32_t* dims_data) {
+  31              		.loc 2 96 8 view -0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35              		.loc 2 96 8 is_stmt 0 view .LVU1
+  36 0000 08B5     		push	{r3, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 8
+  39              		.cfi_offset 3, -8
+  40              		.cfi_offset 14, -4
+  41 0002 0B46     		mov	r3, r1
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LE(dimensions_count, kMaxSmallSize);
+  42              		.loc 2 97 5 is_stmt 1 view .LVU2
+  43 0004 0629     		cmp	r1, #6
+  44 0006 06DC     		bgt	.L4
+  45 0008 1146     		mov	r1, r2
+  46              	.LVL1:
+  98:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     size_ = dimensions_count;
+  47              		.loc 2 98 5 view .LVU3
+  48              		.loc 2 98 11 is_stmt 0 view .LVU4
+  49 000a 40F8043B 		str	r3, [r0], #4
+  50              	.LVL2:
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     int32_t* dst_dims = DimsData();
+  51              		.loc 2 99 5 is_stmt 1 view .LVU5
+  52              	.LBB13:
+  53              	.LBI13:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   const int32_t* DimsData() const { return dims_; }
+  54              		.loc 2 92 12 view .LVU6
+  55              	.LBB14:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   const int32_t* DimsData() const { return dims_; }
+  56              		.loc 2 92 25 view .LVU7
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   const int32_t* DimsData() const { return dims_; }
+  57              		.loc 2 92 25 is_stmt 0 view .LVU8
+  58              	.LBE14:
+  59              	.LBE13:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     std::memcpy(dst_dims, dims_data, dimensions_count * sizeof(int32_t));
+  60              		.loc 2 100 5 is_stmt 1 view .LVU9
+  61              		.loc 2 100 16 is_stmt 0 view .LVU10
+  62 000e 9A00     		lsls	r2, r3, #2
+  63              	.LVL3:
+  64              		.loc 2 100 16 view .LVU11
+  65 0010 FFF7FEFF 		bl	memcpy
+  66              	.LVL4:
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  67              		.loc 2 101 3 view .LVU12
+  68 0014 08BD     		pop	{r3, pc}
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s 			page 4
+
+
+  69              	.LVL5:
+  70              	.L4:
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     size_ = dimensions_count;
+  71              		.loc 2 97 5 discriminator 1 view .LVU13
+  72 0016 FFF7FEFF 		bl	abort
+  73              	.LVL6:
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     size_ = dimensions_count;
+  74              		.loc 2 97 5 discriminator 1 view .LVU14
+  75              		.cfi_endproc
+  76              	.LFE875:
+  78              		.section	.text._ZN6tflite5micro14GetTensorShapeEPKNS0_12TfLiteTensorE,"ax",%progbits
+  79              		.align	1
+  80              		.global	_ZN6tflite5micro14GetTensorShapeEPKNS0_12TfLiteTensorE
+  81              		.syntax unified
+  82              		.thumb
+  83              		.thumb_func
+  85              	_ZN6tflite5micro14GetTensorShapeEPKNS0_12TfLiteTensorE:
+  86              	.LVL7:
+  87              	.LFB940:
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** /* Copyright 2023 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** #include "tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** #include <cstddef>
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** 
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** namespace tflite {
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** namespace micro {
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** 
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** RuntimeShape GetTensorShape(const TfLiteTensor* tensor) {
+  88              		.loc 1 23 57 is_stmt 1 view -0
+  89              		.cfi_startproc
+  90              		@ args = 0, pretend = 0, frame = 0
+  91              		@ frame_needed = 0, uses_anonymous_args = 0
+  92              		.loc 1 23 57 is_stmt 0 view .LVU16
+  93 0000 10B5     		push	{r4, lr}
+  94              	.LCFI1:
+  95              		.cfi_def_cfa_offset 8
+  96              		.cfi_offset 4, -8
+  97              		.cfi_offset 14, -4
+  98 0002 0446     		mov	r4, r0
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc ****   if (tensor == nullptr) {
+  99              		.loc 1 24 3 is_stmt 1 view .LVU17
+ 100 0004 39B1     		cbz	r1, .L9
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc ****     return RuntimeShape();
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s 			page 5
+
+
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc ****   }
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** 
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc ****   TfLiteIntArray* dims = tensor->dims;
+ 101              		.loc 1 28 3 view .LVU18
+ 102              	.LVL8:
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc ****   const int dims_size = dims->size;
+ 103              		.loc 1 29 3 view .LVU19
+ 104              		.loc 1 29 13 is_stmt 0 view .LVU20
+ 105 0006 4A69     		ldr	r2, [r1, #20]
+ 106 0008 52F8041B 		ldr	r1, [r2], #4
+ 107              	.LVL9:
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc ****   const int32_t* dims_data = reinterpret_cast<const int32_t*>(dims->data);
+ 108              		.loc 1 30 3 is_stmt 1 view .LVU21
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc ****   return RuntimeShape(dims_size, dims_data);
+ 109              		.loc 1 31 3 view .LVU22
+ 110              	.LBB15:
+ 111              	.LBI15:
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****       : size_(dimensions_count) {
+ 112              		.loc 2 53 3 view .LVU23
+ 113              	.LBB16:
+ 114              	.LBB17:
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     // check of dimensions_count handled by ReplaceWith()
+ 115              		.loc 2 54 9 is_stmt 0 view .LVU24
+ 116 000c 0160     		str	r1, [r0]
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+ 117              		.loc 2 56 5 is_stmt 1 view .LVU25
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+ 118              		.loc 2 56 16 is_stmt 0 view .LVU26
+ 119 000e FFF7FEFF 		bl	_ZN6tflite5micro12RuntimeShape11ReplaceWithEiPKl
+ 120              	.LVL10:
+ 121              	.L5:
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+ 122              		.loc 2 56 16 view .LVU27
+ 123              	.LBE17:
+ 124              	.LBE16:
+ 125              	.LBE15:
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** }
+ 126              		.loc 1 32 1 view .LVU28
+ 127 0012 2046     		mov	r0, r4
+ 128 0014 10BD     		pop	{r4, pc}
+ 129              	.LVL11:
+ 130              	.L9:
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc ****   }
+ 131              		.loc 1 25 5 is_stmt 1 view .LVU29
+ 132              	.LBB18:
+ 133              	.LBI18:
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 134              		.loc 2 40 3 view .LVU30
+ 135              	.LBB19:
+ 136              	.LBB20:
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 137              		.loc 2 40 20 is_stmt 0 view .LVU31
+ 138 0016 2160     		str	r1, [r4]
+ 139              	.LVL12:
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 140              		.loc 2 40 20 view .LVU32
+ 141              	.LBE20:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s 			page 6
+
+
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 142              		.loc 2 40 30 view .LVU33
+ 143 0018 FBE7     		b	.L5
+ 144              	.LBE19:
+ 145              	.LBE18:
+ 146              		.cfi_endproc
+ 147              	.LFE940:
+ 149              		.section	.text._ZN6tflite5micro14GetTensorShapeEDn,"ax",%progbits
+ 150              		.align	1
+ 151              		.global	_ZN6tflite5micro14GetTensorShapeEDn
+ 152              		.syntax unified
+ 153              		.thumb
+ 154              		.thumb_func
+ 156              	_ZN6tflite5micro14GetTensorShapeEDn:
+ 157              	.LVL13:
+ 158              	.LFB941:
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** 
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.cc **** RuntimeShape GetTensorShape(std::nullptr_t) { return RuntimeShape(); }
+ 159              		.loc 1 34 45 is_stmt 1 view -0
+ 160              		.cfi_startproc
+ 161              		@ args = 0, pretend = 0, frame = 0
+ 162              		@ frame_needed = 0, uses_anonymous_args = 0
+ 163              		@ link register save eliminated.
+ 164              		.loc 1 34 47 view .LVU35
+ 165              	.LBB21:
+ 166              	.LBI21:
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 167              		.loc 2 40 3 view .LVU36
+ 168              	.LBB22:
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 169              		.loc 2 40 20 is_stmt 0 view .LVU37
+ 170 0000 0022     		movs	r2, #0
+ 171 0002 0260     		str	r2, [r0]
+ 172              	.LVL14:
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 173              		.loc 2 40 20 view .LVU38
+ 174              	.LBE22:
+ 175              	.LBE21:
+ 176              		.loc 1 34 70 view .LVU39
+ 177 0004 7047     		bx	lr
+ 178              		.cfi_endproc
+ 179              	.LFE941:
+ 181              		.text
+ 182              	.Letext0:
+ 183              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 184              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 185              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 186              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 187              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 188              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 189              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 190              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 191              		.file 11 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 192              		.file 12 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 193              		.file 13 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 194              		.file 14 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 195              		.file 15 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s 			page 7
+
+
+ 196              		.file 16 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 197              		.file 17 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 198              		.file 18 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 199              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 200              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 201              		.file 21 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 202              		.file 22 "lib/tflite-micro/tensorflow/lite/micro/micro_log.h"
+ 203              		.file 23 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/types.h"
+ 204              		.file 24 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ 205              		.file 25 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+ 206              		.file 26 "<built-in>"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s 			page 8
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 tensor_ctypes.cc
+C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s:21     .text._ZN6tflite5micro12RuntimeShape11ReplaceWithEiPKl:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s:27     .text._ZN6tflite5micro12RuntimeShape11ReplaceWithEiPKl:00000000 _ZN6tflite5micro12RuntimeShape11ReplaceWithEiPKl
+C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s:79     .text._ZN6tflite5micro14GetTensorShapeEPKNS0_12TfLiteTensorE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s:85     .text._ZN6tflite5micro14GetTensorShapeEPKNS0_12TfLiteTensorE:00000000 _ZN6tflite5micro14GetTensorShapeEPKNS0_12TfLiteTensorE
+C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s:150    .text._ZN6tflite5micro14GetTensorShapeEDn:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccqLizWs.s:156    .text._ZN6tflite5micro14GetTensorShapeEDn:00000000 _ZN6tflite5micro14GetTensorShapeEDn
+
+UNDEFINED SYMBOLS
+memcpy
+abort

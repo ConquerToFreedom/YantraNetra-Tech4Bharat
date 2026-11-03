@@ -1,0 +1,176 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc8nlKR3.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"debug_log.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/debug_log.cc"
+  20              		.section	.text.DebugLog,"ax",%progbits
+  21              		.align	1
+  22              		.global	DebugLog
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	DebugLog:
+  28              	.LVL0:
+  29              	.LFB16:
+   1:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** /* Copyright 2023 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // Reference implementation of the DebugLog() function that's required for a
+  17:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // platform to support the TensorFlow Lite for Microcontrollers library. This is
+  18:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // the only function that's absolutely required to be available on a target
+  19:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // device, since it's used for communicating test results back to the host so
+  20:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // that we can verify the implementation is working correctly.
+  21:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // This function should support standard C/C++ stdio style formatting
+  22:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // operations. It's designed to be as easy as possible to supply an
+  23:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // implementation though. On platforms that have a POSIX stack or C library, it
+  24:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // can be written as a single call to `vfprintf(stderr, format, args)` to output
+  25:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // a string to the error stream of the console, but if there's no OS or C
+  26:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // library available, there's almost always an equivalent way to write out a
+  27:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // string to some serial interface that can be used instead. To add an
+  28:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // equivalent function for your own platform, create your own implementation
+  29:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // file, and place it in a subfolder with named after the OS you're targeting.
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc8nlKR3.s 			page 2
+
+
+  30:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // For example, see the Cortex M bare metal version in the
+  31:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // tensorflow/lite/micro/bluepill/debug_log.cc file.
+  32:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** 
+  33:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** #include "tensorflow/lite/micro/debug_log.h"
+  34:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  36:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** #include <cstdio>
+  37:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** #endif
+  38:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** 
+  39:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** extern "C" void DebugLog(const char* format, va_list args) {
+  30              		.loc 1 39 60 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 39 60 is_stmt 0 view .LVU1
+  35 0000 08B5     		push	{r3, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 3, -8
+  39              		.cfi_offset 14, -4
+  40 0002 0A46     		mov	r2, r1
+  40:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  41:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc ****   // Reusing TF_LITE_STRIP_ERROR_STRINGS to disable DebugLog completely to get
+  42:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc ****   // maximum reduction in binary size. This is because we have DebugLog calls
+  43:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc ****   // via TF_LITE_CHECK that are not stubbed out by TF_LITE_REPORT_ERROR.
+  44:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc ****   vfprintf(stderr, format, args);
+  41              		.loc 1 44 3 is_stmt 1 view .LVU2
+  42              		.loc 1 44 11 is_stmt 0 view .LVU3
+  43 0004 034B     		ldr	r3, .L3
+  44 0006 1B68     		ldr	r3, [r3]
+  45 0008 0146     		mov	r1, r0
+  46              	.LVL1:
+  47              		.loc 1 44 11 view .LVU4
+  48 000a D868     		ldr	r0, [r3, #12]
+  49              	.LVL2:
+  50              		.loc 1 44 11 view .LVU5
+  51 000c FFF7FEFF 		bl	vfprintf
+  52              	.LVL3:
+  45:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** #endif
+  46:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** }
+  53              		.loc 1 46 1 view .LVU6
+  54 0010 08BD     		pop	{r3, pc}
+  55              	.L4:
+  56 0012 00BF     		.align	2
+  57              	.L3:
+  58 0014 00000000 		.word	_impure_ptr
+  59              		.cfi_endproc
+  60              	.LFE16:
+  62              		.section	.text.DebugVsnprintf,"ax",%progbits
+  63              		.align	1
+  64              		.global	DebugVsnprintf
+  65              		.syntax unified
+  66              		.thumb
+  67              		.thumb_func
+  69              	DebugVsnprintf:
+  70              	.LVL4:
+  71              	.LFB17:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc8nlKR3.s 			page 3
+
+
+  47:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** 
+  48:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** #ifndef TF_LITE_STRIP_ERROR_STRINGS
+  49:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** // Only called from MicroVsnprintf (micro_log.h)
+  50:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** extern "C" int DebugVsnprintf(char* buffer, size_t buf_size, const char* format,
+  51:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc ****                               va_list vlist) {
+  72              		.loc 1 51 46 is_stmt 1 view -0
+  73              		.cfi_startproc
+  74              		@ args = 0, pretend = 0, frame = 0
+  75              		@ frame_needed = 0, uses_anonymous_args = 0
+  76              		.loc 1 51 46 is_stmt 0 view .LVU8
+  77 0000 08B5     		push	{r3, lr}
+  78              	.LCFI1:
+  79              		.cfi_def_cfa_offset 8
+  80              		.cfi_offset 3, -8
+  81              		.cfi_offset 14, -4
+  52:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc ****   return vsnprintf(buffer, buf_size, format, vlist);
+  82              		.loc 1 52 3 is_stmt 1 view .LVU9
+  83              		.loc 1 52 19 is_stmt 0 view .LVU10
+  84 0002 FFF7FEFF 		bl	vsnprintf
+  85              	.LVL5:
+  53:lib/tflite-micro/tensorflow/lite/micro/debug_log.cc **** }
+  86              		.loc 1 53 1 view .LVU11
+  87 0006 08BD     		pop	{r3, pc}
+  88              		.cfi_endproc
+  89              	.LFE17:
+  91              		.text
+  92              	.Letext0:
+  93              		.file 2 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  94              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  95              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  96              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  97              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none
+  98              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none
+  99              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 100              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 101              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 102              		.file 11 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 103              		.file 12 "<built-in>"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc8nlKR3.s 			page 4
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 debug_log.cc
+C:\Users\Chetan\AppData\Local\Temp\cc8nlKR3.s:21     .text.DebugLog:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cc8nlKR3.s:27     .text.DebugLog:00000000 DebugLog
+C:\Users\Chetan\AppData\Local\Temp\cc8nlKR3.s:58     .text.DebugLog:00000014 $d
+C:\Users\Chetan\AppData\Local\Temp\cc8nlKR3.s:63     .text.DebugVsnprintf:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cc8nlKR3.s:69     .text.DebugVsnprintf:00000000 DebugVsnprintf
+
+UNDEFINED SYMBOLS
+vfprintf
+_impure_ptr
+vsnprintf

@@ -1,0 +1,130 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccEXdkN6.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"micro_time.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/micro_time.cc"
+  20              		.section	.text._ZN6tflite5micro16ticks_per_secondEv,"ax",%progbits
+  21              		.align	1
+  22              		.global	_ZN6tflite5micro16ticks_per_secondEv
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro16ticks_per_secondEv:
+  28              	.LFB4:
+   1:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // Reference implementation of timer functions.  Platforms are not required to
+  17:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // implement these timer methods, but they are required to enable profiling.
+  18:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // On platforms that have a POSIX stack or C library, it can be written using
+  20:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // methods from <sys/time.h> or clock() from <time.h>.
+  21:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // To add an equivalent function for your own platform, create your own
+  23:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // implementation file, and place it in a subfolder with named after the OS
+  24:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // you're targeting. For example, see the Cortex M bare metal version in
+  25:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // tensorflow/lite/micro/bluepill/micro_time.cc
+  26:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+  27:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** #include "tensorflow/lite/micro/micro_time.h"
+  28:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+  29:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** #if defined(TF_LITE_USE_CTIME)
+  30:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** #include <ctime>
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccEXdkN6.s 			page 2
+
+
+  31:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** #endif
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+  33:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** namespace tflite {
+  34:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** namespace micro {
+  35:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+  36:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** #if !defined(TF_LITE_USE_CTIME)
+  37:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // Reference implementation of the ticks_per_second() function that's required
+  39:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // for a platform to support Tensorflow Lite for Microcontrollers profiling.
+  40:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // This returns 0 by default because timing is an optional feature that builds
+  41:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // without errors on platforms that do not need it.
+  42:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** uint32_t ticks_per_second() { return 0; }
+  29              		.loc 1 42 29 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34              		.loc 1 42 31 view .LVU1
+  35              		.loc 1 42 41 is_stmt 0 view .LVU2
+  36 0000 0020     		movs	r0, #0
+  37 0002 7047     		bx	lr
+  38              		.cfi_endproc
+  39              	.LFE4:
+  41              		.section	.text._ZN6tflite5micro19GetCurrentTimeTicksEv,"ax",%progbits
+  42              		.align	1
+  43              		.global	_ZN6tflite5micro19GetCurrentTimeTicksEv
+  44              		.syntax unified
+  45              		.thumb
+  46              		.thumb_func
+  48              	_ZN6tflite5micro19GetCurrentTimeTicksEv:
+  49              	.LFB5:
+  43:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** 
+  44:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // Reference implementation of the GetCurrentTimeTicks() function that's
+  45:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // required for a platform to support Tensorflow Lite for Microcontrollers
+  46:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // profiling. This returns 0 by default because timing is an optional feature
+  47:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** // that builds without errors on platforms that do not need it.
+  48:lib/tflite-micro/tensorflow/lite/micro/micro_time.cc **** uint32_t GetCurrentTimeTicks() { return 0; }
+  50              		.loc 1 48 32 is_stmt 1 view -0
+  51              		.cfi_startproc
+  52              		@ args = 0, pretend = 0, frame = 0
+  53              		@ frame_needed = 0, uses_anonymous_args = 0
+  54              		@ link register save eliminated.
+  55              		.loc 1 48 34 view .LVU4
+  56              		.loc 1 48 44 is_stmt 0 view .LVU5
+  57 0000 0020     		movs	r0, #0
+  58 0002 7047     		bx	lr
+  59              		.cfi_endproc
+  60              	.LFE5:
+  62              		.text
+  63              	.Letext0:
+  64              		.file 2 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  65              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  66              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  67              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  68              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+  69              		.file 7 "lib/tflite-micro/tensorflow/lite/micro/micro_time.h"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccEXdkN6.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 micro_time.cc
+C:\Users\Chetan\AppData\Local\Temp\ccEXdkN6.s:21     .text._ZN6tflite5micro16ticks_per_secondEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccEXdkN6.s:27     .text._ZN6tflite5micro16ticks_per_secondEv:00000000 _ZN6tflite5micro16ticks_per_secondEv
+C:\Users\Chetan\AppData\Local\Temp\ccEXdkN6.s:42     .text._ZN6tflite5micro19GetCurrentTimeTicksEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccEXdkN6.s:48     .text._ZN6tflite5micro19GetCurrentTimeTicksEv:00000000 _ZN6tflite5micro19GetCurrentTimeTicksEv
+
+NO UNDEFINED SYMBOLS

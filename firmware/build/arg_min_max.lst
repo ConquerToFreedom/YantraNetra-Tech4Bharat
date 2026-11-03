@@ -1,0 +1,2975 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"arg_min_max.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc"
+  20              		.section	.text._ZNK6tflite5micro12RuntimeShape4DimsEi,"axG",%progbits,_ZNK6tflite5micro12RuntimeSh
+  21              		.align	1
+  22              		.weak	_ZNK6tflite5micro12RuntimeShape4DimsEi
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZNK6tflite5micro12RuntimeShape4DimsEi:
+  28              	.LVL0:
+  29              	.LFB2723:
+  30              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** /* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_INTERNAL_RUNTIME_SHAPE_H_
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_INTERNAL_RUNTIME_SHAPE_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #include <cstring>
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #include "tensorflow/lite/micro/compatibility.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** namespace tflite {
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** namespace micro {
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** template <int N>
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** struct Dims {
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int sizes[N];
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int strides[N];
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 2
+
+
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** };
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** class RuntimeShape {
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****  public:
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape& operator=(RuntimeShape const&) = delete;
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   // RuntimeShape in TFLM supports up to 6 dimensions.
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   // The name kMaxSmallSize comes from the same file of the upstream
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   // tensorflow lite repo and need to be kept the same for max reuse.
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   static constexpr int kMaxSmallSize = 6;
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape() : size_(0) {}
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   explicit RuntimeShape(int dimensions_count) : size_(dimensions_count) {
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LE(dimensions_count, kMaxSmallSize);
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape(int shape_size, int32_t value) : size_(shape_size) {
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LE(shape_size, kMaxSmallSize);
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     for (int i = 0; i < shape_size; ++i) {
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****       SetDim(i, value);
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     }
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape(int dimensions_count, const int32_t* dims_data)
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****       : size_(dimensions_count) {
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     // check of dimensions_count handled by ReplaceWith()
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     ReplaceWith(dimensions_count, dims_data);
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #ifdef TENSORFLOW_LITE_KERNELS_INTERNAL_RUNTIME_SHAPE_H_
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   RuntimeShape(const ::tflite::RuntimeShape& other)
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****       : RuntimeShape(other.DimensionsCount(), other.DimsData()) {}
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   operator ::tflite::RuntimeShape() const {
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     return ::tflite::RuntimeShape(DimensionsCount(), DimsData());
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** #endif
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   bool operator==(const RuntimeShape& comp) const {
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     return this->size_ == comp.size_ &&
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****            std::memcmp(DimsData(), comp.DimsData(), size_ * sizeof(int32_t)) ==
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****                0;
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   ~RuntimeShape() {}
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t DimensionsCount() const { return size_; }
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+  31              		.loc 2 76 11 view -0
+  32              		.cfi_startproc
+  33              		@ args = 0, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35              		.loc 2 76 11 is_stmt 0 view .LVU1
+  36 0000 08B5     		push	{r3, lr}
+  37              	.LCFI0:
+  38              		.cfi_def_cfa_offset 8
+  39              		.cfi_offset 3, -8
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 3
+
+
+  40              		.cfi_offset 14, -4
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_GE(i, 0);
+  41              		.loc 2 77 5 is_stmt 1 view .LVU2
+  42 0002 0029     		cmp	r1, #0
+  43              		.loc 2 77 5 is_stmt 0 view .LVU3
+  44 0004 06DB     		blt	.L5
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LT(i, size_);
+  45              		.loc 2 78 5 is_stmt 1 view .LVU4
+  46 0006 0368     		ldr	r3, [r0]
+  47 0008 8B42     		cmp	r3, r1
+  48 000a 05DD     		ble	.L6
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     return dims_[i];
+  49              		.loc 2 79 5 view .LVU5
+  50              		.loc 2 79 19 is_stmt 0 view .LVU6
+  51 000c 00EB8100 		add	r0, r0, r1, lsl #2
+  52              	.LVL1:
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   }
+  53              		.loc 2 80 3 view .LVU7
+  54 0010 4068     		ldr	r0, [r0, #4]
+  55 0012 08BD     		pop	{r3, pc}
+  56              	.LVL2:
+  57              	.L5:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     TFLITE_DCHECK_LT(i, size_);
+  58              		.loc 2 77 5 discriminator 1 view .LVU8
+  59 0014 FFF7FEFF 		bl	abort
+  60              	.LVL3:
+  61              	.L6:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     return dims_[i];
+  62              		.loc 2 78 5 discriminator 1 view .LVU9
+  63 0018 FFF7FEFF 		bl	abort
+  64              	.LVL4:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****     return dims_[i];
+  65              		.loc 2 78 5 discriminator 1 view .LVU10
+  66              		.cfi_endproc
+  67              	.LFE2723:
+  69              		.section	.text._ZN6tflite5micro16Register_ARG_MAXEv,"ax",%progbits
+  70              		.align	1
+  71              		.global	_ZN6tflite5micro16Register_ARG_MAXEv
+  72              		.syntax unified
+  73              		.thumb
+  74              		.thumb_func
+  76              	_ZN6tflite5micro16Register_ARG_MAXEv:
+  77              	.LVL5:
+  78              	.LFB3034:
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** /* Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** limitations under the License.
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 4
+
+
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** #include "tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** #include "tensorflow/lite/micro/builtin_op_data.h"
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** #include "tensorflow/lite/micro/kernels/internal/reference/comparisons.h"
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** #include "tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** #include "tensorflow/lite/micro/kernels/kernel_util.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** #include "tensorflow/lite/micro/micro_common.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** #include "tensorflow/lite/micro/micro_log.h"
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** namespace tflite {
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** namespace micro {
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** namespace {
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** constexpr int kInputTensor = 0;
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** constexpr int kAxis = 1;
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** constexpr int kOutputTensor = 0;
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** template <typename T1, typename T2, typename T3>
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** inline void ArgMinMaxHelper(const RuntimeShape& input1_shape,
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                             const T1* input1_data, const T3* input2_data,
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                             const RuntimeShape& output_shape, T2* output_data,
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                             bool is_arg_max) {
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   // Use Greater/Less from comparisons.h (formerly from kernels/micro_utils.h
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   // which was deprecated). Same as gtl::Greater but used here to reduce
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   // dependencies and binary size for micro environment.
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   if (is_arg_max) {
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     reference_ops::ArgMinMax(input1_shape, input1_data, input2_data,
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                              output_shape, output_data,
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                              reference_ops::GreaterFn<T1>());
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   } else {
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     reference_ops::ArgMinMax(input1_shape, input1_data, input2_data,
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                              output_shape, output_data,
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                              reference_ops::LessFn<T1>());
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   }
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** TfLiteStatus Eval(TfLiteContext* context, TfLiteNode* node, bool is_arg_max) {
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   const TfLiteEvalTensor* input =
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       tflite::micro::GetEvalInput(context, node, kInputTensor);
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   const TfLiteEvalTensor* axis =
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       tflite::micro::GetEvalInput(context, node, kAxis);
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   TfLiteEvalTensor* output =
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       tflite::micro::GetEvalOutput(context, node, kOutputTensor);
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** #define TF_LITE_ARG_MIN_MAX(data_type, axis_type, output_type)       \
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   ArgMinMaxHelper(tflite::micro::GetTensorShape(input),              \
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   tflite::micro::GetTensorData<data_type>(input),    \
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   tflite::micro::GetTensorData<axis_type>(axis),     \
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   tflite::micro::GetTensorShape(output),             \
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   tflite::micro::GetTensorData<output_type>(output), \
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   is_arg_max)
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   if (axis->type == kTfLiteInt32) {
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     if (output->type == kTfLiteInt32) {
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       switch (input->type) {
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         case kTfLiteFloat32:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 5
+
+
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           TF_LITE_ARG_MIN_MAX(float, int32_t, int32_t);
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         case kTfLiteInt8:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           TF_LITE_ARG_MIN_MAX(int8_t, int32_t, int32_t);
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         default:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           MicroPrintf(
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****               "Only float32, uint8_t and int8_t are "
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****               "supported currently, got %s.",
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****               TfLiteTypeGetName(input->type));
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           return kTfLiteError;
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       }
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     } else {
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       MicroPrintf("Only int32_t are supported currently, got %s.",
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   TfLiteTypeGetName(output->type));
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       return kTfLiteError;
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     }
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   } else {
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     MicroPrintf("Only int32_t are supported currently, got %s.",
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                 TfLiteTypeGetName(axis->type));
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     return kTfLiteError;
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   }
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** #undef TF_LITE_ARG_MIN_MAX
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   return kTfLiteOk;
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+  98:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** TfLiteStatus ArgMinEval(TfLiteContext* context, TfLiteNode* node) {
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   return Eval(context, node, false);
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 103:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** TfLiteStatus ArgMaxEval(TfLiteContext* context, TfLiteNode* node) {
+ 104:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   return Eval(context, node, true);
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 106:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 107:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }  // namespace
+ 108:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 109:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** TFLMRegistration Register_ARG_MAX() {
+  79              		.loc 1 109 37 is_stmt 1 view -0
+  80              		.cfi_startproc
+  81              		@ args = 0, pretend = 0, frame = 0
+  82              		@ frame_needed = 0, uses_anonymous_args = 0
+  83              		.loc 1 109 37 is_stmt 0 view .LVU12
+  84 0000 10B5     		push	{r4, lr}
+  85              	.LCFI1:
+  86              		.cfi_def_cfa_offset 8
+  87              		.cfi_offset 4, -8
+  88              		.cfi_offset 14, -4
+  89 0002 82B0     		sub	sp, sp, #8
+  90              	.LCFI2:
+  91              		.cfi_def_cfa_offset 16
+  92 0004 0446     		mov	r4, r0
+ 110:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   return tflite::micro::RegisterOp(nullptr, nullptr, ArgMaxEval);
+  93              		.loc 1 110 3 is_stmt 1 view .LVU13
+  94              		.loc 1 110 35 is_stmt 0 view .LVU14
+  95 0006 0021     		movs	r1, #0
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 6
+
+
+  96 0008 0191     		str	r1, [sp, #4]
+  97 000a 0091     		str	r1, [sp]
+  98 000c 034B     		ldr	r3, .L9
+  99 000e 0A46     		mov	r2, r1
+ 100 0010 FFF7FEFF 		bl	_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLit
+ 101              	.LVL6:
+ 111:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 102              		.loc 1 111 1 view .LVU15
+ 103 0014 2046     		mov	r0, r4
+ 104 0016 02B0     		add	sp, sp, #8
+ 105              	.LCFI3:
+ 106              		.cfi_def_cfa_offset 8
+ 107              		@ sp needed
+ 108 0018 10BD     		pop	{r4, pc}
+ 109              	.LVL7:
+ 110              	.L10:
+ 111              		.loc 1 111 1 view .LVU16
+ 112 001a 00BF     		.align	2
+ 113              	.L9:
+ 114 001c 00000000 		.word	_ZN6tflite5micro12_GLOBAL__N_1L10ArgMaxEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ 115              		.cfi_endproc
+ 116              	.LFE3034:
+ 118              		.section	.text._ZN6tflite5micro16Register_ARG_MINEv,"ax",%progbits
+ 119              		.align	1
+ 120              		.global	_ZN6tflite5micro16Register_ARG_MINEv
+ 121              		.syntax unified
+ 122              		.thumb
+ 123              		.thumb_func
+ 125              	_ZN6tflite5micro16Register_ARG_MINEv:
+ 126              	.LVL8:
+ 127              	.LFB3035:
+ 112:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 113:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** TFLMRegistration Register_ARG_MIN() {
+ 128              		.loc 1 113 37 is_stmt 1 view -0
+ 129              		.cfi_startproc
+ 130              		@ args = 0, pretend = 0, frame = 0
+ 131              		@ frame_needed = 0, uses_anonymous_args = 0
+ 132              		.loc 1 113 37 is_stmt 0 view .LVU18
+ 133 0000 10B5     		push	{r4, lr}
+ 134              	.LCFI4:
+ 135              		.cfi_def_cfa_offset 8
+ 136              		.cfi_offset 4, -8
+ 137              		.cfi_offset 14, -4
+ 138 0002 82B0     		sub	sp, sp, #8
+ 139              	.LCFI5:
+ 140              		.cfi_def_cfa_offset 16
+ 141 0004 0446     		mov	r4, r0
+ 114:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   return tflite::micro::RegisterOp(nullptr, nullptr, ArgMinEval);
+ 142              		.loc 1 114 3 is_stmt 1 view .LVU19
+ 143              		.loc 1 114 35 is_stmt 0 view .LVU20
+ 144 0006 0021     		movs	r1, #0
+ 145 0008 0191     		str	r1, [sp, #4]
+ 146 000a 0091     		str	r1, [sp]
+ 147 000c 034B     		ldr	r3, .L13
+ 148 000e 0A46     		mov	r2, r1
+ 149 0010 FFF7FEFF 		bl	_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLit
+ 150              	.LVL9:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 7
+
+
+ 115:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 151              		.loc 1 115 1 view .LVU21
+ 152 0014 2046     		mov	r0, r4
+ 153 0016 02B0     		add	sp, sp, #8
+ 154              	.LCFI6:
+ 155              		.cfi_def_cfa_offset 8
+ 156              		@ sp needed
+ 157 0018 10BD     		pop	{r4, pc}
+ 158              	.LVL10:
+ 159              	.L14:
+ 160              		.loc 1 115 1 view .LVU22
+ 161 001a 00BF     		.align	2
+ 162              	.L13:
+ 163 001c 00000000 		.word	_ZN6tflite5micro12_GLOBAL__N_1L10ArgMinEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ 164              		.cfi_endproc
+ 165              	.LFE3035:
+ 167              		.section	.text._ZN6tflite5micro13GetTensorDataIfEEPKT_PKNS0_16TfLiteEvalTensorE,"axG",%progbits,_Z
+ 168              		.align	1
+ 169              		.weak	_ZN6tflite5micro13GetTensorDataIfEEPKT_PKNS0_16TfLiteEvalTensorE
+ 170              		.syntax unified
+ 171              		.thumb
+ 172              		.thumb_func
+ 174              	_ZN6tflite5micro13GetTensorDataIfEEPKT_PKNS0_16TfLiteEvalTensorE:
+ 175              	.LVL11:
+ 176              	.LFB3134:
+ 177              		.file 3 "lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** /* Copyright 2024 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_KERNEL_UTIL_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_KERNEL_UTIL_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include <cstddef>
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include <cstdint>
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include <initializer_list>
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include <limits>
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/builtin_op_data.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/compatibility.h"
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/kernels/internal/types.h"
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/micro_common.h"
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/micro_context.h"
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #ifdef USE_TFLM_COMPRESSION
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 8
+
+
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/micro_arena_constants.h"
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #include "tensorflow/lite/micro/micro_utils.h"
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** #endif  // USE_TFLM_COMPRESSION
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** namespace tflite {
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** namespace micro {
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TFLMRegistration RegisterOp(
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     void* (*init)(TfLiteContext* context, const char* buffer, size_t length),
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     TfLiteStatus (*prepare)(TfLiteContext* context, TfLiteNode* node),
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     TfLiteStatus (*invoke)(TfLiteContext* context, TfLiteNode* node),
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     void (*free)(TfLiteContext* context, void* buffer) = nullptr,
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     void (*reset)(TfLiteContext* context, void* buffer) = nullptr);
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TFLMInferenceRegistration RegisterOp(
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     TfLiteStatus (*invoke)(TfLiteContext* context, TfLiteNode* node),
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****     void (*reset)(TfLiteContext* context, void* buffer) = nullptr);
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Prints out n bytes in a int8_t buffer as hex
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** void PrintNBytes(const int8_t* tensor_data, int n_bytes,
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                  const char* prefix = nullptr);
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Prints out the n bytes in a TfLiteEvalTensor as hex
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** void PrintNBytes(const TfLiteEvalTensor* tensor, int n_bytes,
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                  const char* prefix = nullptr);
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Prints out n bytes in a TfLiteTensor as hex
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** void PrintNBytes(const TfLiteTensor* tensor, int n_bytes,
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                  const char* prefix = nullptr);
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns a mutable tensor for a given input index. is_variable must be checked
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // during prepare when the full TfLiteTensor is available.
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteEvalTensor* GetMutableEvalInput(const TfLiteContext* context,
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                       const TfLiteNode* node, int index);
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns the TfLiteEvalTensor struct for a given input index in a node.
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** const TfLiteEvalTensor* GetEvalInput(const TfLiteContext* context,
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                      const TfLiteNode* node, int index);
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns the TfLiteEvalTensor struct for a given output index in a node.
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** TfLiteEvalTensor* GetEvalOutput(const TfLiteContext* context,
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****                                 const TfLiteNode* node, int index);
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns data for a TfLiteEvalTensor struct that are expected to exist.
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** template <typename T>
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** T* GetTensorData(TfLiteEvalTensor* tensor) {
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<T*>(tensor->data.raw);
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** // Returns const data for a TfLiteEvalTensor struct that are expected to exist.
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** template <typename T>
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** const T* GetTensorData(const TfLiteEvalTensor* tensor) {
+ 178              		.loc 3 86 10 is_stmt 1 view -0
+ 179              		.cfi_startproc
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 9
+
+
+ 180              		@ args = 0, pretend = 0, frame = 0
+ 181              		@ frame_needed = 0, uses_anonymous_args = 0
+ 182              		.loc 3 86 10 is_stmt 0 view .LVU24
+ 183 0000 08B5     		push	{r3, lr}
+ 184              	.LCFI7:
+ 185              		.cfi_def_cfa_offset 8
+ 186              		.cfi_offset 3, -8
+ 187              		.cfi_offset 14, -4
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 188              		.loc 3 87 3 view .LVU25
+ 189 0002 08B1     		cbz	r0, .L18
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<const T*>(tensor->data.raw);
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** }
+ 190              		.loc 3 89 1 view .LVU26
+ 191 0004 0068     		ldr	r0, [r0]
+ 192              	.LVL12:
+ 193              		.loc 3 89 1 view .LVU27
+ 194 0006 08BD     		pop	{r3, pc}
+ 195              	.LVL13:
+ 196              	.L18:
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 197              		.loc 3 87 3 discriminator 1 view .LVU28
+ 198 0008 FFF7FEFF 		bl	abort
+ 199              	.LVL14:
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 200              		.loc 3 87 3 discriminator 1 view .LVU29
+ 201              		.cfi_endproc
+ 202              	.LFE3134:
+ 204              		.section	.text._ZN6tflite5micro13GetTensorDataIlEEPKT_PKNS0_16TfLiteEvalTensorE,"axG",%progbits,_Z
+ 205              		.align	1
+ 206              		.weak	_ZN6tflite5micro13GetTensorDataIlEEPKT_PKNS0_16TfLiteEvalTensorE
+ 207              		.syntax unified
+ 208              		.thumb
+ 209              		.thumb_func
+ 211              	_ZN6tflite5micro13GetTensorDataIlEEPKT_PKNS0_16TfLiteEvalTensorE:
+ 212              	.LVL15:
+ 213              	.LFB3135:
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 214              		.loc 3 86 10 is_stmt 1 view -0
+ 215              		.cfi_startproc
+ 216              		@ args = 0, pretend = 0, frame = 0
+ 217              		@ frame_needed = 0, uses_anonymous_args = 0
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 218              		.loc 3 86 10 is_stmt 0 view .LVU31
+ 219 0000 08B5     		push	{r3, lr}
+ 220              	.LCFI8:
+ 221              		.cfi_def_cfa_offset 8
+ 222              		.cfi_offset 3, -8
+ 223              		.cfi_offset 14, -4
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 224              		.loc 3 87 3 view .LVU32
+ 225 0002 08B1     		cbz	r0, .L22
+ 226              		.loc 3 89 1 view .LVU33
+ 227 0004 0068     		ldr	r0, [r0]
+ 228              	.LVL16:
+ 229              		.loc 3 89 1 view .LVU34
+ 230 0006 08BD     		pop	{r3, pc}
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 10
+
+
+ 231              	.LVL17:
+ 232              	.L22:
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 233              		.loc 3 87 3 discriminator 1 view .LVU35
+ 234 0008 FFF7FEFF 		bl	abort
+ 235              	.LVL18:
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 236              		.loc 3 87 3 discriminator 1 view .LVU36
+ 237              		.cfi_endproc
+ 238              	.LFE3135:
+ 240              		.section	.text._ZN6tflite5micro13GetTensorDataIlEEPT_PNS0_16TfLiteEvalTensorE,"axG",%progbits,_ZN6
+ 241              		.align	1
+ 242              		.weak	_ZN6tflite5micro13GetTensorDataIlEEPT_PNS0_16TfLiteEvalTensorE
+ 243              		.syntax unified
+ 244              		.thumb
+ 245              		.thumb_func
+ 247              	_ZN6tflite5micro13GetTensorDataIlEEPT_PNS0_16TfLiteEvalTensorE:
+ 248              	.LVL19:
+ 249              	.LFB3136:
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 250              		.loc 3 79 4 is_stmt 1 view -0
+ 251              		.cfi_startproc
+ 252              		@ args = 0, pretend = 0, frame = 0
+ 253              		@ frame_needed = 0, uses_anonymous_args = 0
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 254              		.loc 3 79 4 is_stmt 0 view .LVU38
+ 255 0000 08B5     		push	{r3, lr}
+ 256              	.LCFI9:
+ 257              		.cfi_def_cfa_offset 8
+ 258              		.cfi_offset 3, -8
+ 259              		.cfi_offset 14, -4
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<T*>(tensor->data.raw);
+ 260              		.loc 3 80 3 view .LVU39
+ 261 0002 08B1     		cbz	r0, .L26
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 262              		.loc 3 82 1 view .LVU40
+ 263 0004 0068     		ldr	r0, [r0]
+ 264              	.LVL20:
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h **** 
+ 265              		.loc 3 82 1 view .LVU41
+ 266 0006 08BD     		pop	{r3, pc}
+ 267              	.LVL21:
+ 268              	.L26:
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<T*>(tensor->data.raw);
+ 269              		.loc 3 80 3 discriminator 1 view .LVU42
+ 270 0008 FFF7FEFF 		bl	abort
+ 271              	.LVL22:
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<T*>(tensor->data.raw);
+ 272              		.loc 3 80 3 discriminator 1 view .LVU43
+ 273              		.cfi_endproc
+ 274              	.LFE3136:
+ 276              		.section	.text._ZN6tflite5micro13GetTensorDataIaEEPKT_PKNS0_16TfLiteEvalTensorE,"axG",%progbits,_Z
+ 277              		.align	1
+ 278              		.weak	_ZN6tflite5micro13GetTensorDataIaEEPKT_PKNS0_16TfLiteEvalTensorE
+ 279              		.syntax unified
+ 280              		.thumb
+ 281              		.thumb_func
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 11
+
+
+ 283              	_ZN6tflite5micro13GetTensorDataIaEEPKT_PKNS0_16TfLiteEvalTensorE:
+ 284              	.LVL23:
+ 285              	.LFB3138:
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 286              		.loc 3 86 10 is_stmt 1 view -0
+ 287              		.cfi_startproc
+ 288              		@ args = 0, pretend = 0, frame = 0
+ 289              		@ frame_needed = 0, uses_anonymous_args = 0
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   TFLITE_DCHECK(tensor != nullptr);
+ 290              		.loc 3 86 10 is_stmt 0 view .LVU45
+ 291 0000 08B5     		push	{r3, lr}
+ 292              	.LCFI10:
+ 293              		.cfi_def_cfa_offset 8
+ 294              		.cfi_offset 3, -8
+ 295              		.cfi_offset 14, -4
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<const T*>(tensor->data.raw);
+ 296              		.loc 3 87 3 view .LVU46
+ 297 0002 08B1     		cbz	r0, .L30
+ 298              		.loc 3 89 1 view .LVU47
+ 299 0004 0068     		ldr	r0, [r0]
+ 300              	.LVL24:
+ 301              		.loc 3 89 1 view .LVU48
+ 302 0006 08BD     		pop	{r3, pc}
+ 303              	.LVL25:
+ 304              	.L30:
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<const T*>(tensor->data.raw);
+ 305              		.loc 3 87 3 discriminator 1 view .LVU49
+ 306 0008 FFF7FEFF 		bl	abort
+ 307              	.LVL26:
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h ****   return reinterpret_cast<const T*>(tensor->data.raw);
+ 308              		.loc 3 87 3 discriminator 1 view .LVU50
+ 309              		.cfi_endproc
+ 310              	.LFE3138:
+ 312              		.section	.text._ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_9GreaterFnIfEEEEvRKNS0_12RuntimeSh
+ 313              		.align	1
+ 314              		.weak	_ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_9GreaterFnIfEEEEvRKNS0_12RuntimeShapeEPKT_P
+ 315              		.syntax unified
+ 316              		.thumb
+ 317              		.thumb_func
+ 319              	_ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_9GreaterFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_
+ 320              	.LVL27:
+ 321              	.LFB3235:
+ 322              		.file 4 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** ==============================================================================*/
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 12
+
+
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_INTERNAL_REFERENCE_ARG_MIN_MAX_H_
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_INTERNAL_REFERENCE_ARG_MIN_MAX_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** #include <cmath>
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** #include <functional>
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** #include <type_traits>
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** #include "tensorflow/lite/micro/kernels/internal/types.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** namespace tflite {
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** namespace micro {
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** namespace reference_ops {
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** // Default comparator for non-floating-point types (no NaN possible).
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** template <typename T>
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** typename std::enable_if<!std::is_floating_point<T>::value,
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                         std::function<bool(T, T)>>::type
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** GetComparefunction(bool is_arg_max) {
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   if (is_arg_max) {
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     return std::greater<T>();
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   } else {
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     return std::less<T>();
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** }
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** // NaN-aware comparator for floating-point types.
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** // Matches TensorFlow eager semantics: NaN is treated as "less than any finite
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** // value" for ArgMax and "greater than any finite value" for ArgMin. A NaN
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** // candidate never replaces anything; a finite candidate always replaces a NaN
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** // accumulator. For all-NaN inputs the first index is returned.
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** template <typename T>
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** typename std::enable_if<std::is_floating_point<T>::value,
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                         std::function<bool(T, T)>>::type
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** GetComparefunction(bool is_arg_max) {
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   if (is_arg_max) {
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     return [](T candidate, T current) {
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       return !std::isnan(candidate) &&
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****              (std::isnan(current) || candidate > current);
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     };
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   } else {
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     return [](T candidate, T current) {
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       return !std::isnan(candidate) &&
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****              (std::isnan(current) || candidate < current);
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     };
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** }
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+  63:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** template <typename T1, typename T2, typename T3, typename Cmp>
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** void ArgMinMax(const RuntimeShape& input1_shape, const T1* input1_data,
+ 323              		.loc 4 64 6 is_stmt 1 view -0
+ 324              		.cfi_startproc
+ 325              		@ args = 8, pretend = 0, frame = 8
+ 326              		@ frame_needed = 0, uses_anonymous_args = 0
+ 327              		.loc 4 64 6 is_stmt 0 view .LVU52
+ 328 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 329              	.LCFI11:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 13
+
+
+ 330              		.cfi_def_cfa_offset 36
+ 331              		.cfi_offset 4, -36
+ 332              		.cfi_offset 5, -32
+ 333              		.cfi_offset 6, -28
+ 334              		.cfi_offset 7, -24
+ 335              		.cfi_offset 8, -20
+ 336              		.cfi_offset 9, -16
+ 337              		.cfi_offset 10, -12
+ 338              		.cfi_offset 11, -8
+ 339              		.cfi_offset 14, -4
+ 340 0004 83B0     		sub	sp, sp, #12
+ 341              	.LCFI12:
+ 342              		.cfi_def_cfa_offset 48
+ 343 0006 0090     		str	r0, [sp]
+ 344 0008 9B46     		mov	fp, r3
+ 345 000a 0C9F     		ldr	r7, [sp, #48]
+ 346              	.LVL28:
+ 347              	.LBB90:
+ 348              	.LBI90:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 349              		.loc 2 75 11 is_stmt 1 view .LVU53
+ 350              	.LBB91:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 351              		.loc 2 75 37 view .LVU54
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 352              		.loc 2 75 44 is_stmt 0 view .LVU55
+ 353 000c 0368     		ldr	r3, [r0]
+ 354              	.LVL29:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 355              		.loc 2 75 44 view .LVU56
+ 356 000e 0193     		str	r3, [sp, #4]
+ 357              	.LVL30:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 358              		.loc 2 75 44 view .LVU57
+ 359              	.LBE91:
+ 360              	.LBE90:
+  65:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                const T3* input2_data, const RuntimeShape& output_shape,
+  66:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                T2* output_data, const Cmp& cmp) {
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   TFLITE_DCHECK_GT(input1_shape.DimensionsCount(), 0);
+ 361              		.loc 4 67 3 discriminator 1 view .LVU58
+ 362 0010 002B     		cmp	r3, #0
+ 363 0012 14DD     		ble	.L50
+ 364 0014 0E46     		mov	r6, r1
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   TFLITE_DCHECK_EQ(input1_shape.DimensionsCount() - 1,
+ 365              		.loc 4 68 3 discriminator 1 view .LVU59
+ 366 0016 019B     		ldr	r3, [sp, #4]
+ 367 0018 013B     		subs	r3, r3, #1
+ 368              	.LVL31:
+ 369              	.LBB92:
+ 370              	.LBI92:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 371              		.loc 2 75 11 is_stmt 1 view .LVU60
+ 372              	.LBB93:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 373              		.loc 2 75 37 view .LVU61
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 374              		.loc 2 75 44 is_stmt 0 view .LVU62
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 14
+
+
+ 375 001a DBF80010 		ldr	r1, [fp]
+ 376              	.LVL32:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 377              		.loc 2 75 44 view .LVU63
+ 378              	.LBE93:
+ 379              	.LBE92:
+ 380              		.loc 4 68 3 discriminator 2 view .LVU64
+ 381 001e 8B42     		cmp	r3, r1
+ 382 0020 0FD1     		bne	.L51
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   int axis = input2_data[0];
+ 383              		.loc 4 70 7 view .LVU65
+ 384 0022 D2F80090 		ldr	r9, [r2]
+ 385              	.LVL33:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   if (axis < 0) {
+ 386              		.loc 4 71 3 view .LVU66
+ 387 0026 B9F1000F 		cmp	r9, #0
+ 388 002a 0CDB     		blt	.L52
+ 389              	.LVL34:
+ 390              	.L34:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     axis += input1_shape.DimensionsCount();
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   const int axis_size = input1_shape.Dims(axis);
+ 391              		.loc 4 74 42 view .LVU67
+ 392 002c 4946     		mov	r1, r9
+ 393 002e 0098     		ldr	r0, [sp]
+ 394              	.LVL35:
+ 395              		.loc 4 74 42 view .LVU68
+ 396 0030 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 397              	.LVL36:
+ 398              		.loc 4 74 42 view .LVU69
+ 399 0034 0546     		mov	r5, r0
+ 400              	.LVL37:
+ 401              	.LBB94:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   int outer_size = 1;
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   for (int i = 0; i < axis; ++i) {
+ 402              		.loc 4 77 12 view .LVU70
+ 403 0036 0024     		movs	r4, #0
+ 404              	.LBE94:
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   for (int i = 0; i < axis; ++i) {
+ 405              		.loc 4 76 7 view .LVU71
+ 406 0038 4FF0010A 		mov	r10, #1
+ 407              	.LBB95:
+ 408              		.loc 4 77 3 view .LVU72
+ 409 003c 14E0     		b	.L35
+ 410              	.LVL38:
+ 411              	.L50:
+ 412              		.loc 4 77 3 view .LVU73
+ 413              	.LBE95:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   TFLITE_DCHECK_EQ(input1_shape.DimensionsCount() - 1,
+ 414              		.loc 4 67 3 discriminator 2 view .LVU74
+ 415 003e FFF7FEFF 		bl	abort
+ 416              	.LVL39:
+ 417              	.L51:
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 418              		.loc 4 68 3 discriminator 3 view .LVU75
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 15
+
+
+ 419 0042 FFF7FEFF 		bl	abort
+ 420              	.LVL40:
+ 421              	.L52:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 422              		.loc 4 72 10 discriminator 1 view .LVU76
+ 423 0046 019B     		ldr	r3, [sp, #4]
+ 424 0048 9944     		add	r9, r9, r3
+ 425              	.LVL41:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 426              		.loc 4 72 10 discriminator 1 view .LVU77
+ 427 004a EFE7     		b	.L34
+ 428              	.LVL42:
+ 429              	.L37:
+ 430              	.LBB96:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 431              		.loc 4 78 5 view .LVU78
+ 432 004c 2146     		mov	r1, r4
+ 433 004e 0098     		ldr	r0, [sp]
+ 434 0050 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 435              	.LVL43:
+ 436 0054 8046     		mov	r8, r0
+ 437              		.loc 4 78 5 discriminator 1 view .LVU79
+ 438 0056 2146     		mov	r1, r4
+ 439 0058 5846     		mov	r0, fp
+ 440 005a FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 441              	.LVL44:
+ 442              		.loc 4 78 5 discriminator 2 view .LVU80
+ 443 005e 8045     		cmp	r8, r0
+ 444 0060 08D1     		bne	.L53
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 445              		.loc 4 79 16 discriminator 1 view .LVU81
+ 446 0062 08FB0AFA 		mul	r10, r8, r10
+ 447              	.LVL45:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 448              		.loc 4 77 3 is_stmt 1 discriminator 2 view .LVU82
+ 449 0066 0134     		adds	r4, r4, #1
+ 450              	.LVL46:
+ 451              	.L35:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 452              		.loc 4 77 21 discriminator 1 view .LVU83
+ 453 0068 A145     		cmp	r9, r4
+ 454 006a EFDC     		bgt	.L37
+ 455              	.LVL47:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 456              		.loc 4 77 21 is_stmt 0 discriminator 1 view .LVU84
+ 457              	.LBE96:
+ 458              	.LBB97:
+  80:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   int inner_size = 1;
+  83:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   const int dims_count = input1_shape.DimensionsCount();
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   for (int i = axis + 1; i < dims_count; ++i) {
+ 459              		.loc 4 84 12 view .LVU85
+ 460 006c 09F10108 		add	r8, r9, #1
+ 461              	.LVL48:
+ 462              		.loc 4 84 12 view .LVU86
+ 463              	.LBE97:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 16
+
+
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   const int dims_count = input1_shape.DimensionsCount();
+ 464              		.loc 4 82 7 view .LVU87
+ 465 0070 0124     		movs	r4, #1
+ 466              	.LVL49:
+ 467              	.LBB98:
+ 468              		.loc 4 84 3 view .LVU88
+ 469 0072 11E0     		b	.L38
+ 470              	.LVL50:
+ 471              	.L53:
+ 472              		.loc 4 84 3 view .LVU89
+ 473              	.LBE98:
+ 474              	.LBB99:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 475              		.loc 4 78 5 discriminator 3 view .LVU90
+ 476 0074 FFF7FEFF 		bl	abort
+ 477              	.LVL51:
+ 478              	.L40:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 479              		.loc 4 78 5 discriminator 3 view .LVU91
+ 480              	.LBE99:
+ 481              	.LBB100:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 482              		.loc 4 85 5 view .LVU92
+ 483 0078 4146     		mov	r1, r8
+ 484 007a 0098     		ldr	r0, [sp]
+ 485 007c FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 486              	.LVL52:
+ 487 0080 8146     		mov	r9, r0
+ 488              		.loc 4 85 5 discriminator 1 view .LVU93
+ 489 0082 08F1FF31 		add	r1, r8, #-1
+ 490 0086 5846     		mov	r0, fp
+ 491 0088 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 492              	.LVL53:
+ 493              		.loc 4 85 5 discriminator 2 view .LVU94
+ 494 008c 8145     		cmp	r9, r0
+ 495 008e 09D1     		bne	.L54
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 496              		.loc 4 86 16 discriminator 1 view .LVU95
+ 497 0090 09FB04F4 		mul	r4, r9, r4
+ 498              	.LVL54:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 499              		.loc 4 84 3 is_stmt 1 discriminator 2 view .LVU96
+ 500 0094 08F10108 		add	r8, r8, #1
+ 501              	.LVL55:
+ 502              	.L38:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 503              		.loc 4 84 28 discriminator 1 view .LVU97
+ 504 0098 019B     		ldr	r3, [sp, #4]
+ 505 009a 9845     		cmp	r8, r3
+ 506 009c ECDB     		blt	.L40
+ 507              	.LBE100:
+ 508              	.LBB101:
+  87:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   for (int outer = 0; outer < outer_size; ++outer) {
+ 509              		.loc 4 88 12 is_stmt 0 view .LVU98
+ 510 009e 4FF0000E 		mov	lr, #0
+ 511 00a2 29E0     		b	.L41
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 17
+
+
+ 512              	.L54:
+ 513              		.loc 4 88 12 view .LVU99
+ 514              	.LBE101:
+ 515              	.LBB110:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 516              		.loc 4 85 5 discriminator 3 view .LVU100
+ 517 00a4 FFF7FEFF 		bl	abort
+ 518              	.LVL56:
+ 519              	.L43:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 520              		.loc 4 85 5 discriminator 3 view .LVU101
+ 521              	.LBE110:
+ 522              	.LBB111:
+ 523              	.LBB102:
+ 524              	.LBB103:
+ 525              	.LBB104:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       for (int i = 1; i < axis_size; ++i) {
+ 526              		.loc 4 92 7 is_stmt 1 discriminator 2 view .LVU102
+ 527 00a8 0132     		adds	r2, r2, #1
+ 528              	.LVL57:
+ 529              	.L42:
+ 530              		.loc 4 92 25 discriminator 1 view .LVU103
+ 531 00aa AA42     		cmp	r2, r5
+ 532 00ac 0FDA     		bge	.L55
+ 533              	.LBB105:
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****             input1_data[(outer * axis_size + i) * inner_size + inner];
+ 534              		.loc 4 94 44 is_stmt 0 view .LVU104
+ 535 00ae 8318     		adds	r3, r0, r2
+ 536              		.loc 4 94 62 view .LVU105
+ 537 00b0 04FB0313 		mla	r3, r4, r3, r1
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 538              		.loc 4 93 21 view .LVU106
+ 539 00b4 06EB8303 		add	r3, r6, r3, lsl #2
+ 540              	.LVL58:
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         if (cmp(curr_value, min_max_value)) {
+ 541              		.loc 4 95 16 view .LVU107
+ 542 00b8 D3ED007A 		vldr.32	s15, [r3]
+ 543              		.loc 4 95 9 discriminator 1 view .LVU108
+ 544 00bc F4EEC77A 		vcmpe.f32	s15, s14
+ 545 00c0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 546 00c4 F0DD     		ble	.L43
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 547              		.loc 4 97 25 view .LVU109
+ 548 00c6 9446     		mov	ip, r2
+ 549              	.LVL59:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+ 550              		.loc 4 96 25 view .LVU110
+ 551 00c8 B0EE677A 		vmov.f32	s14, s15
+ 552              	.LVL60:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+ 553              		.loc 4 96 25 view .LVU111
+ 554 00cc ECE7     		b	.L43
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 18
+
+
+ 555              	.LVL61:
+ 556              	.L55:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+ 557              		.loc 4 96 25 view .LVU112
+ 558              	.LBE105:
+ 559              	.LBE104:
+  98:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         }
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       }
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       output_data[outer * inner_size + inner] = min_max_index;
+ 560              		.loc 4 100 38 view .LVU113
+ 561 00ce 0EFB0413 		mla	r3, lr, r4, r1
+ 562              		.loc 4 100 47 view .LVU114
+ 563 00d2 47F823C0 		str	ip, [r7, r3, lsl #2]
+ 564              	.LBE103:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 565              		.loc 4 89 5 is_stmt 1 discriminator 2 view .LVU115
+ 566 00d6 0131     		adds	r1, r1, #1
+ 567              	.LVL62:
+ 568              	.L46:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 569              		.loc 4 89 31 discriminator 1 view .LVU116
+ 570 00d8 8C42     		cmp	r4, r1
+ 571 00da 0BDD     		ble	.L56
+ 572              	.LBB108:
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 573              		.loc 4 90 46 is_stmt 0 view .LVU117
+ 574 00dc 05FB0EF0 		mul	r0, r5, lr
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 575              		.loc 4 90 71 view .LVU118
+ 576 00e0 04FB0013 		mla	r3, r4, r0, r1
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 577              		.loc 4 90 39 view .LVU119
+ 578 00e4 06EB8303 		add	r3, r6, r3, lsl #2
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 579              		.loc 4 90 12 view .LVU120
+ 580 00e8 93ED007A 		vldr.32	s14, [r3]
+ 581              	.LVL63:
+ 582              	.LBB106:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 583              		.loc 4 92 16 view .LVU121
+ 584 00ec 0122     		movs	r2, #1
+ 585              	.LBE106:
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       for (int i = 1; i < axis_size; ++i) {
+ 586              		.loc 4 91 10 view .LVU122
+ 587 00ee 4FF0000C 		mov	ip, #0
+ 588              	.LBB107:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 589              		.loc 4 92 7 view .LVU123
+ 590 00f2 DAE7     		b	.L42
+ 591              	.LVL64:
+ 592              	.L56:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 593              		.loc 4 92 7 view .LVU124
+ 594              	.LBE107:
+ 595              	.LBE108:
+ 596              	.LBE102:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 19
+
+
+ 597              		.loc 4 88 3 is_stmt 1 discriminator 2 view .LVU125
+ 598 00f4 0EF1010E 		add	lr, lr, #1
+ 599              	.LVL65:
+ 600              	.L41:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 601              		.loc 4 88 29 discriminator 1 view .LVU126
+ 602 00f8 F245     		cmp	r10, lr
+ 603 00fa 01DD     		ble	.L57
+ 604              	.LBB109:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 605              		.loc 4 89 14 is_stmt 0 view .LVU127
+ 606 00fc 0021     		movs	r1, #0
+ 607 00fe EBE7     		b	.L46
+ 608              	.L57:
+ 609              	.LBE109:
+ 610              	.LBE111:
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     }
+ 102:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 103:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** }
+ 611              		.loc 4 103 1 view .LVU128
+ 612 0100 03B0     		add	sp, sp, #12
+ 613              	.LCFI13:
+ 614              		.cfi_def_cfa_offset 36
+ 615              	.LVL66:
+ 616              		.loc 4 103 1 view .LVU129
+ 617              		@ sp needed
+ 618 0102 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 619              		.loc 4 103 1 view .LVU130
+ 620              		.cfi_endproc
+ 621              	.LFE3235:
+ 623              		.section	.text._ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_6LessFnIfEEEEvRKNS0_12RuntimeShape
+ 624              		.align	1
+ 625              		.weak	_ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_6LessFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1
+ 626              		.syntax unified
+ 627              		.thumb
+ 628              		.thumb_func
+ 630              	_ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_6LessFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0
+ 631              	.LVL67:
+ 632              	.LFB3236:
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                const T3* input2_data, const RuntimeShape& output_shape,
+ 633              		.loc 4 64 6 is_stmt 1 view -0
+ 634              		.cfi_startproc
+ 635              		@ args = 8, pretend = 0, frame = 8
+ 636              		@ frame_needed = 0, uses_anonymous_args = 0
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                const T3* input2_data, const RuntimeShape& output_shape,
+ 637              		.loc 4 64 6 is_stmt 0 view .LVU132
+ 638 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 639              	.LCFI14:
+ 640              		.cfi_def_cfa_offset 36
+ 641              		.cfi_offset 4, -36
+ 642              		.cfi_offset 5, -32
+ 643              		.cfi_offset 6, -28
+ 644              		.cfi_offset 7, -24
+ 645              		.cfi_offset 8, -20
+ 646              		.cfi_offset 9, -16
+ 647              		.cfi_offset 10, -12
+ 648              		.cfi_offset 11, -8
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 20
+
+
+ 649              		.cfi_offset 14, -4
+ 650 0004 83B0     		sub	sp, sp, #12
+ 651              	.LCFI15:
+ 652              		.cfi_def_cfa_offset 48
+ 653 0006 0090     		str	r0, [sp]
+ 654 0008 9B46     		mov	fp, r3
+ 655 000a 0C9F     		ldr	r7, [sp, #48]
+ 656              	.LVL68:
+ 657              	.LBB112:
+ 658              	.LBI112:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 659              		.loc 2 75 11 is_stmt 1 view .LVU133
+ 660              	.LBB113:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 661              		.loc 2 75 37 view .LVU134
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 662              		.loc 2 75 44 is_stmt 0 view .LVU135
+ 663 000c 0368     		ldr	r3, [r0]
+ 664              	.LVL69:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 665              		.loc 2 75 44 view .LVU136
+ 666 000e 0193     		str	r3, [sp, #4]
+ 667              	.LVL70:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 668              		.loc 2 75 44 view .LVU137
+ 669              	.LBE113:
+ 670              	.LBE112:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   TFLITE_DCHECK_EQ(input1_shape.DimensionsCount() - 1,
+ 671              		.loc 4 67 3 discriminator 1 view .LVU138
+ 672 0010 002B     		cmp	r3, #0
+ 673 0012 14DD     		ble	.L77
+ 674 0014 0E46     		mov	r6, r1
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 675              		.loc 4 68 3 discriminator 1 view .LVU139
+ 676 0016 019B     		ldr	r3, [sp, #4]
+ 677 0018 013B     		subs	r3, r3, #1
+ 678              	.LVL71:
+ 679              	.LBB114:
+ 680              	.LBI114:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 681              		.loc 2 75 11 is_stmt 1 view .LVU140
+ 682              	.LBB115:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 683              		.loc 2 75 37 view .LVU141
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 684              		.loc 2 75 44 is_stmt 0 view .LVU142
+ 685 001a DBF80010 		ldr	r1, [fp]
+ 686              	.LVL72:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 687              		.loc 2 75 44 view .LVU143
+ 688              	.LBE115:
+ 689              	.LBE114:
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 690              		.loc 4 68 3 discriminator 2 view .LVU144
+ 691 001e 8B42     		cmp	r3, r1
+ 692 0020 0FD1     		bne	.L78
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   if (axis < 0) {
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 21
+
+
+ 693              		.loc 4 70 7 view .LVU145
+ 694 0022 D2F80090 		ldr	r9, [r2]
+ 695              	.LVL73:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     axis += input1_shape.DimensionsCount();
+ 696              		.loc 4 71 3 view .LVU146
+ 697 0026 B9F1000F 		cmp	r9, #0
+ 698 002a 0CDB     		blt	.L79
+ 699              	.LVL74:
+ 700              	.L61:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+ 701              		.loc 4 74 42 view .LVU147
+ 702 002c 4946     		mov	r1, r9
+ 703 002e 0098     		ldr	r0, [sp]
+ 704              	.LVL75:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+ 705              		.loc 4 74 42 view .LVU148
+ 706 0030 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 707              	.LVL76:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+ 708              		.loc 4 74 42 view .LVU149
+ 709 0034 0546     		mov	r5, r0
+ 710              	.LVL77:
+ 711              	.LBB116:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 712              		.loc 4 77 12 view .LVU150
+ 713 0036 0024     		movs	r4, #0
+ 714              	.LBE116:
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   for (int i = 0; i < axis; ++i) {
+ 715              		.loc 4 76 7 view .LVU151
+ 716 0038 4FF0010A 		mov	r10, #1
+ 717              	.LBB117:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 718              		.loc 4 77 3 view .LVU152
+ 719 003c 14E0     		b	.L62
+ 720              	.LVL78:
+ 721              	.L77:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 722              		.loc 4 77 3 view .LVU153
+ 723              	.LBE117:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   TFLITE_DCHECK_EQ(input1_shape.DimensionsCount() - 1,
+ 724              		.loc 4 67 3 discriminator 2 view .LVU154
+ 725 003e FFF7FEFF 		bl	abort
+ 726              	.LVL79:
+ 727              	.L78:
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 728              		.loc 4 68 3 discriminator 3 view .LVU155
+ 729 0042 FFF7FEFF 		bl	abort
+ 730              	.LVL80:
+ 731              	.L79:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 732              		.loc 4 72 10 discriminator 1 view .LVU156
+ 733 0046 019B     		ldr	r3, [sp, #4]
+ 734 0048 9944     		add	r9, r9, r3
+ 735              	.LVL81:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 736              		.loc 4 72 10 discriminator 1 view .LVU157
+ 737 004a EFE7     		b	.L61
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 22
+
+
+ 738              	.LVL82:
+ 739              	.L64:
+ 740              	.LBB118:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 741              		.loc 4 78 5 view .LVU158
+ 742 004c 2146     		mov	r1, r4
+ 743 004e 0098     		ldr	r0, [sp]
+ 744 0050 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 745              	.LVL83:
+ 746 0054 8046     		mov	r8, r0
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 747              		.loc 4 78 5 discriminator 1 view .LVU159
+ 748 0056 2146     		mov	r1, r4
+ 749 0058 5846     		mov	r0, fp
+ 750 005a FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 751              	.LVL84:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 752              		.loc 4 78 5 discriminator 2 view .LVU160
+ 753 005e 8045     		cmp	r8, r0
+ 754 0060 08D1     		bne	.L80
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 755              		.loc 4 79 16 discriminator 1 view .LVU161
+ 756 0062 08FB0AFA 		mul	r10, r8, r10
+ 757              	.LVL85:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 758              		.loc 4 77 3 is_stmt 1 discriminator 2 view .LVU162
+ 759 0066 0134     		adds	r4, r4, #1
+ 760              	.LVL86:
+ 761              	.L62:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 762              		.loc 4 77 21 discriminator 1 view .LVU163
+ 763 0068 A145     		cmp	r9, r4
+ 764 006a EFDC     		bgt	.L64
+ 765              	.LVL87:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 766              		.loc 4 77 21 is_stmt 0 discriminator 1 view .LVU164
+ 767              	.LBE118:
+ 768              	.LBB119:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 769              		.loc 4 84 12 view .LVU165
+ 770 006c 09F10108 		add	r8, r9, #1
+ 771              	.LVL88:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 772              		.loc 4 84 12 view .LVU166
+ 773              	.LBE119:
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   const int dims_count = input1_shape.DimensionsCount();
+ 774              		.loc 4 82 7 view .LVU167
+ 775 0070 0124     		movs	r4, #1
+ 776              	.LVL89:
+ 777              	.LBB120:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 778              		.loc 4 84 3 view .LVU168
+ 779 0072 11E0     		b	.L65
+ 780              	.LVL90:
+ 781              	.L80:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 782              		.loc 4 84 3 view .LVU169
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 23
+
+
+ 783              	.LBE120:
+ 784              	.LBB121:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 785              		.loc 4 78 5 discriminator 3 view .LVU170
+ 786 0074 FFF7FEFF 		bl	abort
+ 787              	.LVL91:
+ 788              	.L67:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 789              		.loc 4 78 5 discriminator 3 view .LVU171
+ 790              	.LBE121:
+ 791              	.LBB122:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 792              		.loc 4 85 5 view .LVU172
+ 793 0078 4146     		mov	r1, r8
+ 794 007a 0098     		ldr	r0, [sp]
+ 795 007c FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 796              	.LVL92:
+ 797 0080 8146     		mov	r9, r0
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 798              		.loc 4 85 5 discriminator 1 view .LVU173
+ 799 0082 08F1FF31 		add	r1, r8, #-1
+ 800 0086 5846     		mov	r0, fp
+ 801 0088 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 802              	.LVL93:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 803              		.loc 4 85 5 discriminator 2 view .LVU174
+ 804 008c 8145     		cmp	r9, r0
+ 805 008e 09D1     		bne	.L81
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 806              		.loc 4 86 16 discriminator 1 view .LVU175
+ 807 0090 09FB04F4 		mul	r4, r9, r4
+ 808              	.LVL94:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 809              		.loc 4 84 3 is_stmt 1 discriminator 2 view .LVU176
+ 810 0094 08F10108 		add	r8, r8, #1
+ 811              	.LVL95:
+ 812              	.L65:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 813              		.loc 4 84 28 discriminator 1 view .LVU177
+ 814 0098 019B     		ldr	r3, [sp, #4]
+ 815 009a 9845     		cmp	r8, r3
+ 816 009c ECDB     		blt	.L67
+ 817              	.LBE122:
+ 818              	.LBB123:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 819              		.loc 4 88 12 is_stmt 0 view .LVU178
+ 820 009e 4FF0000E 		mov	lr, #0
+ 821 00a2 29E0     		b	.L68
+ 822              	.L81:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 823              		.loc 4 88 12 view .LVU179
+ 824              	.LBE123:
+ 825              	.LBB132:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 826              		.loc 4 85 5 discriminator 3 view .LVU180
+ 827 00a4 FFF7FEFF 		bl	abort
+ 828              	.LVL96:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 24
+
+
+ 829              	.L70:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 830              		.loc 4 85 5 discriminator 3 view .LVU181
+ 831              	.LBE132:
+ 832              	.LBB133:
+ 833              	.LBB124:
+ 834              	.LBB125:
+ 835              	.LBB126:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 836              		.loc 4 92 7 is_stmt 1 discriminator 2 view .LVU182
+ 837 00a8 0132     		adds	r2, r2, #1
+ 838              	.LVL97:
+ 839              	.L69:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 840              		.loc 4 92 25 discriminator 1 view .LVU183
+ 841 00aa AA42     		cmp	r2, r5
+ 842 00ac 0FDA     		bge	.L82
+ 843              	.LBB127:
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         if (cmp(curr_value, min_max_value)) {
+ 844              		.loc 4 94 44 is_stmt 0 view .LVU184
+ 845 00ae 8318     		adds	r3, r0, r2
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         if (cmp(curr_value, min_max_value)) {
+ 846              		.loc 4 94 62 view .LVU185
+ 847 00b0 04FB0313 		mla	r3, r4, r3, r1
+  93:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****             input1_data[(outer * axis_size + i) * inner_size + inner];
+ 848              		.loc 4 93 21 view .LVU186
+ 849 00b4 06EB8303 		add	r3, r6, r3, lsl #2
+ 850              	.LVL98:
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+ 851              		.loc 4 95 16 view .LVU187
+ 852 00b8 D3ED007A 		vldr.32	s15, [r3]
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+ 853              		.loc 4 95 9 discriminator 1 view .LVU188
+ 854 00bc F4EEC77A 		vcmpe.f32	s15, s14
+ 855 00c0 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+ 856 00c4 F0D5     		bpl	.L70
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         }
+ 857              		.loc 4 97 25 view .LVU189
+ 858 00c6 9446     		mov	ip, r2
+ 859              	.LVL99:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 860              		.loc 4 96 25 view .LVU190
+ 861 00c8 B0EE677A 		vmov.f32	s14, s15
+ 862              	.LVL100:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 863              		.loc 4 96 25 view .LVU191
+ 864 00cc ECE7     		b	.L70
+ 865              	.LVL101:
+ 866              	.L82:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 867              		.loc 4 96 25 view .LVU192
+ 868              	.LBE127:
+ 869              	.LBE126:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     }
+ 870              		.loc 4 100 38 view .LVU193
+ 871 00ce 0EFB0413 		mla	r3, lr, r4, r1
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     }
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 25
+
+
+ 872              		.loc 4 100 47 view .LVU194
+ 873 00d2 47F823C0 		str	ip, [r7, r3, lsl #2]
+ 874              	.LBE125:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 875              		.loc 4 89 5 is_stmt 1 discriminator 2 view .LVU195
+ 876 00d6 0131     		adds	r1, r1, #1
+ 877              	.LVL102:
+ 878              	.L73:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 879              		.loc 4 89 31 discriminator 1 view .LVU196
+ 880 00d8 8C42     		cmp	r4, r1
+ 881 00da 0BDD     		ble	.L83
+ 882              	.LBB130:
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 883              		.loc 4 90 46 is_stmt 0 view .LVU197
+ 884 00dc 05FB0EF0 		mul	r0, r5, lr
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 885              		.loc 4 90 71 view .LVU198
+ 886 00e0 04FB0013 		mla	r3, r4, r0, r1
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 887              		.loc 4 90 39 view .LVU199
+ 888 00e4 06EB8303 		add	r3, r6, r3, lsl #2
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 889              		.loc 4 90 12 view .LVU200
+ 890 00e8 93ED007A 		vldr.32	s14, [r3]
+ 891              	.LVL103:
+ 892              	.LBB128:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 893              		.loc 4 92 16 view .LVU201
+ 894 00ec 0122     		movs	r2, #1
+ 895              	.LBE128:
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       for (int i = 1; i < axis_size; ++i) {
+ 896              		.loc 4 91 10 view .LVU202
+ 897 00ee 4FF0000C 		mov	ip, #0
+ 898              	.LBB129:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 899              		.loc 4 92 7 view .LVU203
+ 900 00f2 DAE7     		b	.L69
+ 901              	.LVL104:
+ 902              	.L83:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 903              		.loc 4 92 7 view .LVU204
+ 904              	.LBE129:
+ 905              	.LBE130:
+ 906              	.LBE124:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 907              		.loc 4 88 3 is_stmt 1 discriminator 2 view .LVU205
+ 908 00f4 0EF1010E 		add	lr, lr, #1
+ 909              	.LVL105:
+ 910              	.L68:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 911              		.loc 4 88 29 discriminator 1 view .LVU206
+ 912 00f8 F245     		cmp	r10, lr
+ 913 00fa 01DD     		ble	.L84
+ 914              	.LBB131:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 915              		.loc 4 89 14 is_stmt 0 view .LVU207
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 26
+
+
+ 916 00fc 0021     		movs	r1, #0
+ 917 00fe EBE7     		b	.L73
+ 918              	.L84:
+ 919              	.LBE131:
+ 920              	.LBE133:
+ 921              		.loc 4 103 1 view .LVU208
+ 922 0100 03B0     		add	sp, sp, #12
+ 923              	.LCFI16:
+ 924              		.cfi_def_cfa_offset 36
+ 925              	.LVL106:
+ 926              		.loc 4 103 1 view .LVU209
+ 927              		@ sp needed
+ 928 0102 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 929              		.loc 4 103 1 view .LVU210
+ 930              		.cfi_endproc
+ 931              	.LFE3236:
+ 933              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIfllEEvRKNS0_12RuntimeShapeEPKT_PKT
+ 934              		.align	1
+ 935              		.syntax unified
+ 936              		.thumb
+ 937              		.thumb_func
+ 939              	_ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIfllEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b:
+ 940              	.LVL107:
+ 941              	.LFB3137:
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                             const T1* input1_data, const T3* input2_data,
+ 942              		.loc 1 34 13 is_stmt 1 view -0
+ 943              		.cfi_startproc
+ 944              		@ args = 8, pretend = 0, frame = 8
+ 945              		@ frame_needed = 0, uses_anonymous_args = 0
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                             const T1* input1_data, const T3* input2_data,
+ 946              		.loc 1 34 13 is_stmt 0 view .LVU212
+ 947 0000 10B5     		push	{r4, lr}
+ 948              	.LCFI17:
+ 949              		.cfi_def_cfa_offset 8
+ 950              		.cfi_offset 4, -8
+ 951              		.cfi_offset 14, -4
+ 952 0002 84B0     		sub	sp, sp, #16
+ 953              	.LCFI18:
+ 954              		.cfi_def_cfa_offset 24
+ 955 0004 9DF81CC0 		ldrb	ip, [sp, #28]	@ zero_extendqisi2
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     reference_ops::ArgMinMax(input1_shape, input1_data, input2_data,
+ 956              		.loc 1 41 3 view .LVU213
+ 957 0008 BCF1000F 		cmp	ip, #0
+ 958 000c 09D0     		beq	.L86
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                              output_shape, output_data,
+ 959              		.loc 1 42 29 view .LVU214
+ 960 000e 0DF1080C 		add	ip, sp, #8
+ 961 0012 CDF804C0 		str	ip, [sp, #4]
+ 962 0016 069C     		ldr	r4, [sp, #24]
+ 963 0018 0094     		str	r4, [sp]
+ 964 001a FFF7FEFF 		bl	_ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_9GreaterFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1
+ 965              	.LVL108:
+ 966              	.L85:
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 967              		.loc 1 50 1 view .LVU215
+ 968 001e 04B0     		add	sp, sp, #16
+ 969              	.LCFI19:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 27
+
+
+ 970              		.cfi_remember_state
+ 971              		.cfi_def_cfa_offset 8
+ 972              		@ sp needed
+ 973 0020 10BD     		pop	{r4, pc}
+ 974              	.LVL109:
+ 975              	.L86:
+ 976              	.LCFI20:
+ 977              		.cfi_restore_state
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                              output_shape, output_data,
+ 978              		.loc 1 46 29 view .LVU216
+ 979 0022 0DF10C0C 		add	ip, sp, #12
+ 980 0026 CDF804C0 		str	ip, [sp, #4]
+ 981 002a 069C     		ldr	r4, [sp, #24]
+ 982 002c 0094     		str	r4, [sp]
+ 983 002e FFF7FEFF 		bl	_ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_6LessFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7
+ 984              	.LVL110:
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 985              		.loc 1 50 1 view .LVU217
+ 986 0032 F4E7     		b	.L85
+ 987              		.cfi_endproc
+ 988              	.LFE3137:
+ 990              		.section	.text._ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_9GreaterFnIaEEEEvRKNS0_12RuntimeSh
+ 991              		.align	1
+ 992              		.weak	_ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_9GreaterFnIaEEEEvRKNS0_12RuntimeShapeEPKT_P
+ 993              		.syntax unified
+ 994              		.thumb
+ 995              		.thumb_func
+ 997              	_ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_9GreaterFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_
+ 998              	.LVL111:
+ 999              	.LFB3237:
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                const T3* input2_data, const RuntimeShape& output_shape,
+ 1000              		.loc 4 64 6 is_stmt 1 view -0
+ 1001              		.cfi_startproc
+ 1002              		@ args = 8, pretend = 0, frame = 8
+ 1003              		@ frame_needed = 0, uses_anonymous_args = 0
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                const T3* input2_data, const RuntimeShape& output_shape,
+ 1004              		.loc 4 64 6 is_stmt 0 view .LVU219
+ 1005 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1006              	.LCFI21:
+ 1007              		.cfi_def_cfa_offset 36
+ 1008              		.cfi_offset 4, -36
+ 1009              		.cfi_offset 5, -32
+ 1010              		.cfi_offset 6, -28
+ 1011              		.cfi_offset 7, -24
+ 1012              		.cfi_offset 8, -20
+ 1013              		.cfi_offset 9, -16
+ 1014              		.cfi_offset 10, -12
+ 1015              		.cfi_offset 11, -8
+ 1016              		.cfi_offset 14, -4
+ 1017 0004 83B0     		sub	sp, sp, #12
+ 1018              	.LCFI22:
+ 1019              		.cfi_def_cfa_offset 48
+ 1020 0006 0090     		str	r0, [sp]
+ 1021 0008 9B46     		mov	fp, r3
+ 1022 000a 0C9F     		ldr	r7, [sp, #48]
+ 1023              	.LVL112:
+ 1024              	.LBB134:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 28
+
+
+ 1025              	.LBI134:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1026              		.loc 2 75 11 is_stmt 1 view .LVU220
+ 1027              	.LBB135:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1028              		.loc 2 75 37 view .LVU221
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1029              		.loc 2 75 44 is_stmt 0 view .LVU222
+ 1030 000c 0368     		ldr	r3, [r0]
+ 1031              	.LVL113:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1032              		.loc 2 75 44 view .LVU223
+ 1033 000e 0193     		str	r3, [sp, #4]
+ 1034              	.LVL114:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1035              		.loc 2 75 44 view .LVU224
+ 1036              	.LBE135:
+ 1037              	.LBE134:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   TFLITE_DCHECK_EQ(input1_shape.DimensionsCount() - 1,
+ 1038              		.loc 4 67 3 discriminator 1 view .LVU225
+ 1039 0010 002B     		cmp	r3, #0
+ 1040 0012 14DD     		ble	.L108
+ 1041 0014 0E46     		mov	r6, r1
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 1042              		.loc 4 68 3 discriminator 1 view .LVU226
+ 1043 0016 019B     		ldr	r3, [sp, #4]
+ 1044 0018 013B     		subs	r3, r3, #1
+ 1045              	.LVL115:
+ 1046              	.LBB136:
+ 1047              	.LBI136:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1048              		.loc 2 75 11 is_stmt 1 view .LVU227
+ 1049              	.LBB137:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1050              		.loc 2 75 37 view .LVU228
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1051              		.loc 2 75 44 is_stmt 0 view .LVU229
+ 1052 001a DBF80010 		ldr	r1, [fp]
+ 1053              	.LVL116:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1054              		.loc 2 75 44 view .LVU230
+ 1055              	.LBE137:
+ 1056              	.LBE136:
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 1057              		.loc 4 68 3 discriminator 2 view .LVU231
+ 1058 001e 8B42     		cmp	r3, r1
+ 1059 0020 0FD1     		bne	.L109
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   if (axis < 0) {
+ 1060              		.loc 4 70 7 view .LVU232
+ 1061 0022 D2F80090 		ldr	r9, [r2]
+ 1062              	.LVL117:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     axis += input1_shape.DimensionsCount();
+ 1063              		.loc 4 71 3 view .LVU233
+ 1064 0026 B9F1000F 		cmp	r9, #0
+ 1065 002a 0CDB     		blt	.L110
+ 1066              	.LVL118:
+ 1067              	.L92:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 29
+
+
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+ 1068              		.loc 4 74 42 view .LVU234
+ 1069 002c 4946     		mov	r1, r9
+ 1070 002e 0098     		ldr	r0, [sp]
+ 1071              	.LVL119:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+ 1072              		.loc 4 74 42 view .LVU235
+ 1073 0030 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1074              	.LVL120:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+ 1075              		.loc 4 74 42 view .LVU236
+ 1076 0034 0546     		mov	r5, r0
+ 1077              	.LVL121:
+ 1078              	.LBB138:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1079              		.loc 4 77 12 view .LVU237
+ 1080 0036 0024     		movs	r4, #0
+ 1081              	.LBE138:
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   for (int i = 0; i < axis; ++i) {
+ 1082              		.loc 4 76 7 view .LVU238
+ 1083 0038 4FF0010A 		mov	r10, #1
+ 1084              	.LBB139:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1085              		.loc 4 77 3 view .LVU239
+ 1086 003c 14E0     		b	.L93
+ 1087              	.LVL122:
+ 1088              	.L108:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1089              		.loc 4 77 3 view .LVU240
+ 1090              	.LBE139:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   TFLITE_DCHECK_EQ(input1_shape.DimensionsCount() - 1,
+ 1091              		.loc 4 67 3 discriminator 2 view .LVU241
+ 1092 003e FFF7FEFF 		bl	abort
+ 1093              	.LVL123:
+ 1094              	.L109:
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 1095              		.loc 4 68 3 discriminator 3 view .LVU242
+ 1096 0042 FFF7FEFF 		bl	abort
+ 1097              	.LVL124:
+ 1098              	.L110:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 1099              		.loc 4 72 10 discriminator 1 view .LVU243
+ 1100 0046 019B     		ldr	r3, [sp, #4]
+ 1101 0048 9944     		add	r9, r9, r3
+ 1102              	.LVL125:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 1103              		.loc 4 72 10 discriminator 1 view .LVU244
+ 1104 004a EFE7     		b	.L92
+ 1105              	.LVL126:
+ 1106              	.L95:
+ 1107              	.LBB140:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1108              		.loc 4 78 5 view .LVU245
+ 1109 004c 2146     		mov	r1, r4
+ 1110 004e 0098     		ldr	r0, [sp]
+ 1111 0050 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1112              	.LVL127:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 30
+
+
+ 1113 0054 8046     		mov	r8, r0
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1114              		.loc 4 78 5 discriminator 1 view .LVU246
+ 1115 0056 2146     		mov	r1, r4
+ 1116 0058 5846     		mov	r0, fp
+ 1117 005a FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1118              	.LVL128:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1119              		.loc 4 78 5 discriminator 2 view .LVU247
+ 1120 005e 8045     		cmp	r8, r0
+ 1121 0060 08D1     		bne	.L111
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 1122              		.loc 4 79 16 discriminator 1 view .LVU248
+ 1123 0062 08FB0AFA 		mul	r10, r8, r10
+ 1124              	.LVL129:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1125              		.loc 4 77 3 is_stmt 1 discriminator 2 view .LVU249
+ 1126 0066 0134     		adds	r4, r4, #1
+ 1127              	.LVL130:
+ 1128              	.L93:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1129              		.loc 4 77 21 discriminator 1 view .LVU250
+ 1130 0068 A145     		cmp	r9, r4
+ 1131 006a EFDC     		bgt	.L95
+ 1132              	.LVL131:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1133              		.loc 4 77 21 is_stmt 0 discriminator 1 view .LVU251
+ 1134              	.LBE140:
+ 1135              	.LBB141:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1136              		.loc 4 84 12 view .LVU252
+ 1137 006c 09F10108 		add	r8, r9, #1
+ 1138              	.LVL132:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1139              		.loc 4 84 12 view .LVU253
+ 1140              	.LBE141:
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   const int dims_count = input1_shape.DimensionsCount();
+ 1141              		.loc 4 82 7 view .LVU254
+ 1142 0070 0124     		movs	r4, #1
+ 1143              	.LVL133:
+ 1144              	.LBB142:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1145              		.loc 4 84 3 view .LVU255
+ 1146 0072 11E0     		b	.L96
+ 1147              	.LVL134:
+ 1148              	.L111:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1149              		.loc 4 84 3 view .LVU256
+ 1150              	.LBE142:
+ 1151              	.LBB143:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1152              		.loc 4 78 5 discriminator 3 view .LVU257
+ 1153 0074 FFF7FEFF 		bl	abort
+ 1154              	.LVL135:
+ 1155              	.L98:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1156              		.loc 4 78 5 discriminator 3 view .LVU258
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 31
+
+
+ 1157              	.LBE143:
+ 1158              	.LBB144:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1159              		.loc 4 85 5 view .LVU259
+ 1160 0078 4146     		mov	r1, r8
+ 1161 007a 0098     		ldr	r0, [sp]
+ 1162 007c FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1163              	.LVL136:
+ 1164 0080 8146     		mov	r9, r0
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1165              		.loc 4 85 5 discriminator 1 view .LVU260
+ 1166 0082 08F1FF31 		add	r1, r8, #-1
+ 1167 0086 5846     		mov	r0, fp
+ 1168 0088 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1169              	.LVL137:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1170              		.loc 4 85 5 discriminator 2 view .LVU261
+ 1171 008c 8145     		cmp	r9, r0
+ 1172 008e 09D1     		bne	.L112
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 1173              		.loc 4 86 16 discriminator 1 view .LVU262
+ 1174 0090 09FB04F4 		mul	r4, r9, r4
+ 1175              	.LVL138:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1176              		.loc 4 84 3 is_stmt 1 discriminator 2 view .LVU263
+ 1177 0094 08F10108 		add	r8, r8, #1
+ 1178              	.LVL139:
+ 1179              	.L96:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1180              		.loc 4 84 28 discriminator 1 view .LVU264
+ 1181 0098 019B     		ldr	r3, [sp, #4]
+ 1182 009a 9845     		cmp	r8, r3
+ 1183 009c ECDB     		blt	.L98
+ 1184              	.LBE144:
+ 1185              	.LBB145:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1186              		.loc 4 88 12 is_stmt 0 view .LVU265
+ 1187 009e 4FF00008 		mov	r8, #0
+ 1188              	.LVL140:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1189              		.loc 4 88 12 view .LVU266
+ 1190 00a2 20E0     		b	.L99
+ 1191              	.LVL141:
+ 1192              	.L112:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1193              		.loc 4 88 12 view .LVU267
+ 1194              	.LBE145:
+ 1195              	.LBB154:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1196              		.loc 4 85 5 discriminator 3 view .LVU268
+ 1197 00a4 FFF7FEFF 		bl	abort
+ 1198              	.LVL142:
+ 1199              	.L101:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1200              		.loc 4 85 5 discriminator 3 view .LVU269
+ 1201              	.LBE154:
+ 1202              	.LBB155:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 32
+
+
+ 1203              	.LBB146:
+ 1204              	.LBB147:
+ 1205              	.LBB148:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1206              		.loc 4 92 7 is_stmt 1 discriminator 2 view .LVU270
+ 1207 00a8 0133     		adds	r3, r3, #1
+ 1208              	.LVL143:
+ 1209              	.L100:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1210              		.loc 4 92 25 discriminator 1 view .LVU271
+ 1211 00aa AB42     		cmp	r3, r5
+ 1212 00ac 09DA     		bge	.L113
+ 1213              	.LBB149:
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         if (cmp(curr_value, min_max_value)) {
+ 1214              		.loc 4 94 44 is_stmt 0 view .LVU272
+ 1215 00ae 0CEB0302 		add	r2, ip, r3
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         if (cmp(curr_value, min_max_value)) {
+ 1216              		.loc 4 94 62 view .LVU273
+ 1217 00b2 04FB0212 		mla	r2, r4, r2, r1
+ 1218              	.LVL144:
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+ 1219              		.loc 4 95 16 view .LVU274
+ 1220 00b6 B256     		ldrsb	r2, [r6, r2]
+ 1221              	.LVL145:
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+ 1222              		.loc 4 95 9 discriminator 1 view .LVU275
+ 1223 00b8 8242     		cmp	r2, r0
+ 1224 00ba F5DD     		ble	.L101
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         }
+ 1225              		.loc 4 97 25 view .LVU276
+ 1226 00bc 9E46     		mov	lr, r3
+ 1227              	.LVL146:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 1228              		.loc 4 96 25 view .LVU277
+ 1229 00be 1046     		mov	r0, r2
+ 1230              	.LVL147:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 1231              		.loc 4 96 25 view .LVU278
+ 1232 00c0 F2E7     		b	.L101
+ 1233              	.LVL148:
+ 1234              	.L113:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 1235              		.loc 4 96 25 view .LVU279
+ 1236              	.LBE149:
+ 1237              	.LBE148:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     }
+ 1238              		.loc 4 100 38 view .LVU280
+ 1239 00c2 08FB0413 		mla	r3, r8, r4, r1
+ 1240              	.LVL149:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     }
+ 1241              		.loc 4 100 47 view .LVU281
+ 1242 00c6 47F823E0 		str	lr, [r7, r3, lsl #2]
+ 1243              	.LBE147:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 1244              		.loc 4 89 5 is_stmt 1 discriminator 2 view .LVU282
+ 1245 00ca 0131     		adds	r1, r1, #1
+ 1246              	.LVL150:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 33
+
+
+ 1247              	.L104:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 1248              		.loc 4 89 31 discriminator 1 view .LVU283
+ 1249 00cc 8C42     		cmp	r4, r1
+ 1250 00ce 08DD     		ble	.L114
+ 1251              	.LBB152:
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 1252              		.loc 4 90 46 is_stmt 0 view .LVU284
+ 1253 00d0 05FB08FC 		mul	ip, r5, r8
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 1254              		.loc 4 90 71 view .LVU285
+ 1255 00d4 04FB0C13 		mla	r3, r4, ip, r1
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 1256              		.loc 4 90 12 view .LVU286
+ 1257 00d8 F056     		ldrsb	r0, [r6, r3]
+ 1258              	.LVL151:
+ 1259              	.LBB150:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1260              		.loc 4 92 16 view .LVU287
+ 1261 00da 0123     		movs	r3, #1
+ 1262              	.LBE150:
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       for (int i = 1; i < axis_size; ++i) {
+ 1263              		.loc 4 91 10 view .LVU288
+ 1264 00dc 4FF0000E 		mov	lr, #0
+ 1265              	.LBB151:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1266              		.loc 4 92 7 view .LVU289
+ 1267 00e0 E3E7     		b	.L100
+ 1268              	.LVL152:
+ 1269              	.L114:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1270              		.loc 4 92 7 view .LVU290
+ 1271              	.LBE151:
+ 1272              	.LBE152:
+ 1273              	.LBE146:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1274              		.loc 4 88 3 is_stmt 1 discriminator 2 view .LVU291
+ 1275 00e2 08F10108 		add	r8, r8, #1
+ 1276              	.LVL153:
+ 1277              	.L99:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1278              		.loc 4 88 29 discriminator 1 view .LVU292
+ 1279 00e6 C245     		cmp	r10, r8
+ 1280 00e8 01DD     		ble	.L115
+ 1281              	.LBB153:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 1282              		.loc 4 89 14 is_stmt 0 view .LVU293
+ 1283 00ea 0021     		movs	r1, #0
+ 1284 00ec EEE7     		b	.L104
+ 1285              	.L115:
+ 1286              	.LBE153:
+ 1287              	.LBE155:
+ 1288              		.loc 4 103 1 view .LVU294
+ 1289 00ee 03B0     		add	sp, sp, #12
+ 1290              	.LCFI23:
+ 1291              		.cfi_def_cfa_offset 36
+ 1292              	.LVL154:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 34
+
+
+ 1293              		.loc 4 103 1 view .LVU295
+ 1294              		@ sp needed
+ 1295 00f0 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1296              		.loc 4 103 1 view .LVU296
+ 1297              		.cfi_endproc
+ 1298              	.LFE3237:
+ 1300              		.section	.text._ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_6LessFnIaEEEEvRKNS0_12RuntimeShape
+ 1301              		.align	1
+ 1302              		.weak	_ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_6LessFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1
+ 1303              		.syntax unified
+ 1304              		.thumb
+ 1305              		.thumb_func
+ 1307              	_ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_6LessFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0
+ 1308              	.LVL155:
+ 1309              	.LFB3238:
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                const T3* input2_data, const RuntimeShape& output_shape,
+ 1310              		.loc 4 64 6 is_stmt 1 view -0
+ 1311              		.cfi_startproc
+ 1312              		@ args = 8, pretend = 0, frame = 8
+ 1313              		@ frame_needed = 0, uses_anonymous_args = 0
+  64:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                const T3* input2_data, const RuntimeShape& output_shape,
+ 1314              		.loc 4 64 6 is_stmt 0 view .LVU298
+ 1315 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 1316              	.LCFI24:
+ 1317              		.cfi_def_cfa_offset 36
+ 1318              		.cfi_offset 4, -36
+ 1319              		.cfi_offset 5, -32
+ 1320              		.cfi_offset 6, -28
+ 1321              		.cfi_offset 7, -24
+ 1322              		.cfi_offset 8, -20
+ 1323              		.cfi_offset 9, -16
+ 1324              		.cfi_offset 10, -12
+ 1325              		.cfi_offset 11, -8
+ 1326              		.cfi_offset 14, -4
+ 1327 0004 83B0     		sub	sp, sp, #12
+ 1328              	.LCFI25:
+ 1329              		.cfi_def_cfa_offset 48
+ 1330 0006 0090     		str	r0, [sp]
+ 1331 0008 9B46     		mov	fp, r3
+ 1332 000a 0C9F     		ldr	r7, [sp, #48]
+ 1333              	.LVL156:
+ 1334              	.LBB156:
+ 1335              	.LBI156:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1336              		.loc 2 75 11 is_stmt 1 view .LVU299
+ 1337              	.LBB157:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1338              		.loc 2 75 37 view .LVU300
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1339              		.loc 2 75 44 is_stmt 0 view .LVU301
+ 1340 000c 0368     		ldr	r3, [r0]
+ 1341              	.LVL157:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1342              		.loc 2 75 44 view .LVU302
+ 1343 000e 0193     		str	r3, [sp, #4]
+ 1344              	.LVL158:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 35
+
+
+ 1345              		.loc 2 75 44 view .LVU303
+ 1346              	.LBE157:
+ 1347              	.LBE156:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   TFLITE_DCHECK_EQ(input1_shape.DimensionsCount() - 1,
+ 1348              		.loc 4 67 3 discriminator 1 view .LVU304
+ 1349 0010 002B     		cmp	r3, #0
+ 1350 0012 14DD     		ble	.L135
+ 1351 0014 0E46     		mov	r6, r1
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 1352              		.loc 4 68 3 discriminator 1 view .LVU305
+ 1353 0016 019B     		ldr	r3, [sp, #4]
+ 1354 0018 013B     		subs	r3, r3, #1
+ 1355              	.LVL159:
+ 1356              	.LBB158:
+ 1357              	.LBI158:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1358              		.loc 2 75 11 is_stmt 1 view .LVU306
+ 1359              	.LBB159:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1360              		.loc 2 75 37 view .LVU307
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1361              		.loc 2 75 44 is_stmt 0 view .LVU308
+ 1362 001a DBF80010 		ldr	r1, [fp]
+ 1363              	.LVL160:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h ****   int32_t Dims(int i) const {
+ 1364              		.loc 2 75 44 view .LVU309
+ 1365              	.LBE159:
+ 1366              	.LBE158:
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 1367              		.loc 4 68 3 discriminator 2 view .LVU310
+ 1368 001e 8B42     		cmp	r3, r1
+ 1369 0020 0FD1     		bne	.L136
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   if (axis < 0) {
+ 1370              		.loc 4 70 7 view .LVU311
+ 1371 0022 D2F80090 		ldr	r9, [r2]
+ 1372              	.LVL161:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     axis += input1_shape.DimensionsCount();
+ 1373              		.loc 4 71 3 view .LVU312
+ 1374 0026 B9F1000F 		cmp	r9, #0
+ 1375 002a 0CDB     		blt	.L137
+ 1376              	.LVL162:
+ 1377              	.L119:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+ 1378              		.loc 4 74 42 view .LVU313
+ 1379 002c 4946     		mov	r1, r9
+ 1380 002e 0098     		ldr	r0, [sp]
+ 1381              	.LVL163:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+ 1382              		.loc 4 74 42 view .LVU314
+ 1383 0030 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1384              	.LVL164:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h **** 
+ 1385              		.loc 4 74 42 view .LVU315
+ 1386 0034 0546     		mov	r5, r0
+ 1387              	.LVL165:
+ 1388              	.LBB160:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 36
+
+
+ 1389              		.loc 4 77 12 view .LVU316
+ 1390 0036 0024     		movs	r4, #0
+ 1391              	.LBE160:
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   for (int i = 0; i < axis; ++i) {
+ 1392              		.loc 4 76 7 view .LVU317
+ 1393 0038 4FF0010A 		mov	r10, #1
+ 1394              	.LBB161:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1395              		.loc 4 77 3 view .LVU318
+ 1396 003c 14E0     		b	.L120
+ 1397              	.LVL166:
+ 1398              	.L135:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1399              		.loc 4 77 3 view .LVU319
+ 1400              	.LBE161:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   TFLITE_DCHECK_EQ(input1_shape.DimensionsCount() - 1,
+ 1401              		.loc 4 67 3 discriminator 2 view .LVU320
+ 1402 003e FFF7FEFF 		bl	abort
+ 1403              	.LVL167:
+ 1404              	.L136:
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****                    output_shape.DimensionsCount());
+ 1405              		.loc 4 68 3 discriminator 3 view .LVU321
+ 1406 0042 FFF7FEFF 		bl	abort
+ 1407              	.LVL168:
+ 1408              	.L137:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 1409              		.loc 4 72 10 discriminator 1 view .LVU322
+ 1410 0046 019B     		ldr	r3, [sp, #4]
+ 1411 0048 9944     		add	r9, r9, r3
+ 1412              	.LVL169:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 1413              		.loc 4 72 10 discriminator 1 view .LVU323
+ 1414 004a EFE7     		b	.L119
+ 1415              	.LVL170:
+ 1416              	.L122:
+ 1417              	.LBB162:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1418              		.loc 4 78 5 view .LVU324
+ 1419 004c 2146     		mov	r1, r4
+ 1420 004e 0098     		ldr	r0, [sp]
+ 1421 0050 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1422              	.LVL171:
+ 1423 0054 8046     		mov	r8, r0
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1424              		.loc 4 78 5 discriminator 1 view .LVU325
+ 1425 0056 2146     		mov	r1, r4
+ 1426 0058 5846     		mov	r0, fp
+ 1427 005a FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1428              	.LVL172:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1429              		.loc 4 78 5 discriminator 2 view .LVU326
+ 1430 005e 8045     		cmp	r8, r0
+ 1431 0060 08D1     		bne	.L138
+  79:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 1432              		.loc 4 79 16 discriminator 1 view .LVU327
+ 1433 0062 08FB0AFA 		mul	r10, r8, r10
+ 1434              	.LVL173:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 37
+
+
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1435              		.loc 4 77 3 is_stmt 1 discriminator 2 view .LVU328
+ 1436 0066 0134     		adds	r4, r4, #1
+ 1437              	.LVL174:
+ 1438              	.L120:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1439              		.loc 4 77 21 discriminator 1 view .LVU329
+ 1440 0068 A145     		cmp	r9, r4
+ 1441 006a EFDC     		bgt	.L122
+ 1442              	.LVL175:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i));
+ 1443              		.loc 4 77 21 is_stmt 0 discriminator 1 view .LVU330
+ 1444              	.LBE162:
+ 1445              	.LBB163:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1446              		.loc 4 84 12 view .LVU331
+ 1447 006c 09F10108 		add	r8, r9, #1
+ 1448              	.LVL176:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1449              		.loc 4 84 12 view .LVU332
+ 1450              	.LBE163:
+  82:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   const int dims_count = input1_shape.DimensionsCount();
+ 1451              		.loc 4 82 7 view .LVU333
+ 1452 0070 0124     		movs	r4, #1
+ 1453              	.LVL177:
+ 1454              	.LBB164:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1455              		.loc 4 84 3 view .LVU334
+ 1456 0072 11E0     		b	.L123
+ 1457              	.LVL178:
+ 1458              	.L138:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1459              		.loc 4 84 3 view .LVU335
+ 1460              	.LBE164:
+ 1461              	.LBB165:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1462              		.loc 4 78 5 discriminator 3 view .LVU336
+ 1463 0074 FFF7FEFF 		bl	abort
+ 1464              	.LVL179:
+ 1465              	.L125:
+  78:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     outer_size *= input1_shape.Dims(i);
+ 1466              		.loc 4 78 5 discriminator 3 view .LVU337
+ 1467              	.LBE165:
+ 1468              	.LBB166:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1469              		.loc 4 85 5 view .LVU338
+ 1470 0078 4146     		mov	r1, r8
+ 1471 007a 0098     		ldr	r0, [sp]
+ 1472 007c FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1473              	.LVL180:
+ 1474 0080 8146     		mov	r9, r0
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1475              		.loc 4 85 5 discriminator 1 view .LVU339
+ 1476 0082 08F1FF31 		add	r1, r8, #-1
+ 1477 0086 5846     		mov	r0, fp
+ 1478 0088 FFF7FEFF 		bl	_ZNK6tflite5micro12RuntimeShape4DimsEi
+ 1479              	.LVL181:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 38
+
+
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1480              		.loc 4 85 5 discriminator 2 view .LVU340
+ 1481 008c 8145     		cmp	r9, r0
+ 1482 008e 09D1     		bne	.L139
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****   }
+ 1483              		.loc 4 86 16 discriminator 1 view .LVU341
+ 1484 0090 09FB04F4 		mul	r4, r9, r4
+ 1485              	.LVL182:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1486              		.loc 4 84 3 is_stmt 1 discriminator 2 view .LVU342
+ 1487 0094 08F10108 		add	r8, r8, #1
+ 1488              	.LVL183:
+ 1489              	.L123:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     TFLITE_DCHECK_EQ(input1_shape.Dims(i), output_shape.Dims(i - 1));
+ 1490              		.loc 4 84 28 discriminator 1 view .LVU343
+ 1491 0098 019B     		ldr	r3, [sp, #4]
+ 1492 009a 9845     		cmp	r8, r3
+ 1493 009c ECDB     		blt	.L125
+ 1494              	.LBE166:
+ 1495              	.LBB167:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1496              		.loc 4 88 12 is_stmt 0 view .LVU344
+ 1497 009e 4FF00008 		mov	r8, #0
+ 1498              	.LVL184:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1499              		.loc 4 88 12 view .LVU345
+ 1500 00a2 20E0     		b	.L126
+ 1501              	.LVL185:
+ 1502              	.L139:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1503              		.loc 4 88 12 view .LVU346
+ 1504              	.LBE167:
+ 1505              	.LBB176:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1506              		.loc 4 85 5 discriminator 3 view .LVU347
+ 1507 00a4 FFF7FEFF 		bl	abort
+ 1508              	.LVL186:
+ 1509              	.L128:
+  85:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     inner_size *= input1_shape.Dims(i);
+ 1510              		.loc 4 85 5 discriminator 3 view .LVU348
+ 1511              	.LBE176:
+ 1512              	.LBB177:
+ 1513              	.LBB168:
+ 1514              	.LBB169:
+ 1515              	.LBB170:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1516              		.loc 4 92 7 is_stmt 1 discriminator 2 view .LVU349
+ 1517 00a8 0133     		adds	r3, r3, #1
+ 1518              	.LVL187:
+ 1519              	.L127:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1520              		.loc 4 92 25 discriminator 1 view .LVU350
+ 1521 00aa AB42     		cmp	r3, r5
+ 1522 00ac 09DA     		bge	.L140
+ 1523              	.LBB171:
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         if (cmp(curr_value, min_max_value)) {
+ 1524              		.loc 4 94 44 is_stmt 0 view .LVU351
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 39
+
+
+ 1525 00ae 0CEB0302 		add	r2, ip, r3
+  94:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         if (cmp(curr_value, min_max_value)) {
+ 1526              		.loc 4 94 62 view .LVU352
+ 1527 00b2 04FB0212 		mla	r2, r4, r2, r1
+ 1528              	.LVL188:
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+ 1529              		.loc 4 95 16 view .LVU353
+ 1530 00b6 B256     		ldrsb	r2, [r6, r2]
+ 1531              	.LVL189:
+  95:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_value = curr_value;
+ 1532              		.loc 4 95 9 discriminator 1 view .LVU354
+ 1533 00b8 8242     		cmp	r2, r0
+ 1534 00ba F5DA     		bge	.L128
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         }
+ 1535              		.loc 4 97 25 view .LVU355
+ 1536 00bc 9E46     		mov	lr, r3
+ 1537              	.LVL190:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 1538              		.loc 4 96 25 view .LVU356
+ 1539 00be 1046     		mov	r0, r2
+ 1540              	.LVL191:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 1541              		.loc 4 96 25 view .LVU357
+ 1542 00c0 F2E7     		b	.L128
+ 1543              	.LVL192:
+ 1544              	.L140:
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****           min_max_index = static_cast<T2>(i);
+ 1545              		.loc 4 96 25 view .LVU358
+ 1546              	.LBE171:
+ 1547              	.LBE170:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     }
+ 1548              		.loc 4 100 38 view .LVU359
+ 1549 00c2 08FB0413 		mla	r3, r8, r4, r1
+ 1550              	.LVL193:
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     }
+ 1551              		.loc 4 100 47 view .LVU360
+ 1552 00c6 47F823E0 		str	lr, [r7, r3, lsl #2]
+ 1553              	.LBE169:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 1554              		.loc 4 89 5 is_stmt 1 discriminator 2 view .LVU361
+ 1555 00ca 0131     		adds	r1, r1, #1
+ 1556              	.LVL194:
+ 1557              	.L131:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 1558              		.loc 4 89 31 discriminator 1 view .LVU362
+ 1559 00cc 8C42     		cmp	r4, r1
+ 1560 00ce 08DD     		ble	.L141
+ 1561              	.LBB174:
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 1562              		.loc 4 90 46 is_stmt 0 view .LVU363
+ 1563 00d0 05FB08FC 		mul	ip, r5, r8
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 1564              		.loc 4 90 71 view .LVU364
+ 1565 00d4 04FB0C13 		mla	r3, r4, ip, r1
+  90:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       T2 min_max_index = 0;
+ 1566              		.loc 4 90 12 view .LVU365
+ 1567 00d8 F056     		ldrsb	r0, [r6, r3]
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 40
+
+
+ 1568              	.LVL195:
+ 1569              	.LBB172:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1570              		.loc 4 92 16 view .LVU366
+ 1571 00da 0123     		movs	r3, #1
+ 1572              	.LBE172:
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       for (int i = 1; i < axis_size; ++i) {
+ 1573              		.loc 4 91 10 view .LVU367
+ 1574 00dc 4FF0000E 		mov	lr, #0
+ 1575              	.LBB173:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1576              		.loc 4 92 7 view .LVU368
+ 1577 00e0 E3E7     		b	.L127
+ 1578              	.LVL196:
+ 1579              	.L141:
+  92:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****         const auto& curr_value =
+ 1580              		.loc 4 92 7 view .LVU369
+ 1581              	.LBE173:
+ 1582              	.LBE174:
+ 1583              	.LBE168:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1584              		.loc 4 88 3 is_stmt 1 discriminator 2 view .LVU370
+ 1585 00e2 08F10108 		add	r8, r8, #1
+ 1586              	.LVL197:
+ 1587              	.L126:
+  88:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****     for (int inner = 0; inner < inner_size; ++inner) {
+ 1588              		.loc 4 88 29 discriminator 1 view .LVU371
+ 1589 00e6 C245     		cmp	r10, r8
+ 1590 00e8 01DD     		ble	.L142
+ 1591              	.LBB175:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/arg_min_max.h ****       auto min_max_value = input1_data[outer * axis_size * inner_size + inner];
+ 1592              		.loc 4 89 14 is_stmt 0 view .LVU372
+ 1593 00ea 0021     		movs	r1, #0
+ 1594 00ec EEE7     		b	.L131
+ 1595              	.L142:
+ 1596              	.LBE175:
+ 1597              	.LBE177:
+ 1598              		.loc 4 103 1 view .LVU373
+ 1599 00ee 03B0     		add	sp, sp, #12
+ 1600              	.LCFI26:
+ 1601              		.cfi_def_cfa_offset 36
+ 1602              	.LVL198:
+ 1603              		.loc 4 103 1 view .LVU374
+ 1604              		@ sp needed
+ 1605 00f0 BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 1606              		.loc 4 103 1 view .LVU375
+ 1607              		.cfi_endproc
+ 1608              	.LFE3238:
+ 1610              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIallEEvRKNS0_12RuntimeShapeEPKT_PKT
+ 1611              		.align	1
+ 1612              		.syntax unified
+ 1613              		.thumb
+ 1614              		.thumb_func
+ 1616              	_ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIallEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b:
+ 1617              	.LVL199:
+ 1618              	.LFB3139:
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                             const T1* input1_data, const T3* input2_data,
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 41
+
+
+ 1619              		.loc 1 34 13 is_stmt 1 view -0
+ 1620              		.cfi_startproc
+ 1621              		@ args = 8, pretend = 0, frame = 8
+ 1622              		@ frame_needed = 0, uses_anonymous_args = 0
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                             const T1* input1_data, const T3* input2_data,
+ 1623              		.loc 1 34 13 is_stmt 0 view .LVU377
+ 1624 0000 10B5     		push	{r4, lr}
+ 1625              	.LCFI27:
+ 1626              		.cfi_def_cfa_offset 8
+ 1627              		.cfi_offset 4, -8
+ 1628              		.cfi_offset 14, -4
+ 1629 0002 84B0     		sub	sp, sp, #16
+ 1630              	.LCFI28:
+ 1631              		.cfi_def_cfa_offset 24
+ 1632 0004 9DF81CC0 		ldrb	ip, [sp, #28]	@ zero_extendqisi2
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     reference_ops::ArgMinMax(input1_shape, input1_data, input2_data,
+ 1633              		.loc 1 41 3 view .LVU378
+ 1634 0008 BCF1000F 		cmp	ip, #0
+ 1635 000c 09D0     		beq	.L144
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                              output_shape, output_data,
+ 1636              		.loc 1 42 29 view .LVU379
+ 1637 000e 0DF1080C 		add	ip, sp, #8
+ 1638 0012 CDF804C0 		str	ip, [sp, #4]
+ 1639 0016 069C     		ldr	r4, [sp, #24]
+ 1640 0018 0094     		str	r4, [sp]
+ 1641 001a FFF7FEFF 		bl	_ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_9GreaterFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1
+ 1642              	.LVL200:
+ 1643              	.L143:
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 1644              		.loc 1 50 1 view .LVU380
+ 1645 001e 04B0     		add	sp, sp, #16
+ 1646              	.LCFI29:
+ 1647              		.cfi_remember_state
+ 1648              		.cfi_def_cfa_offset 8
+ 1649              		@ sp needed
+ 1650 0020 10BD     		pop	{r4, pc}
+ 1651              	.LVL201:
+ 1652              	.L144:
+ 1653              	.LCFI30:
+ 1654              		.cfi_restore_state
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                              output_shape, output_data,
+ 1655              		.loc 1 46 29 view .LVU381
+ 1656 0022 0DF10C0C 		add	ip, sp, #12
+ 1657 0026 CDF804C0 		str	ip, [sp, #4]
+ 1658 002a 069C     		ldr	r4, [sp, #24]
+ 1659 002c 0094     		str	r4, [sp]
+ 1660 002e FFF7FEFF 		bl	_ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_6LessFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7
+ 1661              	.LVL202:
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 1662              		.loc 1 50 1 view .LVU382
+ 1663 0032 F4E7     		b	.L143
+ 1664              		.cfi_endproc
+ 1665              	.LFE3139:
+ 1667              		.section	.rodata._ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb.str
+ 1668              		.align	2
+ 1669              	.LC0:
+ 1670 0000 4F6E6C79 		.ascii	"Only float32, uint8_t and int8_t are supported curr"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 42
+
+
+ 1670      20666C6F 
+ 1670      61743332 
+ 1670      2C207569 
+ 1670      6E74385F 
+ 1671 0033 656E746C 		.ascii	"ently, got %s.\000"
+ 1671      792C2067 
+ 1671      6F742025 
+ 1671      732E00
+ 1672 0042 0000     		.align	2
+ 1673              	.LC1:
+ 1674 0044 4F6E6C79 		.ascii	"Only int32_t are supported currently, got %s.\000"
+ 1674      20696E74 
+ 1674      33325F74 
+ 1674      20617265 
+ 1674      20737570 
+ 1675              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb,"ax",
+ 1676              		.align	1
+ 1677              		.syntax unified
+ 1678              		.thumb
+ 1679              		.thumb_func
+ 1681              	_ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb:
+ 1682              	.LVL203:
+ 1683              	.LFB3031:
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   const TfLiteEvalTensor* input =
+ 1684              		.loc 1 52 78 is_stmt 1 view -0
+ 1685              		.cfi_startproc
+ 1686              		@ args = 0, pretend = 0, frame = 112
+ 1687              		@ frame_needed = 0, uses_anonymous_args = 0
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   const TfLiteEvalTensor* input =
+ 1688              		.loc 1 52 78 is_stmt 0 view .LVU384
+ 1689 0000 2DE9F047 		push	{r4, r5, r6, r7, r8, r9, r10, lr}
+ 1690              	.LCFI31:
+ 1691              		.cfi_def_cfa_offset 32
+ 1692              		.cfi_offset 4, -32
+ 1693              		.cfi_offset 5, -28
+ 1694              		.cfi_offset 6, -24
+ 1695              		.cfi_offset 7, -20
+ 1696              		.cfi_offset 8, -16
+ 1697              		.cfi_offset 9, -12
+ 1698              		.cfi_offset 10, -8
+ 1699              		.cfi_offset 14, -4
+ 1700 0004 9EB0     		sub	sp, sp, #120
+ 1701              	.LCFI32:
+ 1702              		.cfi_def_cfa_offset 152
+ 1703 0006 0546     		mov	r5, r0
+ 1704 0008 0E46     		mov	r6, r1
+ 1705 000a 9246     		mov	r10, r2
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       tflite::micro::GetEvalInput(context, node, kInputTensor);
+ 1706              		.loc 1 53 3 is_stmt 1 view .LVU385
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   const TfLiteEvalTensor* axis =
+ 1707              		.loc 1 54 34 is_stmt 0 view .LVU386
+ 1708 000c 0022     		movs	r2, #0
+ 1709              	.LVL204:
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   const TfLiteEvalTensor* axis =
+ 1710              		.loc 1 54 34 view .LVU387
+ 1711 000e FFF7FEFF 		bl	_ZN6tflite5micro12GetEvalInputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+ 1712              	.LVL205:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 43
+
+
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   const TfLiteEvalTensor* axis =
+ 1713              		.loc 1 54 34 view .LVU388
+ 1714 0012 0746     		mov	r7, r0
+ 1715              	.LVL206:
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       tflite::micro::GetEvalInput(context, node, kAxis);
+ 1716              		.loc 1 55 3 is_stmt 1 view .LVU389
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   TfLiteEvalTensor* output =
+ 1717              		.loc 1 56 34 is_stmt 0 view .LVU390
+ 1718 0014 0122     		movs	r2, #1
+ 1719 0016 3146     		mov	r1, r6
+ 1720 0018 2846     		mov	r0, r5
+ 1721              	.LVL207:
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   TfLiteEvalTensor* output =
+ 1722              		.loc 1 56 34 view .LVU391
+ 1723 001a FFF7FEFF 		bl	_ZN6tflite5micro12GetEvalInputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+ 1724              	.LVL208:
+ 1725 001e 0446     		mov	r4, r0
+ 1726 0020 8046     		mov	r8, r0
+ 1727              	.LVL209:
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       tflite::micro::GetEvalOutput(context, node, kOutputTensor);
+ 1728              		.loc 1 57 3 is_stmt 1 view .LVU392
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 1729              		.loc 1 58 35 is_stmt 0 view .LVU393
+ 1730 0022 0022     		movs	r2, #0
+ 1731 0024 3146     		mov	r1, r6
+ 1732 0026 2846     		mov	r0, r5
+ 1733              	.LVL210:
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 1734              		.loc 1 58 35 view .LVU394
+ 1735 0028 FFF7FEFF 		bl	_ZN6tflite5micro13GetEvalOutputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+ 1736              	.LVL211:
+ 1737 002c 0246     		mov	r2, r0
+ 1738 002e 8146     		mov	r9, r0
+ 1739              	.LVL212:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     if (output->type == kTfLiteInt32) {
+ 1740              		.loc 1 67 3 is_stmt 1 view .LVU395
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     if (output->type == kTfLiteInt32) {
+ 1741              		.loc 1 67 13 is_stmt 0 view .LVU396
+ 1742 0030 207A     		ldrb	r0, [r4, #8]	@ zero_extendqisi2
+ 1743              	.LVL213:
+  67:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     if (output->type == kTfLiteInt32) {
+ 1744              		.loc 1 67 3 view .LVU397
+ 1745 0032 0228     		cmp	r0, #2
+ 1746 0034 55D1     		bne	.L148
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       switch (input->type) {
+ 1747              		.loc 1 68 5 is_stmt 1 view .LVU398
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       switch (input->type) {
+ 1748              		.loc 1 68 17 is_stmt 0 view .LVU399
+ 1749 0036 107A     		ldrb	r0, [r2, #8]	@ zero_extendqisi2
+  68:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       switch (input->type) {
+ 1750              		.loc 1 68 5 view .LVU400
+ 1751 0038 0228     		cmp	r0, #2
+ 1752 003a 4AD1     		bne	.L149
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         case kTfLiteFloat32:
+ 1753              		.loc 1 69 7 is_stmt 1 view .LVU401
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         case kTfLiteFloat32:
+ 1754              		.loc 1 69 22 is_stmt 0 view .LVU402
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 44
+
+
+ 1755 003c 387A     		ldrb	r0, [r7, #8]	@ zero_extendqisi2
+  69:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         case kTfLiteFloat32:
+ 1756              		.loc 1 69 7 view .LVU403
+ 1757 003e 0128     		cmp	r0, #1
+ 1758 0040 09D0     		beq	.L150
+ 1759 0042 0928     		cmp	r0, #9
+ 1760 0044 26D0     		beq	.L151
+  76:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           MicroPrintf(
+ 1761              		.loc 1 76 9 is_stmt 1 view .LVU404
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****               "Only float32, uint8_t and int8_t are "
+ 1762              		.loc 1 77 11 view .LVU405
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****               "Only float32, uint8_t and int8_t are "
+ 1763              		.loc 1 77 22 is_stmt 0 view .LVU406
+ 1764 0046 FFF7FEFF 		bl	_ZN6tflite5micro17TfLiteTypeGetNameENS0_10TfLiteTypeE
+ 1765              	.LVL214:
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****               "Only float32, uint8_t and int8_t are "
+ 1766              		.loc 1 77 22 view .LVU407
+ 1767 004a 0146     		mov	r1, r0
+  77:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****               "Only float32, uint8_t and int8_t are "
+ 1768              		.loc 1 77 22 discriminator 1 view .LVU408
+ 1769 004c 2A48     		ldr	r0, .L156
+ 1770 004e FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 1771              	.LVL215:
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       }
+ 1772              		.loc 1 81 11 is_stmt 1 view .LVU409
+  81:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****       }
+ 1773              		.loc 1 81 18 is_stmt 0 view .LVU410
+ 1774 0052 0120     		movs	r0, #1
+ 1775 0054 4CE0     		b	.L153
+ 1776              	.LVL216:
+ 1777              	.L150:
+  70:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           TF_LITE_ARG_MIN_MAX(float, int32_t, int32_t);
+ 1778              		.loc 1 70 9 is_stmt 1 view .LVU411
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1779              		.loc 1 71 11 view .LVU412
+ 1780 0056 3946     		mov	r1, r7
+ 1781 0058 02A8     		add	r0, sp, #8
+ 1782 005a FFF7FEFF 		bl	_ZN6tflite5micro14GetTensorShapeEPKNS0_16TfLiteEvalTensorE
+ 1783              	.LVL217:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1784              		.loc 1 71 11 is_stmt 0 discriminator 1 view .LVU413
+ 1785 005e 3846     		mov	r0, r7
+ 1786 0060 FFF7FEFF 		bl	_ZN6tflite5micro13GetTensorDataIfEEPKT_PKNS0_16TfLiteEvalTensorE
+ 1787              	.LVL218:
+ 1788 0064 0646     		mov	r6, r0
+ 1789              	.LVL219:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1790              		.loc 1 71 11 discriminator 2 view .LVU414
+ 1791 0066 4046     		mov	r0, r8
+ 1792 0068 FFF7FEFF 		bl	_ZN6tflite5micro13GetTensorDataIlEEPKT_PKNS0_16TfLiteEvalTensorE
+ 1793              	.LVL220:
+ 1794 006c 0546     		mov	r5, r0
+ 1795              	.LVL221:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1796              		.loc 1 71 11 discriminator 3 view .LVU415
+ 1797 006e 4946     		mov	r1, r9
+ 1798 0070 09AB     		add	r3, sp, #36
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 45
+
+
+ 1799 0072 1846     		mov	r0, r3
+ 1800 0074 FFF7FEFF 		bl	_ZN6tflite5micro14GetTensorShapeEPKNS0_16TfLiteEvalTensorE
+ 1801              	.LVL222:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1802              		.loc 1 71 11 discriminator 4 view .LVU416
+ 1803 0078 4846     		mov	r0, r9
+ 1804 007a FFF7FEFF 		bl	_ZN6tflite5micro13GetTensorDataIlEEPT_PNS0_16TfLiteEvalTensorE
+ 1805              	.LVL223:
+  71:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1806              		.loc 1 71 11 discriminator 5 view .LVU417
+ 1807 007e CDF804A0 		str	r10, [sp, #4]
+ 1808 0082 0090     		str	r0, [sp]
+ 1809 0084 09AB     		add	r3, sp, #36
+ 1810 0086 2A46     		mov	r2, r5
+ 1811 0088 3146     		mov	r1, r6
+ 1812 008a 02A8     		add	r0, sp, #8
+ 1813 008c FFF7FEFF 		bl	_ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIfllEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b
+ 1814              	.LVL224:
+ 1815              	.LBB178:
+ 1816              	.LBI178:
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 1817              		.loc 2 73 3 is_stmt 1 view .LVU418
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 1818              		.loc 2 73 3 is_stmt 0 view .LVU419
+ 1819              	.LBE178:
+ 1820              	.LBB179:
+ 1821              	.LBI179:
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 1822              		.loc 2 73 3 is_stmt 1 view .LVU420
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 1823              		.loc 2 73 3 is_stmt 0 view .LVU421
+ 1824              	.LBE179:
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         case kTfLiteInt8:
+ 1825              		.loc 1 72 11 is_stmt 1 view .LVU422
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 1826              		.loc 1 96 10 is_stmt 0 view .LVU423
+ 1827 0090 0020     		movs	r0, #0
+  72:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         case kTfLiteInt8:
+ 1828              		.loc 1 72 11 view .LVU424
+ 1829 0092 2DE0     		b	.L153
+ 1830              	.LVL225:
+ 1831              	.L151:
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           TF_LITE_ARG_MIN_MAX(int8_t, int32_t, int32_t);
+ 1832              		.loc 1 73 9 is_stmt 1 view .LVU425
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1833              		.loc 1 74 11 view .LVU426
+ 1834 0094 3946     		mov	r1, r7
+ 1835 0096 10A8     		add	r0, sp, #64
+ 1836 0098 FFF7FEFF 		bl	_ZN6tflite5micro14GetTensorShapeEPKNS0_16TfLiteEvalTensorE
+ 1837              	.LVL226:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1838              		.loc 1 74 11 is_stmt 0 discriminator 1 view .LVU427
+ 1839 009c 3846     		mov	r0, r7
+ 1840 009e FFF7FEFF 		bl	_ZN6tflite5micro13GetTensorDataIaEEPKT_PKNS0_16TfLiteEvalTensorE
+ 1841              	.LVL227:
+ 1842 00a2 0646     		mov	r6, r0
+ 1843              	.LVL228:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 46
+
+
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1844              		.loc 1 74 11 discriminator 2 view .LVU428
+ 1845 00a4 4046     		mov	r0, r8
+ 1846 00a6 FFF7FEFF 		bl	_ZN6tflite5micro13GetTensorDataIlEEPKT_PKNS0_16TfLiteEvalTensorE
+ 1847              	.LVL229:
+ 1848 00aa 0546     		mov	r5, r0
+ 1849              	.LVL230:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1850              		.loc 1 74 11 discriminator 3 view .LVU429
+ 1851 00ac 4946     		mov	r1, r9
+ 1852 00ae 17AB     		add	r3, sp, #92
+ 1853 00b0 1846     		mov	r0, r3
+ 1854 00b2 FFF7FEFF 		bl	_ZN6tflite5micro14GetTensorShapeEPKNS0_16TfLiteEvalTensorE
+ 1855              	.LVL231:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1856              		.loc 1 74 11 discriminator 4 view .LVU430
+ 1857 00b6 4846     		mov	r0, r9
+ 1858 00b8 FFF7FEFF 		bl	_ZN6tflite5micro13GetTensorDataIlEEPT_PNS0_16TfLiteEvalTensorE
+ 1859              	.LVL232:
+  74:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****           break;
+ 1860              		.loc 1 74 11 discriminator 5 view .LVU431
+ 1861 00bc CDF804A0 		str	r10, [sp, #4]
+ 1862 00c0 0090     		str	r0, [sp]
+ 1863 00c2 17AB     		add	r3, sp, #92
+ 1864 00c4 2A46     		mov	r2, r5
+ 1865 00c6 3146     		mov	r1, r6
+ 1866 00c8 10A8     		add	r0, sp, #64
+ 1867 00ca FFF7FEFF 		bl	_ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIallEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b
+ 1868              	.LVL233:
+ 1869              	.LBB180:
+ 1870              	.LBI180:
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 1871              		.loc 2 73 3 is_stmt 1 view .LVU432
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 1872              		.loc 2 73 3 is_stmt 0 view .LVU433
+ 1873              	.LBE180:
+ 1874              	.LBB181:
+ 1875              	.LBI181:
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 1876              		.loc 2 73 3 is_stmt 1 view .LVU434
+  73:lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h **** 
+ 1877              		.loc 2 73 3 is_stmt 0 view .LVU435
+ 1878              	.LBE181:
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         default:
+ 1879              		.loc 1 75 11 is_stmt 1 view .LVU436
+  96:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 1880              		.loc 1 96 10 is_stmt 0 view .LVU437
+ 1881 00ce 0020     		movs	r0, #0
+  75:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****         default:
+ 1882              		.loc 1 75 11 view .LVU438
+ 1883 00d0 0EE0     		b	.L153
+ 1884              	.LVL234:
+ 1885              	.L149:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   TfLiteTypeGetName(output->type));
+ 1886              		.loc 1 84 7 is_stmt 1 view .LVU439
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   TfLiteTypeGetName(output->type));
+ 1887              		.loc 1 84 18 is_stmt 0 view .LVU440
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 47
+
+
+ 1888 00d2 FFF7FEFF 		bl	_ZN6tflite5micro17TfLiteTypeGetNameENS0_10TfLiteTypeE
+ 1889              	.LVL235:
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   TfLiteTypeGetName(output->type));
+ 1890              		.loc 1 84 18 view .LVU441
+ 1891 00d6 0146     		mov	r1, r0
+  84:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                   TfLiteTypeGetName(output->type));
+ 1892              		.loc 1 84 18 discriminator 1 view .LVU442
+ 1893 00d8 0848     		ldr	r0, .L156+4
+ 1894 00da FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 1895              	.LVL236:
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     }
+ 1896              		.loc 1 86 7 is_stmt 1 view .LVU443
+  86:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****     }
+ 1897              		.loc 1 86 14 is_stmt 0 view .LVU444
+ 1898 00de 0120     		movs	r0, #1
+ 1899 00e0 06E0     		b	.L153
+ 1900              	.LVL237:
+ 1901              	.L148:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                 TfLiteTypeGetName(axis->type));
+ 1902              		.loc 1 89 5 is_stmt 1 view .LVU445
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                 TfLiteTypeGetName(axis->type));
+ 1903              		.loc 1 89 16 is_stmt 0 view .LVU446
+ 1904 00e2 FFF7FEFF 		bl	_ZN6tflite5micro17TfLiteTypeGetNameENS0_10TfLiteTypeE
+ 1905              	.LVL238:
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                 TfLiteTypeGetName(axis->type));
+ 1906              		.loc 1 89 16 view .LVU447
+ 1907 00e6 0146     		mov	r1, r0
+  89:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****                 TfLiteTypeGetName(axis->type));
+ 1908              		.loc 1 89 16 discriminator 1 view .LVU448
+ 1909 00e8 0448     		ldr	r0, .L156+4
+ 1910 00ea FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 1911              	.LVL239:
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   }
+ 1912              		.loc 1 91 5 is_stmt 1 view .LVU449
+  91:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   }
+ 1913              		.loc 1 91 12 is_stmt 0 view .LVU450
+ 1914 00ee 0120     		movs	r0, #1
+ 1915              	.LVL240:
+ 1916              	.L153:
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 1917              		.loc 1 97 1 view .LVU451
+ 1918 00f0 1EB0     		add	sp, sp, #120
+ 1919              	.LCFI33:
+ 1920              		.cfi_def_cfa_offset 32
+ 1921              		@ sp needed
+ 1922 00f2 BDE8F087 		pop	{r4, r5, r6, r7, r8, r9, r10, pc}
+ 1923              	.LVL241:
+ 1924              	.L157:
+  97:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 1925              		.loc 1 97 1 view .LVU452
+ 1926 00f6 00BF     		.align	2
+ 1927              	.L156:
+ 1928 00f8 00000000 		.word	.LC0
+ 1929 00fc 44000000 		.word	.LC1
+ 1930              		.cfi_endproc
+ 1931              	.LFE3031:
+ 1933              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L10ArgMaxEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 48
+
+
+ 1934              		.align	1
+ 1935              		.syntax unified
+ 1936              		.thumb
+ 1937              		.thumb_func
+ 1939              	_ZN6tflite5micro12_GLOBAL__N_1L10ArgMaxEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:
+ 1940              	.LVL242:
+ 1941              	.LFB3033:
+ 103:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   return Eval(context, node, true);
+ 1942              		.loc 1 103 67 is_stmt 1 view -0
+ 1943              		.cfi_startproc
+ 1944              		@ args = 0, pretend = 0, frame = 0
+ 1945              		@ frame_needed = 0, uses_anonymous_args = 0
+ 103:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   return Eval(context, node, true);
+ 1946              		.loc 1 103 67 is_stmt 0 view .LVU454
+ 1947 0000 08B5     		push	{r3, lr}
+ 1948              	.LCFI34:
+ 1949              		.cfi_def_cfa_offset 8
+ 1950              		.cfi_offset 3, -8
+ 1951              		.cfi_offset 14, -4
+ 104:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 1952              		.loc 1 104 3 is_stmt 1 view .LVU455
+ 104:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 1953              		.loc 1 104 14 is_stmt 0 view .LVU456
+ 1954 0002 0122     		movs	r2, #1
+ 1955 0004 FFF7FEFF 		bl	_ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb
+ 1956              	.LVL243:
+ 105:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 1957              		.loc 1 105 1 view .LVU457
+ 1958 0008 08BD     		pop	{r3, pc}
+ 1959              		.cfi_endproc
+ 1960              	.LFE3033:
+ 1962              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L10ArgMinEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ 1963              		.align	1
+ 1964              		.syntax unified
+ 1965              		.thumb
+ 1966              		.thumb_func
+ 1968              	_ZN6tflite5micro12_GLOBAL__N_1L10ArgMinEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:
+ 1969              	.LVL244:
+ 1970              	.LFB3032:
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   return Eval(context, node, false);
+ 1971              		.loc 1 99 67 is_stmt 1 view -0
+ 1972              		.cfi_startproc
+ 1973              		@ args = 0, pretend = 0, frame = 0
+ 1974              		@ frame_needed = 0, uses_anonymous_args = 0
+  99:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc ****   return Eval(context, node, false);
+ 1975              		.loc 1 99 67 is_stmt 0 view .LVU459
+ 1976 0000 08B5     		push	{r3, lr}
+ 1977              	.LCFI35:
+ 1978              		.cfi_def_cfa_offset 8
+ 1979              		.cfi_offset 3, -8
+ 1980              		.cfi_offset 14, -4
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 1981              		.loc 1 100 3 is_stmt 1 view .LVU460
+ 100:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** }
+ 1982              		.loc 1 100 14 is_stmt 0 view .LVU461
+ 1983 0002 0022     		movs	r2, #0
+ 1984 0004 FFF7FEFF 		bl	_ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 49
+
+
+ 1985              	.LVL245:
+ 101:lib/tflite-micro/tensorflow/lite/micro/kernels/arg_min_max.cc **** 
+ 1986              		.loc 1 101 1 view .LVU462
+ 1987 0008 08BD     		pop	{r3, pc}
+ 1988              		.cfi_endproc
+ 1989              	.LFE3032:
+ 1991              		.text
+ 1992              	.Letext0:
+ 1993              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 1994              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 1995              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 1996              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 1997              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 1998              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 1999              		.file 11 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2000              		.file 12 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2001              		.file 13 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2002              		.file 14 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2003              		.file 15 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2004              		.file 16 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2005              		.file 17 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 2006              		.file 18 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2007              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2008              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2009              		.file 21 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2010              		.file 22 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2011              		.file 23 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2012              		.file 24 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2013              		.file 25 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2014              		.file 26 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 2015              		.file 27 "lib/tflite-micro/tensorflow/lite/micro/micro_log.h"
+ 2016              		.file 28 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/types.h"
+ 2017              		.file 29 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ 2018              		.file 30 "lib/tflite-micro/tensorflow/lite/micro/builtin_op_data.h"
+ 2019              		.file 31 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.h"
+ 2020              		.file 32 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+ 2021              		.file 33 "lib/tflite-micro/tensorflow/lite/micro/micro_profiler_interface.h"
+ 2022              		.file 34 "lib/tflite-micro/tensorflow/lite/micro/micro_context.h"
+ 2023              		.file 35 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/reference/comparisons.h"
+ 2024              		.file 36 "lib/tflite-micro/tensorflow/lite/micro/micro_graph.h"
+ 2025              		.file 37 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 2026              		.file 38 "<built-in>"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s 			page 50
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 arg_min_max.cc
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:21     .text._ZNK6tflite5micro12RuntimeShape4DimsEi:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:27     .text._ZNK6tflite5micro12RuntimeShape4DimsEi:00000000 _ZNK6tflite5micro12RuntimeShape4DimsEi
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:70     .text._ZN6tflite5micro16Register_ARG_MAXEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:76     .text._ZN6tflite5micro16Register_ARG_MAXEv:00000000 _ZN6tflite5micro16Register_ARG_MAXEv
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:114    .text._ZN6tflite5micro16Register_ARG_MAXEv:0000001c $d
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1939   .text._ZN6tflite5micro12_GLOBAL__N_1L10ArgMaxEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 _ZN6tflite5micro12_GLOBAL__N_1L10ArgMaxEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:119    .text._ZN6tflite5micro16Register_ARG_MINEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:125    .text._ZN6tflite5micro16Register_ARG_MINEv:00000000 _ZN6tflite5micro16Register_ARG_MINEv
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:163    .text._ZN6tflite5micro16Register_ARG_MINEv:0000001c $d
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1968   .text._ZN6tflite5micro12_GLOBAL__N_1L10ArgMinEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 _ZN6tflite5micro12_GLOBAL__N_1L10ArgMinEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:168    .text._ZN6tflite5micro13GetTensorDataIfEEPKT_PKNS0_16TfLiteEvalTensorE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:174    .text._ZN6tflite5micro13GetTensorDataIfEEPKT_PKNS0_16TfLiteEvalTensorE:00000000 _ZN6tflite5micro13GetTensorDataIfEEPKT_PKNS0_16TfLiteEvalTensorE
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:205    .text._ZN6tflite5micro13GetTensorDataIlEEPKT_PKNS0_16TfLiteEvalTensorE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:211    .text._ZN6tflite5micro13GetTensorDataIlEEPKT_PKNS0_16TfLiteEvalTensorE:00000000 _ZN6tflite5micro13GetTensorDataIlEEPKT_PKNS0_16TfLiteEvalTensorE
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:241    .text._ZN6tflite5micro13GetTensorDataIlEEPT_PNS0_16TfLiteEvalTensorE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:247    .text._ZN6tflite5micro13GetTensorDataIlEEPT_PNS0_16TfLiteEvalTensorE:00000000 _ZN6tflite5micro13GetTensorDataIlEEPT_PNS0_16TfLiteEvalTensorE
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:277    .text._ZN6tflite5micro13GetTensorDataIaEEPKT_PKNS0_16TfLiteEvalTensorE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:283    .text._ZN6tflite5micro13GetTensorDataIaEEPKT_PKNS0_16TfLiteEvalTensorE:00000000 _ZN6tflite5micro13GetTensorDataIaEEPKT_PKNS0_16TfLiteEvalTensorE
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:313    .text._ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_9GreaterFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:319    .text._ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_9GreaterFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_:00000000 _ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_9GreaterFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:624    .text._ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_6LessFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:630    .text._ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_6LessFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_:00000000 _ZN6tflite5micro13reference_ops9ArgMinMaxIfllNS1_6LessFnIfEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:934    .text._ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIfllEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:939    .text._ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIfllEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b:00000000 _ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIfllEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:991    .text._ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_9GreaterFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:997    .text._ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_9GreaterFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_:00000000 _ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_9GreaterFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1301   .text._ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_6LessFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1307   .text._ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_6LessFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_:00000000 _ZN6tflite5micro13reference_ops9ArgMinMaxIallNS1_6LessFnIaEEEEvRKNS0_12RuntimeShapeEPKT_PKT1_S7_PT0_RKT2_
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1611   .text._ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIallEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1616   .text._ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIallEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b:00000000 _ZN6tflite5micro12_GLOBAL__N_1L15ArgMinMaxHelperIallEEvRKNS0_12RuntimeShapeEPKT_PKT1_S5_PT0_b
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1668   .rodata._ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1676   .text._ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1681   .text._ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb:00000000 _ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1928   .text._ZN6tflite5micro12_GLOBAL__N_1L4EvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEb:000000f8 $d
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1934   .text._ZN6tflite5micro12_GLOBAL__N_1L10ArgMaxEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccOhuf7a.s:1963   .text._ZN6tflite5micro12_GLOBAL__N_1L10ArgMinEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 $t
+
+UNDEFINED SYMBOLS
+abort
+_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLiteNodeEESC_PFvS3_S1_ESE_
+_ZN6tflite5micro12GetEvalInputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+_ZN6tflite5micro13GetEvalOutputEPKNS0_13TfLiteContextEPKNS0_10TfLiteNodeEi
+_ZN6tflite5micro17TfLiteTypeGetNameENS0_10TfLiteTypeE
+_Z11MicroPrintfPKcz
+_ZN6tflite5micro14GetTensorShapeEPKNS0_16TfLiteEvalTensorE

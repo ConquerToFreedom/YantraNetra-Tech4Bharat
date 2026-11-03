@@ -1,0 +1,834 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"micro_utils.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc"
+  20              		.section	.text._ZN6tflite5micro12ElementCountERKNS0_14TfLiteIntArrayE,"ax",%progbits
+  21              		.align	1
+  22              		.global	_ZN6tflite5micro12ElementCountERKNS0_14TfLiteIntArrayE
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro12ElementCountERKNS0_14TfLiteIntArrayE:
+  28              	.LVL0:
+  29              	.LFB10465:
+   1:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** #include "tensorflow/lite/micro/micro_utils.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** #include <cmath>
+  19:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** #include <cstdint>
+  20:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** #include <limits>
+  21:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** #include "tensorflow/lite/micro/compatibility.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** #include "tensorflow/lite/micro/memory_helpers.h"
+  24:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** #include "tensorflow/lite/micro/micro_common.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** #include "tensorflow/lite/micro/micro_log.h"
+  26:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  27:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** namespace tflite {
+  28:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** namespace micro {
+  29:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 2
+
+
+  30:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** int ElementCount(const TfLiteIntArray& dims) {
+  30              		.loc 1 30 46 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  35              		.loc 1 30 46 is_stmt 0 view .LVU1
+  36 0000 0246     		mov	r2, r0
+  31:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   int result = 1;
+  37              		.loc 1 31 3 is_stmt 1 view .LVU2
+  38              	.LVL1:
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  39              		.loc 1 32 3 view .LVU3
+  40              	.LBB12:
+  41              		.loc 1 32 12 is_stmt 0 view .LVU4
+  42 0002 0023     		movs	r3, #0
+  43              	.LBE12:
+  31:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   int result = 1;
+  44              		.loc 1 31 7 view .LVU5
+  45 0004 0120     		movs	r0, #1
+  46              	.LVL2:
+  47              	.LBB13:
+  48              		.loc 1 32 3 view .LVU6
+  49 0006 05E0     		b	.L2
+  50              	.LVL3:
+  51              	.L3:
+  33:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     result *= dims.data[i];
+  52              		.loc 1 33 5 is_stmt 1 view .LVU7
+  53              		.loc 1 33 26 is_stmt 0 view .LVU8
+  54 0008 02EB8301 		add	r1, r2, r3, lsl #2
+  55 000c 4968     		ldr	r1, [r1, #4]
+  56              		.loc 1 33 12 view .LVU9
+  57 000e 01FB00F0 		mul	r0, r1, r0
+  58              	.LVL4:
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  59              		.loc 1 32 3 is_stmt 1 discriminator 3 view .LVU10
+  60 0012 0133     		adds	r3, r3, #1
+  61              	.LVL5:
+  62              	.L2:
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  63              		.loc 1 32 21 discriminator 1 view .LVU11
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  64              		.loc 1 32 28 is_stmt 0 discriminator 1 view .LVU12
+  65 0014 1168     		ldr	r1, [r2]
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   for (int i = 0; i < dims.size; ++i) {
+  66              		.loc 1 32 21 discriminator 1 view .LVU13
+  67 0016 9942     		cmp	r1, r3
+  68 0018 F6DC     		bgt	.L3
+  69              	.LBE13:
+  34:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   }
+  35:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   return result;
+  70              		.loc 1 35 3 is_stmt 1 view .LVU14
+  36:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** }
+  71              		.loc 1 36 1 is_stmt 0 view .LVU15
+  72 001a 7047     		bx	lr
+  73              		.cfi_endproc
+  74              	.LFE10465:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 3
+
+
+  76              		.section	.text._ZN6tflite5micro15EvalTensorBytesEPKNS0_16TfLiteEvalTensorE,"ax",%progbits
+  77              		.align	1
+  78              		.global	_ZN6tflite5micro15EvalTensorBytesEPKNS0_16TfLiteEvalTensorE
+  79              		.syntax unified
+  80              		.thumb
+  81              		.thumb_func
+  83              	_ZN6tflite5micro15EvalTensorBytesEPKNS0_16TfLiteEvalTensorE:
+  84              	.LVL6:
+  85              	.LFB10466:
+  37:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** size_t EvalTensorBytes(const TfLiteEvalTensor* tensor) {
+  86              		.loc 1 38 56 is_stmt 1 view -0
+  87              		.cfi_startproc
+  88              		@ args = 0, pretend = 0, frame = 8
+  89              		@ frame_needed = 0, uses_anonymous_args = 0
+  90              		.loc 1 38 56 is_stmt 0 view .LVU17
+  91 0000 00B5     		push	{lr}
+  92              	.LCFI0:
+  93              		.cfi_def_cfa_offset 4
+  94              		.cfi_offset 14, -4
+  95 0002 83B0     		sub	sp, sp, #12
+  96              	.LCFI1:
+  97              		.cfi_def_cfa_offset 16
+  39:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   size_t bytes;
+  98              		.loc 1 39 3 is_stmt 1 view .LVU18
+  40:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   TFLITE_DCHECK(kTfLiteOk == TfLiteEvalTensorByteLength(tensor, &bytes));
+  99              		.loc 1 40 3 view .LVU19
+ 100 0004 01A9     		add	r1, sp, #4
+ 101 0006 FFF7FEFF 		bl	_ZN6tflite5micro26TfLiteEvalTensorByteLengthEPKNS0_16TfLiteEvalTensorEPj
+ 102              	.LVL7:
+ 103              		.loc 1 40 3 is_stmt 0 discriminator 1 view .LVU20
+ 104 000a 10B9     		cbnz	r0, .L7
+  41:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   return bytes;
+ 105              		.loc 1 41 3 is_stmt 1 view .LVU21
+  42:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** }
+ 106              		.loc 1 42 1 is_stmt 0 view .LVU22
+ 107 000c 0198     		ldr	r0, [sp, #4]
+ 108 000e 03B0     		add	sp, sp, #12
+ 109              	.LCFI2:
+ 110              		.cfi_remember_state
+ 111              		.cfi_def_cfa_offset 4
+ 112              		@ sp needed
+ 113 0010 00BD     		pop	{pc}
+ 114              	.L7:
+ 115              	.LCFI3:
+ 116              		.cfi_restore_state
+  40:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   TFLITE_DCHECK(kTfLiteOk == TfLiteEvalTensorByteLength(tensor, &bytes));
+ 117              		.loc 1 40 3 discriminator 2 view .LVU23
+ 118 0012 FFF7FEFF 		bl	abort
+ 119              	.LVL8:
+ 120              		.cfi_endproc
+ 121              	.LFE10466:
+ 123              		.section	.rodata._ZN6tflite5micro33SignedSymmetricPerChannelQuantizeEPKfPNS0_14TfLiteIntArrayEiPaP
+ 124              		.align	2
+ 125              	.LC0:
+ 126 0000 7175616E 		.ascii	"quantized dimension must be 0 or 3\000"
+ 126      74697A65 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 4
+
+
+ 126      64206469 
+ 126      6D656E73 
+ 126      696F6E20 
+ 127              		.section	.text._ZN6tflite5micro33SignedSymmetricPerChannelQuantizeEPKfPNS0_14TfLiteIntArrayEiPaPfN
+ 128              		.align	1
+ 129              		.global	_ZN6tflite5micro33SignedSymmetricPerChannelQuantizeEPKfPNS0_14TfLiteIntArrayEiPaPfNS0_10Tf
+ 130              		.syntax unified
+ 131              		.thumb
+ 132              		.thumb_func
+ 134              	_ZN6tflite5micro33SignedSymmetricPerChannelQuantizeEPKfPNS0_14TfLiteIntArrayEiPaPfNS0_10TfLiteTypeE
+ 135              	.LVL9:
+ 136              	.LFB10467:
+  43:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  44:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** void SignedSymmetricPerChannelQuantize(
+  45:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     const float* values, TfLiteIntArray* dims, int quantized_dimension,
+  46:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     int8_t* quantized_values, float* scaling_factors, TfLiteType type) {
+ 137              		.loc 1 46 72 is_stmt 1 view -0
+ 138              		.cfi_startproc
+ 139              		@ args = 8, pretend = 0, frame = 16
+ 140              		@ frame_needed = 0, uses_anonymous_args = 0
+ 141              		.loc 1 46 72 is_stmt 0 view .LVU25
+ 142 0000 2DE9F04F 		push	{r4, r5, r6, r7, r8, r9, r10, fp, lr}
+ 143              	.LCFI4:
+ 144              		.cfi_def_cfa_offset 36
+ 145              		.cfi_offset 4, -36
+ 146              		.cfi_offset 5, -32
+ 147              		.cfi_offset 6, -28
+ 148              		.cfi_offset 7, -24
+ 149              		.cfi_offset 8, -20
+ 150              		.cfi_offset 9, -16
+ 151              		.cfi_offset 10, -12
+ 152              		.cfi_offset 11, -8
+ 153              		.cfi_offset 14, -4
+ 154 0004 2DED048B 		vpush.64	{d8, d9}
+ 155              	.LCFI5:
+ 156              		.cfi_def_cfa_offset 52
+ 157              		.cfi_offset 80, -52
+ 158              		.cfi_offset 81, -48
+ 159              		.cfi_offset 82, -44
+ 160              		.cfi_offset 83, -40
+ 161 0008 85B0     		sub	sp, sp, #20
+ 162              	.LCFI6:
+ 163              		.cfi_def_cfa_offset 72
+ 164 000a 8046     		mov	r8, r0
+ 165 000c 0C46     		mov	r4, r1
+ 166 000e 1546     		mov	r5, r2
+ 167 0010 0193     		str	r3, [sp, #4]
+  47:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   int input_size = ElementCount(*dims);
+ 168              		.loc 1 47 3 is_stmt 1 view .LVU26
+ 169              		.loc 1 47 32 is_stmt 0 view .LVU27
+ 170 0012 0846     		mov	r0, r1
+ 171              	.LVL10:
+ 172              		.loc 1 47 32 view .LVU28
+ 173 0014 FFF7FEFF 		bl	_ZN6tflite5micro12ElementCountERKNS0_14TfLiteIntArrayE
+ 174              	.LVL11:
+  48:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   int channel_count = dims->data[quantized_dimension];
+ 175              		.loc 1 48 3 is_stmt 1 view .LVU29
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 5
+
+
+ 176              		.loc 1 48 7 is_stmt 0 view .LVU30
+ 177 0018 04EB8504 		add	r4, r4, r5, lsl #2
+ 178              	.LVL12:
+ 179              		.loc 1 48 7 view .LVU31
+ 180 001c 6368     		ldr	r3, [r4, #4]
+ 181 001e 0393     		str	r3, [sp, #12]
+ 182              	.LVL13:
+  49:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   int per_channel_size = input_size / channel_count;
+ 183              		.loc 1 49 3 is_stmt 1 view .LVU32
+ 184              		.loc 1 49 7 is_stmt 0 view .LVU33
+ 185 0020 90FBF3F7 		sdiv	r7, r0, r3
+ 186              	.LVL14:
+  50:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  51:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   int stride;
+ 187              		.loc 1 51 3 is_stmt 1 view .LVU34
+  52:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   int channel_stride;
+ 188              		.loc 1 52 3 view .LVU35
+  53:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  54:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   int qmin = QMinFromTfLiteType(type);
+ 189              		.loc 1 54 3 view .LVU36
+ 190              	.LBB14:
+ 191              	.LBI14:
+ 192              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/micro_utils.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** #ifndef TENSORFLOW_LITE_MICRO_MICRO_UTILS_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** #define TENSORFLOW_LITE_MICRO_MICRO_UTILS_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** #include <algorithm>
+  20:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** #include <cmath>
+  21:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** #include <cstdint>
+  22:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** #include <limits>
+  23:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  24:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** #include "tensorflow/lite/micro/micro_common.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  26:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** namespace tflite {
+  27:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** namespace micro {
+  28:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  29:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // Returns number of elements in the shape array.
+  30:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  31:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** int ElementCount(const TfLiteIntArray& dims);
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  33:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** size_t EvalTensorBytes(const TfLiteEvalTensor* tensor);
+  34:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 6
+
+
+  35:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // Converts a float value into a quantized value.  Note that large values (close
+  36:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // to max int and min int) may see significant error due to a lack of floating
+  37:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // point granularity for large values.
+  38:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** template <typename T>
+  39:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** T FloatToQuantizedType(const float value, const float scale, int zero_point) {
+  40:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   int32_t result = round(value / scale) + zero_point;
+  41:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   result = std::clamp<int32_t>(result, std::numeric_limits<T>::min(),
+  42:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                std::numeric_limits<T>::max());
+  43:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   return result;
+  44:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** }
+  45:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  46:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** template <typename T>
+  47:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** T FloatToSymmetricQuantizedType(const float value, const float scale) {
+  48:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   // 64-bit values are required since 8x16 conv accumulates to int64, meaning
+  49:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   // an int64 bias is required.
+  50:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   std::int64_t result = round(value / scale);
+  51:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   result = std::clamp<std::int64_t>(
+  52:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****       result, static_cast<std::int64_t>(std::numeric_limits<T>::min()) + 1,
+  53:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****       std::numeric_limits<T>::max());
+  54:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   return result;
+  55:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** }
+  56:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  57:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // Helper methods to quantize arrays of floats to the desired format.
+  58:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** //
+  59:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // There are several key flavors of quantization in TfLite:
+  60:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** //        asymmetric symmetric  per channel
+  61:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // int8_t  |     X    |    X    |     X      |
+  62:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // uint8_t |     X    |    X    |            |
+  63:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // int16_t |     X    |         |            |
+  64:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // int32_t |          |    X    |     X      |
+  65:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** //
+  66:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // The per-op quantization spec can be found here:
+  67:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // https://www.tensorflow.org/lite/performance/quantization_spec
+  68:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** template <typename T>
+  69:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** void Quantize(const float* input, T* output, int num_elements, float scale,
+  70:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****               int zero_point) {
+  71:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   for (int i = 0; i < num_elements; i++) {
+  72:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     output[i] = FloatToQuantizedType<T>(input[i], scale, zero_point);
+  73:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   }
+  74:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** }
+  75:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  76:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** template <typename T>
+  77:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** void SymmetricQuantize(const float* input, T* output, int num_elements,
+  78:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                        float scale) {
+  79:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   for (int i = 0; i < num_elements; i++) {
+  80:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     output[i] = FloatToSymmetricQuantizedType<T>(input[i], scale);
+  81:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   }
+  82:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** }
+  83:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+  84:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** template <typename T>
+  85:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** void SymmetricPerChannelQuantize(const float* input, T* output,
+  86:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                  int num_elements, int num_channels,
+  87:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                  float* scales,
+  88:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                  size_t quantized_dimension = 0) {
+  89:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   int elements_per_channel = num_elements / num_channels;
+  90:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   for (int i = 0; i < num_channels; i++) {
+  91:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     for (int j = 0; j < elements_per_channel; j++) {
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 7
+
+
+  92:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****       size_t offset;
+  93:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****       if (quantized_dimension == 0) {
+  94:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****         offset = i * elements_per_channel + j;
+  95:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****       } else {
+  96:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****         offset = i + elements_per_channel * j;
+  97:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****       }
+  98:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****       output[offset] =
+  99:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****           FloatToSymmetricQuantizedType<T>(input[offset], scales[i]);
+ 100:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     }
+ 101:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   }
+ 102:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** }
+ 103:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+ 104:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** void SignedSymmetricPerChannelQuantize(const float* values,
+ 105:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                        TfLiteIntArray* dims,
+ 106:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                        int quantized_dimension,
+ 107:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                        int8_t* quantized_values,
+ 108:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                        float* scaling_factor,
+ 109:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                        TfLiteType type = kTfLiteNoType);
+ 110:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+ 111:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // Quantizes inputs based on the values provided, choosing the smallest range
+ 112:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // which includes all input values.
+ 113:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** template <typename T>
+ 114:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** void SymmetricQuantizeCalculateScales(const float* values, TfLiteIntArray* dims,
+ 115:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                                       T* output, float* scale) {
+ 116:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   int input_size = ElementCount(*dims);
+ 117:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+ 118:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   float min = 0;
+ 119:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   float max = 0;
+ 120:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   for (int i = 0; i < input_size; i++) {
+ 121:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     min = fminf(min, values[i]);
+ 122:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     max = fmaxf(max, values[i]);
+ 123:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   }
+ 124:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   *scale = fmaxf(std::abs(min), std::abs(max)) / std::numeric_limits<T>::max();
+ 125:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   for (int i = 0; i < input_size; i++) {
+ 126:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     const int32_t quantized_value =
+ 127:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****         static_cast<int32_t>(roundf(values[i] / *scale));
+ 128:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     // Clamp: just in case some odd numeric offset.
+ 129:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     output[i] = std::clamp<int32_t>(
+ 130:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****         quantized_value,
+ 131:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****         static_cast<int32_t>(std::numeric_limits<T>::min()) + 1,
+ 132:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****         std::numeric_limits<T>::max());
+ 133:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   }
+ 134:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** }
+ 135:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+ 136:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** template <typename T>
+ 137:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** void Dequantize(const T* values, const int size, const float scale,
+ 138:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****                 int zero_point, float* dequantized_values) {
+ 139:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   for (int i = 0; i < size; ++i) {
+ 140:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     dequantized_values[i] = (values[i] - zero_point) * scale;
+ 141:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   }
+ 142:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** }
+ 143:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+ 144:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // based on TfLiteType passed in to these functions the corresponding max / min
+ 145:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** // int for that type are returned
+ 146:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** inline int QMinFromTfLiteType(TfLiteType type) {
+ 193              		.loc 2 146 12 view .LVU37
+ 194              	.LBB15:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 8
+
+
+ 147:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   if (type == kTfLiteInt4) {
+ 195              		.loc 2 147 3 view .LVU38
+ 196 0024 9DF84C30 		ldrb	r3, [sp, #76]	@ zero_extendqisi2
+ 197              	.LVL15:
+ 198              		.loc 2 147 3 is_stmt 0 view .LVU39
+ 199 0028 122B     		cmp	r3, #18
+ 200 002a 0CD0     		beq	.L16
+ 148:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     return -8;
+ 149:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   } else {
+ 150:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     return std::numeric_limits<int8_t>::min();
+ 201              		.loc 2 150 45 view .LVU40
+ 202 002c 6FF07F03 		mvn	r3, #127
+ 203 0030 0293     		str	r3, [sp, #8]
+ 204              	.LBE15:
+ 205              	.LBE14:
+ 206              	.LBB17:
+ 207              	.LBB18:
+ 151:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   }
+ 152:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** }
+ 153:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** 
+ 154:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h **** inline int QMaxFromTfLiteType(TfLiteType type) {
+ 155:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   if (type == kTfLiteInt4) {
+ 156:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     return 7;
+ 157:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   } else {
+ 158:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****     return std::numeric_limits<int8_t>::max();
+ 208              		.loc 2 158 45 view .LVU41
+ 209 0032 DFED3F9A 		vldr.32	s19, .L23	@ int
+ 210              	.L9:
+ 211              	.LVL16:
+ 212              		.loc 2 158 45 view .LVU42
+ 213              	.LBE18:
+ 214              	.LBE17:
+  55:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   int qmax = QMaxFromTfLiteType(type);
+  56:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  57:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   if (quantized_dimension == 0) {
+ 215              		.loc 1 57 3 is_stmt 1 view .LVU43
+ 216 0036 8DB1     		cbz	r5, .L17
+  58:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     stride = 1;
+  59:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     channel_stride = per_channel_size;
+  60:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   } else if (quantized_dimension == 3) {
+ 217              		.loc 1 60 10 view .LVU44
+ 218 0038 032D     		cmp	r5, #3
+ 219 003a 0AD1     		bne	.L21
+  61:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     stride = channel_count;
+ 220              		.loc 1 61 12 is_stmt 0 view .LVU45
+ 221 003c DDF80C90 		ldr	r9, [sp, #12]
+  62:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     channel_stride = 1;
+ 222              		.loc 1 62 20 view .LVU46
+ 223 0040 4FF0010A 		mov	r10, #1
+ 224 0044 0DE0     		b	.L10
+ 225              	.LVL17:
+ 226              	.L16:
+ 227              	.LBB20:
+ 228              	.LBB16:
+ 148:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   } else {
+ 229              		.loc 2 148 13 view .LVU47
+ 230 0046 6FF00703 		mvn	r3, #7
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 9
+
+
+ 231 004a 0293     		str	r3, [sp, #8]
+ 232              	.LBE16:
+ 233              	.LBE20:
+ 234              	.LBB21:
+ 235              	.LBB19:
+ 156:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   } else {
+ 236              		.loc 2 156 12 view .LVU48
+ 237 004c DFED399A 		vldr.32	s19, .L23+4	@ int
+ 238 0050 F1E7     		b	.L9
+ 239              	.LVL18:
+ 240              	.L21:
+ 156:lib/tflite-micro/tensorflow/lite/micro/micro_utils.h ****   } else {
+ 241              		.loc 2 156 12 view .LVU49
+ 242              	.LBE19:
+ 243              	.LBE21:
+  63:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   } else {
+  64:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     MicroPrintf("quantized dimension must be 0 or 3");
+ 244              		.loc 1 64 5 is_stmt 1 view .LVU50
+ 245              		.loc 1 64 16 is_stmt 0 view .LVU51
+ 246 0052 3948     		ldr	r0, .L23+8
+ 247              	.LVL19:
+ 248              		.loc 1 64 16 view .LVU52
+ 249 0054 FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 250              	.LVL20:
+  65:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     TFLITE_ABORT;
+ 251              		.loc 1 65 5 is_stmt 1 view .LVU53
+ 252 0058 FFF7FEFF 		bl	abort
+ 253              	.LVL21:
+ 254              	.L17:
+  59:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   } else if (quantized_dimension == 3) {
+ 255              		.loc 1 59 20 is_stmt 0 view .LVU54
+ 256 005c BA46     		mov	r10, r7
+  58:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     channel_stride = per_channel_size;
+ 257              		.loc 1 58 12 view .LVU55
+ 258 005e 4FF00109 		mov	r9, #1
+ 259              	.L10:
+ 260              	.LVL22:
+  66:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   }
+  67:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  68:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   // Calculate scales for each channel.
+  69:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   for (int channel = 0; channel < channel_count; channel++) {
+ 261              		.loc 1 69 3 is_stmt 1 view .LVU56
+ 262              	.LBB22:
+ 263              		.loc 1 69 12 is_stmt 0 view .LVU57
+ 264 0062 0026     		movs	r6, #0
+ 265              		.loc 1 69 3 view .LVU58
+ 266 0064 55E0     		b	.L11
+ 267              	.LVL23:
+ 268              	.L12:
+ 269              	.LBB23:
+ 270              	.LBB24:
+ 271              	.LBB25:
+  70:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     float min = 0;
+  71:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     float max = 0;
+  72:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+  73:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     for (int i = 0; i < per_channel_size; i++) {
+  74:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 10
+
+
+ 272              		.loc 1 74 7 is_stmt 1 view .LVU59
+ 273              		.loc 1 74 46 is_stmt 0 view .LVU60
+ 274 0066 04FB09F3 		mul	r3, r4, r9
+ 275              		.loc 1 74 11 view .LVU61
+ 276 006a 06FB0A33 		mla	r3, r6, r10, r3
+ 277              	.LVL24:
+  75:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       min = fminf(min, values[idx]);
+ 278              		.loc 1 75 7 is_stmt 1 view .LVU62
+ 279              		.loc 1 75 34 is_stmt 0 view .LVU63
+ 280 006e 08EB8303 		add	r3, r8, r3, lsl #2
+ 281              	.LVL25:
+ 282              		.loc 1 75 18 view .LVU64
+ 283 0072 93ED009A 		vldr.32	s18, [r3]
+ 284 0076 F0EE680A 		vmov.f32	s1, s17
+ 285 007a B0EE490A 		vmov.f32	s0, s18
+ 286 007e FFF7FEFF 		bl	fminf
+ 287              	.LVL26:
+ 288 0082 F0EE408A 		vmov.f32	s17, s0
+ 289              	.LVL27:
+  76:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       max = fmaxf(max, values[idx]);
+ 290              		.loc 1 76 7 is_stmt 1 view .LVU65
+ 291              		.loc 1 76 18 is_stmt 0 view .LVU66
+ 292 0086 F0EE480A 		vmov.f32	s1, s16
+ 293 008a B0EE490A 		vmov.f32	s0, s18
+ 294              	.LVL28:
+ 295              		.loc 1 76 18 view .LVU67
+ 296 008e FFF7FEFF 		bl	fmaxf
+ 297              	.LVL29:
+ 298 0092 B0EE408A 		vmov.f32	s16, s0
+ 299              	.LVL30:
+ 300              		.loc 1 76 18 view .LVU68
+ 301              	.LBE25:
+  73:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 302              		.loc 1 73 5 is_stmt 1 discriminator 3 view .LVU69
+ 303 0096 0134     		adds	r4, r4, #1
+ 304              	.LVL31:
+ 305              	.L15:
+  73:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 306              		.loc 1 73 23 discriminator 1 view .LVU70
+ 307 0098 BC42     		cmp	r4, r7
+ 308 009a E4DB     		blt	.L12
+ 309              	.LBE24:
+  77:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     }
+  78:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     scaling_factors[channel] = fmaxf(fabs(min), fabs(max)) / qmax;
+ 310              		.loc 1 78 5 view .LVU71
+ 311              		.loc 1 78 37 is_stmt 0 view .LVU72
+ 312 009c F0EEC80A 		vabs.f32	s1, s16
+ 313 00a0 B0EEE80A 		vabs.f32	s0, s17
+ 314 00a4 FFF7FEFF 		bl	fmaxf
+ 315              	.LVL32:
+ 316              		.loc 1 78 60 discriminator 1 view .LVU73
+ 317 00a8 B8EEE98A 		vcvt.f32.s32	s16, s19
+ 318              	.LVL33:
+ 319              		.loc 1 78 28 discriminator 1 view .LVU74
+ 320 00ac 129B     		ldr	r3, [sp, #72]
+ 321 00ae 03EB860B 		add	fp, r3, r6, lsl #2
+ 322              		.loc 1 78 60 discriminator 1 view .LVU75
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 11
+
+
+ 323 00b2 C0EE087A 		vdiv.f32	s15, s0, s16
+ 324              		.loc 1 78 30 discriminator 1 view .LVU76
+ 325 00b6 CBED007A 		vstr.32	s15, [fp]
+  79:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     for (int i = 0; i < per_channel_size; i++) {
+ 326              		.loc 1 79 5 is_stmt 1 view .LVU77
+ 327              	.LVL34:
+ 328              	.LBB26:
+ 329              		.loc 1 79 14 is_stmt 0 view .LVU78
+ 330 00ba 0025     		movs	r5, #0
+ 331              		.loc 1 79 5 view .LVU79
+ 332 00bc 26E0     		b	.L13
+ 333              	.LVL35:
+ 334              	.L14:
+ 335              	.LBB27:
+  80:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 336              		.loc 1 80 7 is_stmt 1 view .LVU80
+ 337              		.loc 1 80 46 is_stmt 0 view .LVU81
+ 338 00be 05FB09F4 		mul	r4, r5, r9
+ 339              		.loc 1 80 11 view .LVU82
+ 340 00c2 06FB0A44 		mla	r4, r6, r10, r4
+ 341              	.LVL36:
+  81:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       const int32_t quantized_value =
+ 342              		.loc 1 81 7 is_stmt 1 view .LVU83
+  82:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****           static_cast<int32_t>(roundf(values[idx] / scaling_factors[channel]));
+ 343              		.loc 1 82 49 is_stmt 0 view .LVU84
+ 344 00c6 08EB8403 		add	r3, r8, r4, lsl #2
+ 345 00ca 93ED000A 		vldr.32	s0, [r3]
+ 346              		.loc 1 82 76 view .LVU85
+ 347 00ce DBED007A 		vldr.32	s15, [fp]
+ 348              		.loc 1 82 38 view .LVU86
+ 349 00d2 80EE270A 		vdiv.f32	s0, s0, s15
+ 350 00d6 FFF7FEFF 		bl	roundf
+ 351              	.LVL37:
+  81:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       const int32_t quantized_value =
+ 352              		.loc 1 81 21 view .LVU87
+ 353 00da FDEEC00A 		vcvt.s32.f32	s1, s0
+ 354              	.LVL38:
+  83:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       // Clamp: just in case some odd numeric offset.
+  84:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       quantized_values[idx] = fminf(qmax, fmaxf(qmin + 1, quantized_value));
+ 355              		.loc 1 84 7 is_stmt 1 view .LVU88
+ 356              		.loc 1 84 54 is_stmt 0 view .LVU89
+ 357 00de 029B     		ldr	r3, [sp, #8]
+ 358 00e0 0133     		adds	r3, r3, #1
+ 359              		.loc 1 84 36 view .LVU90
+ 360 00e2 F8EEE00A 		vcvt.f32.s32	s1, s1
+ 361              	.LVL39:
+ 362              		.loc 1 84 36 view .LVU91
+ 363 00e6 00EE103A 		vmov	s0, r3	@ int
+ 364              	.LVL40:
+ 365              		.loc 1 84 36 view .LVU92
+ 366 00ea B8EEC00A 		vcvt.f32.s32	s0, s0
+ 367 00ee FFF7FEFF 		bl	fmaxf
+ 368              	.LVL41:
+ 369 00f2 F0EE400A 		vmov.f32	s1, s0
+ 370              		.loc 1 84 36 discriminator 1 view .LVU93
+ 371 00f6 B0EE480A 		vmov.f32	s0, s16
+ 372 00fa FFF7FEFF 		bl	fminf
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 12
+
+
+ 373              	.LVL42:
+ 374              		.loc 1 84 29 discriminator 2 view .LVU94
+ 375 00fe FDEEC07A 		vcvt.s32.f32	s15, s0
+ 376 0102 17EE903A 		vmov	r3, s15	@ int
+ 377 0106 019A     		ldr	r2, [sp, #4]
+ 378 0108 1355     		strb	r3, [r2, r4]
+ 379              	.LBE27:
+  79:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 380              		.loc 1 79 5 is_stmt 1 discriminator 3 view .LVU95
+ 381 010a 0135     		adds	r5, r5, #1
+ 382              	.LVL43:
+ 383              	.L13:
+  79:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 384              		.loc 1 79 23 discriminator 1 view .LVU96
+ 385 010c BD42     		cmp	r5, r7
+ 386 010e D6DB     		blt	.L14
+ 387              	.LBE26:
+ 388              	.LBE23:
+  69:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     float min = 0;
+ 389              		.loc 1 69 3 discriminator 2 view .LVU97
+ 390 0110 0136     		adds	r6, r6, #1
+ 391              	.LVL44:
+ 392              	.L11:
+  69:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     float min = 0;
+ 393              		.loc 1 69 33 discriminator 1 view .LVU98
+ 394 0112 039B     		ldr	r3, [sp, #12]
+ 395 0114 9E42     		cmp	r6, r3
+ 396 0116 05DA     		bge	.L22
+ 397              	.LBB29:
+ 398              	.LBB28:
+  73:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****       int idx = channel * channel_stride + i * stride;
+ 399              		.loc 1 73 14 is_stmt 0 view .LVU99
+ 400 0118 0024     		movs	r4, #0
+ 401              	.LBE28:
+  71:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** 
+ 402              		.loc 1 71 11 view .LVU100
+ 403 011a 9FED088A 		vldr.32	s16, .L23+12
+  70:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     float max = 0;
+ 404              		.loc 1 70 11 view .LVU101
+ 405 011e F0EE488A 		vmov.f32	s17, s16
+ 406 0122 B9E7     		b	.L15
+ 407              	.L22:
+ 408              	.LBE29:
+ 409              	.LBE22:
+  85:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****     }
+  86:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc ****   }
+  87:lib/tflite-micro/tensorflow/lite/micro/micro_utils.cc **** }
+ 410              		.loc 1 87 1 view .LVU102
+ 411 0124 05B0     		add	sp, sp, #20
+ 412              	.LCFI7:
+ 413              		.cfi_def_cfa_offset 52
+ 414              		@ sp needed
+ 415 0126 BDEC048B 		vldm	sp!, {d8-d9}
+ 416              	.LCFI8:
+ 417              		.cfi_restore 82
+ 418              		.cfi_restore 83
+ 419              		.cfi_restore 80
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 13
+
+
+ 420              		.cfi_restore 81
+ 421              		.cfi_def_cfa_offset 36
+ 422 012a BDE8F08F 		pop	{r4, r5, r6, r7, r8, r9, r10, fp, pc}
+ 423              	.LVL45:
+ 424              	.L24:
+ 425              		.loc 1 87 1 view .LVU103
+ 426 012e 00BF     		.align	2
+ 427              	.L23:
+ 428 0130 7F000000 		.word	127
+ 429 0134 07000000 		.word	7
+ 430 0138 00000000 		.word	.LC0
+ 431 013c 00000000 		.word	0
+ 432              		.cfi_endproc
+ 433              	.LFE10467:
+ 435              		.text
+ 436              	.Letext0:
+ 437              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 438              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 439              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 440              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 441              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 442              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 443              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 444              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 445              		.file 11 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 446              		.file 12 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 447              		.file 13 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 448              		.file 14 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 449              		.file 15 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 450              		.file 16 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 451              		.file 17 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 452              		.file 18 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 453              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 454              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 455              		.file 21 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 456              		.file 22 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 457              		.file 23 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 458              		.file 24 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 459              		.file 25 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 460              		.file 26 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 461              		.file 27 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 462              		.file 28 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 463              		.file 29 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 464              		.file 30 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 465              		.file 31 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 466              		.file 32 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 467              		.file 33 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 468              		.file 34 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 469              		.file 35 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 470              		.file 36 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 471              		.file 37 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 472              		.file 38 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 473              		.file 39 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 474              		.file 40 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 475              		.file 41 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 476              		.file 42 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 477              		.file 43 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 14
+
+
+ 478              		.file 44 "<built-in>"
+ 479              		.file 45 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 480              		.file 46 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 481              		.file 47 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 482              		.file 48 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 483              		.file 49 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 484              		.file 50 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 485              		.file 51 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 486              		.file 52 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ 487              		.file 53 "lib/tflite-micro/tensorflow/lite/micro/memory_helpers.h"
+ 488              		.file 54 "lib/tflite-micro/tensorflow/lite/micro/schema/schema_generated.h"
+ 489              		.file 55 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 490              		.file 56 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 491              		.file 57 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 492              		.file 58 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 493              		.file 59 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 494              		.file 60 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/base.h"
+ 495              		.file 61 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/buffer.h"
+ 496              		.file 62 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/stl_emulation.h"
+ 497              		.file 63 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/string.h"
+ 498              		.file 64 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/vector.h"
+ 499              		.file 65 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/verifier.h"
+ 500              		.file 66 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/detached_buffer.h"
+ 501              		.file 67 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/allocator.h"
+ 502              		.file 68 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/table.h"
+ 503              		.file 69 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/vector_downward.h"
+ 504              		.file 70 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/flatbuffer_builder.h"
+ 505              		.file 71 "lib/tflite-micro/third_party/flatbuffers/include/flatbuffers/flatbuffers.h"
+ 506              		.file 72 "lib/tflite-micro/tensorflow/lite/micro/micro_log.h"
+ 507              		.file 73 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 micro_utils.cc
+C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s:21     .text._ZN6tflite5micro12ElementCountERKNS0_14TfLiteIntArrayE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s:27     .text._ZN6tflite5micro12ElementCountERKNS0_14TfLiteIntArrayE:00000000 _ZN6tflite5micro12ElementCountERKNS0_14TfLiteIntArrayE
+C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s:77     .text._ZN6tflite5micro15EvalTensorBytesEPKNS0_16TfLiteEvalTensorE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s:83     .text._ZN6tflite5micro15EvalTensorBytesEPKNS0_16TfLiteEvalTensorE:00000000 _ZN6tflite5micro15EvalTensorBytesEPKNS0_16TfLiteEvalTensorE
+C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s:124    .rodata._ZN6tflite5micro33SignedSymmetricPerChannelQuantizeEPKfPNS0_14TfLiteIntArrayEiPaPfNS0_10TfLiteTypeE.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s:128    .text._ZN6tflite5micro33SignedSymmetricPerChannelQuantizeEPKfPNS0_14TfLiteIntArrayEiPaPfNS0_10TfLiteTypeE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s:134    .text._ZN6tflite5micro33SignedSymmetricPerChannelQuantizeEPKfPNS0_14TfLiteIntArrayEiPaPfNS0_10TfLiteTypeE:00000000 _ZN6tflite5micro33SignedSymmetricPerChannelQuantizeEPKfPNS0_14TfLiteIntArrayEiPaPfNS0_10TfLiteTypeE
+C:\Users\Chetan\AppData\Local\Temp\ccxnKHxh.s:428    .text._ZN6tflite5micro33SignedSymmetricPerChannelQuantizeEPKfPNS0_14TfLiteIntArrayEiPaPfNS0_10TfLiteTypeE:00000130 $d
+
+UNDEFINED SYMBOLS
+_ZN6tflite5micro26TfLiteEvalTensorByteLengthEPKNS0_16TfLiteEvalTensorEPj
+abort
+_Z11MicroPrintfPKcz
+fminf
+fmaxf
+roundf

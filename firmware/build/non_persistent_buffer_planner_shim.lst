@@ -1,0 +1,879 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"non_persistent_buffer_planner_shim.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.
+  20              		.section	.text._ZN6tflite5micro18MicroMemoryPlanner9AddBufferEiiii,"axG",%progbits,_ZN6tflite5micr
+  21              		.align	1
+  22              		.weak	_ZN6tflite5micro18MicroMemoryPlanner9AddBufferEiiii
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro18MicroMemoryPlanner9AddBufferEiiii:
+  28              	.LVL0:
+  29              	.LFB673:
+  30              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** /* Copyright 2019 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** #ifndef TENSORFLOW_LITE_MICRO_MEMORY_PLANNER_MICRO_MEMORY_PLANNER_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** #define TENSORFLOW_LITE_MICRO_MEMORY_PLANNER_MICRO_MEMORY_PLANNER_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** #include "tensorflow/lite/micro/micro_common.h"
+  20:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** namespace tflite {
+  22:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** namespace micro {
+  23:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  24:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // Interface class for planning the layout of memory buffers during the
+  25:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // execution of a graph.
+  26:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // It's designed to be used by a client that iterates in any order through the
+  27:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // buffers it wants to lay out, and then calls the getter functions for
+  28:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // information about the calculated layout. For example:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 2
+
+
+  29:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** //
+  30:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // SomeMemoryPlanner planner;
+  31:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // planner.AddBuffer(100, 0, 1);  // Buffer 0
+  32:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // planner.AddBuffer(50, 2, 3);   // Buffer 1
+  33:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // planner.AddBuffer(50, 2, 3);   // Buffer 2
+  34:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** //
+  35:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // int offset0;
+  36:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // TF_EXPECT_OK(planner.GetOffsetForBuffer(0, &offset0));
+  37:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // int offset1;
+  38:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // TF_EXPECT_OK(planner.GetOffsetForBuffer(1, &offset1));
+  39:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // int offset2;
+  40:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // TF_EXPECT_OK(planner.GetOffsetForBuffer(2, &offset2));
+  41:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // const int arena_size_needed = planner.GetMaximumMemorySize();
+  42:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** //
+  43:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // The goal is for applications to be able to experiment with different layout
+  44:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // strategies without changing their client code, by swapping out classes that
+  45:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** // implement this interface.=
+  46:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** class MicroMemoryPlanner {
+  47:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****  public:
+  48:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   MicroMemoryPlanner() {}
+  49:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual ~MicroMemoryPlanner() {}
+  50:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  51:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // Pass information about a buffer's size and lifetime to the layout
+  52:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // algorithm. The order this is called implicitly assigns an index to the
+  53:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // result, so the buffer information that's passed into the N-th call of
+  54:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // this method will be used as the buffer_index argument to
+  55:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // GetOffsetForBuffer().
+  56:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual TfLiteStatus AddBuffer(int size, int first_time_used,
+  57:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****                                  int last_time_used) = 0;
+  58:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  59:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // Record details of an offline planned buffer offset we want to place.
+  60:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // offline_offset is the buffer offset from the start of the arena.
+  61:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // This is to support offline memory planning from the flatbuffer metadata.
+  62:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // By default, it returns an error.
+  63:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual TfLiteStatus AddBuffer(int size, int first_time_used,
+  31              		.loc 2 63 24 view -0
+  32              		.cfi_startproc
+  33              		@ args = 4, pretend = 0, frame = 0
+  34              		@ frame_needed = 0, uses_anonymous_args = 0
+  35              		@ link register save eliminated.
+  64:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****                                  int last_time_used, int offline_offset) {
+  65:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****     return kTfLiteError;
+  36              		.loc 2 65 5 view .LVU1
+  66:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   }
+  37              		.loc 2 66 3 is_stmt 0 view .LVU2
+  38 0000 0120     		movs	r0, #1
+  39              	.LVL1:
+  40              		.loc 2 66 3 view .LVU3
+  41 0002 7047     		bx	lr
+  42              		.cfi_endproc
+  43              	.LFE673:
+  45              		.section	.text._ZN6tflite5micro18MicroMemoryPlanner4InitEPhi,"axG",%progbits,_ZN6tflite5micro18Mic
+  46              		.align	1
+  47              		.weak	_ZN6tflite5micro18MicroMemoryPlanner4InitEPhi
+  48              		.syntax unified
+  49              		.thumb
+  50              		.thumb_func
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 3
+
+
+  52              	_ZN6tflite5micro18MicroMemoryPlanner4InitEPhi:
+  53              	.LVL2:
+  54              	.LFB674:
+  67:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  68:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // The largest contiguous block of memory that's needed to hold the layout.
+  69:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual size_t GetMaximumMemorySize() = 0;
+  70:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // How many buffers have been added to the planner.
+  71:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual int GetBufferCount() = 0;
+  72:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // Calculated layout offset for the N-th buffer added to the planner.
+  73:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual TfLiteStatus GetOffsetForBuffer(int buffer_index, int* offset) = 0;
+  74:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  75:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // Provides the scratch buffer in case that the memory planner needs it.
+  76:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // The lifetime of scratch buffers lifetime lasts until the static memory plan
+  77:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // is committed.
+  78:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // The default implementation is for the memory planner that does not need
+  79:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // scratch buffer and simply returns ok.
+  80:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual TfLiteStatus Init(unsigned char* scratch_buffer,
+  55              		.loc 2 80 24 is_stmt 1 view -0
+  56              		.cfi_startproc
+  57              		@ args = 0, pretend = 0, frame = 0
+  58              		@ frame_needed = 0, uses_anonymous_args = 0
+  59              		@ link register save eliminated.
+  81:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****                             int scratch_buffer_size) {
+  82:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****     return kTfLiteOk;
+  60              		.loc 2 82 5 view .LVU5
+  83:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   }
+  61              		.loc 2 83 3 is_stmt 0 view .LVU6
+  62 0000 0020     		movs	r0, #0
+  63              	.LVL3:
+  64              		.loc 2 83 3 view .LVU7
+  65 0002 7047     		bx	lr
+  66              		.cfi_endproc
+  67              	.LFE674:
+  69              		.section	.text._ZN6tflite5micro18MicroMemoryPlanner15PrintMemoryPlanEv,"axG",%progbits,_ZN6tflite5
+  70              		.align	1
+  71              		.weak	_ZN6tflite5micro18MicroMemoryPlanner15PrintMemoryPlanEv
+  72              		.syntax unified
+  73              		.thumb
+  74              		.thumb_func
+  76              	_ZN6tflite5micro18MicroMemoryPlanner15PrintMemoryPlanEv:
+  77              	.LVL4:
+  78              	.LFB675:
+  84:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  85:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // Method will return True if the MicroMemoryPlanner preserves all tensors
+  86:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   // after invocation, and False if it doesn't.
+  87:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual bool preserves_all_tensors() const = 0;
+  88:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+  89:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual void PrintMemoryPlan() {
+  79              		.loc 2 89 16 is_stmt 1 view -0
+  80              		.cfi_startproc
+  81              		@ args = 0, pretend = 0, frame = 0
+  82              		@ frame_needed = 0, uses_anonymous_args = 0
+  83              		@ link register save eliminated.
+  90:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****     // Default does nothing.
+  91:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   }
+  84              		.loc 2 91 3 is_stmt 0 view .LVU9
+  85 0000 7047     		bx	lr
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 4
+
+
+  86              		.cfi_endproc
+  87              	.LFE675:
+  89              		.section	.text._ZNK6tflite5micro30NonPersistentMemoryPlannerShim21preserves_all_tensorsEv,"axG",%p
+  90              		.align	1
+  91              		.weak	_ZNK6tflite5micro30NonPersistentMemoryPlannerShim21preserves_all_tensorsEv
+  92              		.syntax unified
+  93              		.thumb
+  94              		.thumb_func
+  96              	_ZNK6tflite5micro30NonPersistentMemoryPlannerShim21preserves_all_tensorsEv:
+  97              	.LVL5:
+  98              	.LFB676:
+  99              		.file 3 "lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.
+   1:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** /* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** #ifndef TENSORFLOW_LITE_MICRO_MEMORY_PLANNER_NON_PERSISTENT_BUFFER_PLANNER_SHIM_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** #define TENSORFLOW_LITE_MICRO_MEMORY_PLANNER_NON_PERSISTENT_BUFFER_PLANNER_SHIM_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** #include "tensorflow/lite/micro/compatibility.h"
+  20:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** #include "tensorflow/lite/micro/memory_planner/memory_plan_struct.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** #include "tensorflow/lite/micro/memory_planner/micro_memory_planner.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  23:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** namespace tflite {
+  24:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** namespace micro {
+  25:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  26:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** /*   This is an experimental feature and subjected to change.
+  27:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****  *
+  28:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** The NonPersistentMemoryPlannerShim enables TFLM to work with an external tooling
+  29:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** that can plan the offset of each non persistent buffer for the Model within the
+  30:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** TFLM arena.
+  31:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  32:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** If the NonPersistentMemoryPlannerShim is used, then the final binary does not
+  33:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** have any of the symbols associated with the GreedyMemoryPlanner which results in
+  34:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** a reduced memory footprint.
+  35:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  36:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** Additionally, the offline planning of the non-persistent buffers can be used to
+  37:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** have a more efficient utilization compared to the GreedyMemoryPlanner.
+  38:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  39:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** For example, consider the following hypothetical model:
+  40:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  41:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** A1(400)                    A2(401)
+  42:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** ──┬─────────┐    ┌───────────
+  43:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │         │    │
+  44:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │         │    │
+  45:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │         ▼    ▼
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 5
+
+
+  46:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       ┌────────┐
+  47:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       │  OP1   │
+  48:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       └───┬────┘       A4(201)
+  49:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │   A3(10)  │              │
+  50:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │           │              │
+  51:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │           │              │
+  52:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       ┌───┴────┐         │
+  53:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       │  OP2   │◄────────┤
+  54:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       └───┬────┘         │
+  55:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │   A5(11)  │      A6(202) │
+  56:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │           │       │      │
+  57:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │           ▼       │      │
+  58:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       ┌────────┐  │      │
+  59:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       │  OP3   │◄─┘      │
+  60:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       └───┬────┘         │
+  61:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │           │      A8(200) │
+  62:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │   A7(12)  │        │     │
+  63:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │           │        │     │
+  64:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   │       ┌───┴────┐◄──┘     │
+  65:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   └──────►│  OP4   │         │
+  66:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****           └───┬────┘◄────────┘
+  67:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****               │
+  68:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****       A9(13)  │
+  69:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****               ▼
+  70:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  71:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** The GreedyMemoryPlanner will give the following memory layout that requires 1012
+  72:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** bytes of scratch arena size:
+  73:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  74:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** ┌────────────────────────────────
+  75:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** │  A2(401)                                │          A1(400)         │ A4(201)│
+  76:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** A3(10)│
+  77:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** └────────────────────────────────
+  78:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  79:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** ┌───────────┬──────┬──────┐
+  80:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** │ A6(202)   │A5(11)│A7(12)│
+  81:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** └───────────┴──────┴──────┘
+  82:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  83:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** ┌──────────┬───────┐
+  84:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** │ A8(200)  │A9(13) │
+  85:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** └──────────┴───────┘
+  86:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  87:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** But a more efficient offline memory plan that requires only 826 bytes of scratch
+  88:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** arena size can be
+  89:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  90:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** ┌────────────────────────────────
+  91:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** │      A1(400)                         │         A2(401)             │
+  92:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** A3(10)│A5(11)│
+  93:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** └────────────────────────────────
+  94:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  95:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****                                        ┌────────────────┬──
+  96:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****                                        │A4(201)         │  A8(200)   │A9(13)
+  97:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** │A7(12) │ └────────────────┴──────────�
+  98:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+  99:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****                                                         ┌─────────────�
+ 100:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****                                                         │  A6(202)    │
+ 101:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****                                                         └─────────────�
+ 102:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 6
+
+
+ 103:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** */
+ 104:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** class NonPersistentMemoryPlannerShim : public MicroMemoryPlanner {
+ 105:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****  public:
+ 106:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   // Does not take ownership of buffer_plan, which must refer to a valid
+ 107:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   // BufferPlan that outlives this object.
+ 108:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   explicit NonPersistentMemoryPlannerShim(const BufferPlan* buffer_plan);
+ 109:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   ~NonPersistentMemoryPlannerShim() override;
+ 110:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+ 111:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   TfLiteStatus GetOffsetForBuffer(int buffer_request_index,
+ 112:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****                                   int* offset) override;
+ 113:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+ 114:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   TfLiteStatus AddBuffer(int size, int first_time_used,
+ 115:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****                          int last_time_used) override;
+ 116:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   size_t GetMaximumMemorySize() override;
+ 117:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   int GetBufferCount() override;
+ 118:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h **** 
+ 119:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   // Returns False because the NonPersistentMemoryPlannerShim doesn't preserves
+ 120:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   // all tensors after invocation.
+ 121:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h ****   bool preserves_all_tensors() const override { return false; }
+ 100              		.loc 3 121 8 is_stmt 1 view -0
+ 101              		.cfi_startproc
+ 102              		@ args = 0, pretend = 0, frame = 0
+ 103              		@ frame_needed = 0, uses_anonymous_args = 0
+ 104              		@ link register save eliminated.
+ 105              		.loc 3 121 49 view .LVU11
+ 106              		.loc 3 121 63 is_stmt 0 view .LVU12
+ 107 0000 0020     		movs	r0, #0
+ 108              	.LVL6:
+ 109              		.loc 3 121 63 view .LVU13
+ 110 0002 7047     		bx	lr
+ 111              		.cfi_endproc
+ 112              	.LFE676:
+ 114              		.section	.text._ZN6tflite5micro30NonPersistentMemoryPlannerShimD2Ev,"ax",%progbits
+ 115              		.align	1
+ 116              		.global	_ZN6tflite5micro30NonPersistentMemoryPlannerShimD2Ev
+ 117              		.syntax unified
+ 118              		.thumb
+ 119              		.thumb_func
+ 121              	_ZN6tflite5micro30NonPersistentMemoryPlannerShimD2Ev:
+ 122              	.LVL7:
+ 123              	.LFB681:
+   1:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** /* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** #include "tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.h"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 7
+
+
+  17:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** #include "tensorflow/lite/micro/micro_log.h"
+  19:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+  20:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** namespace tflite {
+  21:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** namespace micro {
+  22:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+  23:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** NonPersistentMemoryPlannerShim::NonPersistentMemoryPlannerShim(
+  24:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     const BufferPlan* buffer_plan)
+  25:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     : buffer_plan_(buffer_plan), buffer_request_count_(0) {}
+  26:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+  27:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** NonPersistentMemoryPlannerShim::~NonPersistentMemoryPlannerShim() {}
+ 124              		.loc 1 27 1 is_stmt 1 view -0
+ 125              		.cfi_startproc
+ 126              		@ args = 0, pretend = 0, frame = 0
+ 127              		@ frame_needed = 0, uses_anonymous_args = 0
+ 128              		@ link register save eliminated.
+ 129              	.LBB13:
+ 130              		.loc 1 27 65 is_stmt 0 view .LVU15
+ 131 0000 024A     		ldr	r2, .L6
+ 132 0002 0260     		str	r2, [r0]
+ 133              	.LVL8:
+ 134              	.LBB14:
+ 135              	.LBI14:
+  49:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+ 136              		.loc 2 49 11 is_stmt 1 view .LVU16
+ 137              	.LBB15:
+  49:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+ 138              		.loc 2 49 33 is_stmt 0 view .LVU17
+ 139 0004 024A     		ldr	r2, .L6+4
+ 140 0006 0260     		str	r2, [r0]
+ 141              	.LVL9:
+  49:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h **** 
+ 142              		.loc 2 49 33 view .LVU18
+ 143              	.LBE15:
+ 144              	.LBE14:
+ 145              	.LBE13:
+ 146              		.loc 1 27 68 view .LVU19
+ 147 0008 7047     		bx	lr
+ 148              	.L7:
+ 149 000a 00BF     		.align	2
+ 150              	.L6:
+ 151 000c 08000000 		.word	_ZTVN6tflite5micro30NonPersistentMemoryPlannerShimE+8
+ 152 0010 08000000 		.word	_ZTVN6tflite5micro18MicroMemoryPlannerE+8
+ 153              		.cfi_endproc
+ 154              	.LFE681:
+ 156              		.global	_ZN6tflite5micro30NonPersistentMemoryPlannerShimD1Ev
+ 157              		.thumb_set _ZN6tflite5micro30NonPersistentMemoryPlannerShimD1Ev,_ZN6tflite5micro30NonPersistentMem
+ 158              		.section	.text._ZN6tflite5micro30NonPersistentMemoryPlannerShim20GetMaximumMemorySizeEv,"ax",%prog
+ 159              		.align	1
+ 160              		.global	_ZN6tflite5micro30NonPersistentMemoryPlannerShim20GetMaximumMemorySizeEv
+ 161              		.syntax unified
+ 162              		.thumb
+ 163              		.thumb_func
+ 165              	_ZN6tflite5micro30NonPersistentMemoryPlannerShim20GetMaximumMemorySizeEv:
+ 166              	.LVL10:
+ 167              	.LFB685:
+  28:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 8
+
+
+  29:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** TfLiteStatus NonPersistentMemoryPlannerShim::AddBuffer(int size,
+  30:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****                                                        int first_time_used,
+  31:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****                                                        int last_time_used) {
+  32:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   buffer_request_count_++;
+  33:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   if (buffer_request_count_ > buffer_plan_->buffer_count) {
+  34:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     MicroPrintf(
+  35:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****         "Attempting to add buffer %d, but only %d buffers in given buffer "
+  36:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****         "plan.",
+  37:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****         buffer_request_count_, buffer_plan_->buffer_count);
+  38:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     return kTfLiteError;
+  39:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   }
+  40:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   return kTfLiteOk;
+  41:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** }
+  42:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+  43:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** size_t NonPersistentMemoryPlannerShim::GetMaximumMemorySize() {
+ 168              		.loc 1 43 63 is_stmt 1 view -0
+ 169              		.cfi_startproc
+ 170              		@ args = 0, pretend = 0, frame = 0
+ 171              		@ frame_needed = 0, uses_anonymous_args = 0
+ 172              		@ link register save eliminated.
+  44:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   // Simply return 0 to let the framework accept this memory plan
+  45:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   // because the client ensure validity of the memory plan.
+  46:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   return 0;
+ 173              		.loc 1 46 3 view .LVU21
+  47:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** }
+ 174              		.loc 1 47 1 is_stmt 0 view .LVU22
+ 175 0000 0020     		movs	r0, #0
+ 176              	.LVL11:
+ 177              		.loc 1 47 1 view .LVU23
+ 178 0002 7047     		bx	lr
+ 179              		.cfi_endproc
+ 180              	.LFE685:
+ 182              		.section	.text._ZN6tflite5micro30NonPersistentMemoryPlannerShim14GetBufferCountEv,"ax",%progbits
+ 183              		.align	1
+ 184              		.global	_ZN6tflite5micro30NonPersistentMemoryPlannerShim14GetBufferCountEv
+ 185              		.syntax unified
+ 186              		.thumb
+ 187              		.thumb_func
+ 189              	_ZN6tflite5micro30NonPersistentMemoryPlannerShim14GetBufferCountEv:
+ 190              	.LVL12:
+ 191              	.LFB686:
+  48:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+  49:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** // How many buffers are in the given memory plan.
+  50:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** int NonPersistentMemoryPlannerShim::GetBufferCount() {
+ 192              		.loc 1 50 54 is_stmt 1 view -0
+ 193              		.cfi_startproc
+ 194              		@ args = 0, pretend = 0, frame = 0
+ 195              		@ frame_needed = 0, uses_anonymous_args = 0
+ 196              		@ link register save eliminated.
+  51:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   return buffer_plan_->buffer_count;
+ 197              		.loc 1 51 3 view .LVU25
+ 198              		.loc 1 51 10 is_stmt 0 view .LVU26
+ 199 0000 4368     		ldr	r3, [r0, #4]
+  52:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** }
+ 200              		.loc 1 52 1 view .LVU27
+ 201 0002 1868     		ldr	r0, [r3]
+ 202              	.LVL13:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 9
+
+
+ 203              		.loc 1 52 1 view .LVU28
+ 204 0004 7047     		bx	lr
+ 205              		.cfi_endproc
+ 206              	.LFE686:
+ 208              		.section	.text._ZN6tflite5micro30NonPersistentMemoryPlannerShimD0Ev,"ax",%progbits
+ 209              		.align	1
+ 210              		.global	_ZN6tflite5micro30NonPersistentMemoryPlannerShimD0Ev
+ 211              		.syntax unified
+ 212              		.thumb
+ 213              		.thumb_func
+ 215              	_ZN6tflite5micro30NonPersistentMemoryPlannerShimD0Ev:
+ 216              	.LVL14:
+ 217              	.LFB683:
+  27:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 218              		.loc 1 27 1 is_stmt 1 view -0
+ 219              		.cfi_startproc
+ 220              		@ args = 0, pretend = 0, frame = 0
+ 221              		@ frame_needed = 0, uses_anonymous_args = 0
+  27:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 222              		.loc 1 27 1 is_stmt 0 view .LVU30
+ 223 0000 10B5     		push	{r4, lr}
+ 224              	.LCFI0:
+ 225              		.cfi_def_cfa_offset 8
+ 226              		.cfi_offset 4, -8
+ 227              		.cfi_offset 14, -4
+ 228 0002 0446     		mov	r4, r0
+  27:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 229              		.loc 1 27 68 view .LVU31
+ 230 0004 FFF7FEFF 		bl	_ZN6tflite5micro30NonPersistentMemoryPlannerShimD1Ev
+ 231              	.LVL15:
+  27:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 232              		.loc 1 27 68 discriminator 1 view .LVU32
+ 233 0008 0C21     		movs	r1, #12
+ 234 000a 2046     		mov	r0, r4
+ 235 000c FFF7FEFF 		bl	_ZdlPvj
+ 236              	.LVL16:
+  27:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 237              		.loc 1 27 68 view .LVU33
+ 238 0010 2046     		mov	r0, r4
+ 239 0012 10BD     		pop	{r4, pc}
+  27:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 240              		.loc 1 27 68 view .LVU34
+ 241              		.cfi_endproc
+ 242              	.LFE683:
+ 244              		.section	.rodata._ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii.str1.4,"aMS",%prog
+ 245              		.align	2
+ 246              	.LC0:
+ 247 0000 41747465 		.ascii	"Attempting to add buffer %d, but only %d buffers in"
+ 247      6D707469 
+ 247      6E672074 
+ 247      6F206164 
+ 247      64206275 
+ 248 0033 20676976 		.ascii	" given buffer plan.\000"
+ 248      656E2062 
+ 248      75666665 
+ 248      7220706C 
+ 248      616E2E00 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 10
+
+
+ 249              		.section	.text._ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii,"ax",%progbits
+ 250              		.align	1
+ 251              		.global	_ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii
+ 252              		.syntax unified
+ 253              		.thumb
+ 254              		.thumb_func
+ 256              	_ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii:
+ 257              	.LVL17:
+ 258              	.LFB684:
+  31:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   buffer_request_count_++;
+ 259              		.loc 1 31 76 is_stmt 1 view -0
+ 260              		.cfi_startproc
+ 261              		@ args = 0, pretend = 0, frame = 0
+ 262              		@ frame_needed = 0, uses_anonymous_args = 0
+  31:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   buffer_request_count_++;
+ 263              		.loc 1 31 76 is_stmt 0 view .LVU36
+ 264 0000 08B5     		push	{r3, lr}
+ 265              	.LCFI1:
+ 266              		.cfi_def_cfa_offset 8
+ 267              		.cfi_offset 3, -8
+ 268              		.cfi_offset 14, -4
+  32:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   if (buffer_request_count_ > buffer_plan_->buffer_count) {
+ 269              		.loc 1 32 3 is_stmt 1 view .LVU37
+ 270 0002 8168     		ldr	r1, [r0, #8]
+ 271              	.LVL18:
+  32:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   if (buffer_request_count_ > buffer_plan_->buffer_count) {
+ 272              		.loc 1 32 24 is_stmt 0 view .LVU38
+ 273 0004 0131     		adds	r1, r1, #1
+ 274 0006 8160     		str	r1, [r0, #8]
+  33:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     MicroPrintf(
+ 275              		.loc 1 33 3 is_stmt 1 view .LVU39
+  33:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     MicroPrintf(
+ 276              		.loc 1 33 31 is_stmt 0 view .LVU40
+ 277 0008 4368     		ldr	r3, [r0, #4]
+ 278              	.LVL19:
+  33:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     MicroPrintf(
+ 279              		.loc 1 33 45 view .LVU41
+ 280 000a 1A68     		ldr	r2, [r3]
+ 281              	.LVL20:
+  33:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     MicroPrintf(
+ 282              		.loc 1 33 3 view .LVU42
+ 283 000c 9142     		cmp	r1, r2
+ 284 000e 01DC     		bgt	.L16
+  40:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** }
+ 285              		.loc 1 40 10 view .LVU43
+ 286 0010 0020     		movs	r0, #0
+ 287              	.LVL21:
+ 288              	.L13:
+  41:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 289              		.loc 1 41 1 view .LVU44
+ 290 0012 08BD     		pop	{r3, pc}
+ 291              	.LVL22:
+ 292              	.L16:
+  34:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****         "Attempting to add buffer %d, but only %d buffers in given buffer "
+ 293              		.loc 1 34 5 is_stmt 1 view .LVU45
+  34:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****         "Attempting to add buffer %d, but only %d buffers in given buffer "
+ 294              		.loc 1 34 16 is_stmt 0 view .LVU46
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 11
+
+
+ 295 0014 0248     		ldr	r0, .L17
+ 296              	.LVL23:
+  34:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****         "Attempting to add buffer %d, but only %d buffers in given buffer "
+ 297              		.loc 1 34 16 view .LVU47
+ 298 0016 FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 299              	.LVL24:
+  38:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   }
+ 300              		.loc 1 38 5 is_stmt 1 view .LVU48
+  38:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   }
+ 301              		.loc 1 38 12 is_stmt 0 view .LVU49
+ 302 001a 0120     		movs	r0, #1
+ 303 001c F9E7     		b	.L13
+ 304              	.L18:
+ 305 001e 00BF     		.align	2
+ 306              	.L17:
+ 307 0020 00000000 		.word	.LC0
+ 308              		.cfi_endproc
+ 309              	.LFE684:
+ 311              		.section	.rodata._ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi.str1.4,"
+ 312              		.align	2
+ 313              	.LC1:
+ 314 0000 41747465 		.ascii	"Attempting to get offset for buffer %d, but only %d"
+ 314      6D707469 
+ 314      6E672074 
+ 314      6F206765 
+ 314      74206F66 
+ 315 0033 20627566 		.ascii	" buffers in given buffer plan.\000"
+ 315      66657273 
+ 315      20696E20 
+ 315      67697665 
+ 315      6E206275 
+ 316              		.section	.text._ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi,"ax",%prog
+ 317              		.align	1
+ 318              		.global	_ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi
+ 319              		.syntax unified
+ 320              		.thumb
+ 321              		.thumb_func
+ 323              	_ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi:
+ 324              	.LVL25:
+ 325              	.LFB687:
+  53:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+  54:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** TfLiteStatus NonPersistentMemoryPlannerShim::GetOffsetForBuffer(
+  55:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     int buffer_request_index, int* offset) {
+ 326              		.loc 1 55 44 is_stmt 1 view -0
+ 327              		.cfi_startproc
+ 328              		@ args = 0, pretend = 0, frame = 0
+ 329              		@ frame_needed = 0, uses_anonymous_args = 0
+ 330              		.loc 1 55 44 is_stmt 0 view .LVU51
+ 331 0000 08B5     		push	{r3, lr}
+ 332              	.LCFI2:
+ 333              		.cfi_def_cfa_offset 8
+ 334              		.cfi_offset 3, -8
+ 335              		.cfi_offset 14, -4
+  56:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   if (buffer_request_index >= buffer_plan_->buffer_count) {
+ 336              		.loc 1 56 3 is_stmt 1 view .LVU52
+ 337              		.loc 1 56 31 is_stmt 0 view .LVU53
+ 338 0002 4368     		ldr	r3, [r0, #4]
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 12
+
+
+ 339              		.loc 1 56 45 view .LVU54
+ 340 0004 1868     		ldr	r0, [r3]
+ 341              	.LVL26:
+ 342              		.loc 1 56 3 view .LVU55
+ 343 0006 8842     		cmp	r0, r1
+ 344 0008 05DD     		ble	.L23
+  57:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     MicroPrintf(
+  58:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****         "Attempting to get offset for buffer %d, but only %d buffers in given "
+  59:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****         "buffer plan.",
+  60:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****         buffer_request_index, buffer_plan_->buffer_count);
+  61:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     return kTfLiteError;
+  62:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   }
+  63:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   *offset = buffer_plan_->buffer_plan_entries[buffer_request_index].offset;
+ 345              		.loc 1 63 3 is_stmt 1 view .LVU56
+ 346              		.loc 1 63 69 is_stmt 0 view .LVU57
+ 347 000a 03EB8103 		add	r3, r3, r1, lsl #2
+ 348 000e 5B68     		ldr	r3, [r3, #4]
+ 349              		.loc 1 63 11 view .LVU58
+ 350 0010 1360     		str	r3, [r2]
+  64:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   return kTfLiteOk;
+ 351              		.loc 1 64 3 is_stmt 1 view .LVU59
+ 352              		.loc 1 64 10 is_stmt 0 view .LVU60
+ 353 0012 0020     		movs	r0, #0
+ 354              	.LVL27:
+ 355              	.L21:
+  65:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** }
+ 356              		.loc 1 65 1 view .LVU61
+ 357 0014 08BD     		pop	{r3, pc}
+ 358              	.LVL28:
+ 359              	.L23:
+  57:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     MicroPrintf(
+ 360              		.loc 1 57 5 is_stmt 1 view .LVU62
+  57:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     MicroPrintf(
+ 361              		.loc 1 57 16 is_stmt 0 view .LVU63
+ 362 0016 0246     		mov	r2, r0
+ 363              	.LVL29:
+  57:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     MicroPrintf(
+ 364              		.loc 1 57 16 view .LVU64
+ 365 0018 0248     		ldr	r0, .L24
+ 366 001a FFF7FEFF 		bl	_Z11MicroPrintfPKcz
+ 367              	.LVL30:
+  61:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   }
+ 368              		.loc 1 61 5 is_stmt 1 view .LVU65
+  61:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****   }
+ 369              		.loc 1 61 12 is_stmt 0 view .LVU66
+ 370 001e 0120     		movs	r0, #1
+ 371 0020 F8E7     		b	.L21
+ 372              	.L25:
+ 373 0022 00BF     		.align	2
+ 374              	.L24:
+ 375 0024 00000000 		.word	.LC1
+ 376              		.cfi_endproc
+ 377              	.LFE687:
+ 379              		.section	.text._ZN6tflite5micro30NonPersistentMemoryPlannerShimC2EPKNS0_10BufferPlanE,"ax",%progbi
+ 380              		.align	1
+ 381              		.global	_ZN6tflite5micro30NonPersistentMemoryPlannerShimC2EPKNS0_10BufferPlanE
+ 382              		.syntax unified
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 13
+
+
+ 383              		.thumb
+ 384              		.thumb_func
+ 386              	_ZN6tflite5micro30NonPersistentMemoryPlannerShimC2EPKNS0_10BufferPlanE:
+ 387              	.LVL31:
+ 388              	.LFB678:
+  23:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc ****     const BufferPlan* buffer_plan)
+ 389              		.loc 1 23 1 is_stmt 1 view -0
+ 390              		.cfi_startproc
+ 391              		@ args = 0, pretend = 0, frame = 0
+ 392              		@ frame_needed = 0, uses_anonymous_args = 0
+ 393              		@ link register save eliminated.
+ 394              	.LBB16:
+ 395              	.LBB17:
+ 396              	.LBI17:
+  48:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual ~MicroMemoryPlanner() {}
+ 397              		.loc 2 48 3 view .LVU68
+ 398              	.LBB18:
+ 399              	.LBB19:
+  48:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual ~MicroMemoryPlanner() {}
+ 400              		.loc 2 48 24 is_stmt 0 view .LVU69
+ 401 0000 034A     		ldr	r2, .L27
+ 402 0002 0260     		str	r2, [r0]
+ 403              	.LVL32:
+  48:lib/tflite-micro/tensorflow/lite/micro/memory_planner/micro_memory_planner.h ****   virtual ~MicroMemoryPlanner() {}
+ 404              		.loc 2 48 24 view .LVU70
+ 405              	.LBE19:
+ 406              	.LBE18:
+ 407              	.LBE17:
+  25:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 408              		.loc 1 25 57 discriminator 1 view .LVU71
+ 409 0004 034A     		ldr	r2, .L27+4
+ 410 0006 0260     		str	r2, [r0]
+  25:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 411              		.loc 1 25 7 discriminator 1 view .LVU72
+ 412 0008 4160     		str	r1, [r0, #4]
+  25:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 413              		.loc 1 25 34 discriminator 1 view .LVU73
+ 414 000a 0022     		movs	r2, #0
+ 415 000c 8260     		str	r2, [r0, #8]
+ 416              	.LBE16:
+  25:lib/tflite-micro/tensorflow/lite/micro/memory_planner/non_persistent_buffer_planner_shim.cc **** 
+ 417              		.loc 1 25 60 view .LVU74
+ 418 000e 7047     		bx	lr
+ 419              	.L28:
+ 420              		.align	2
+ 421              	.L27:
+ 422 0010 08000000 		.word	_ZTVN6tflite5micro18MicroMemoryPlannerE+8
+ 423 0014 08000000 		.word	_ZTVN6tflite5micro30NonPersistentMemoryPlannerShimE+8
+ 424              		.cfi_endproc
+ 425              	.LFE678:
+ 427              		.global	_ZN6tflite5micro30NonPersistentMemoryPlannerShimC1EPKNS0_10BufferPlanE
+ 428              		.thumb_set _ZN6tflite5micro30NonPersistentMemoryPlannerShimC1EPKNS0_10BufferPlanE,_ZN6tflite5micro
+ 429              		.weak	_ZTVN6tflite5micro18MicroMemoryPlannerE
+ 430              		.section	.rodata._ZTVN6tflite5micro18MicroMemoryPlannerE,"aG",%progbits,_ZTVN6tflite5micro18MicroM
+ 431              		.align	2
+ 434              	_ZTVN6tflite5micro18MicroMemoryPlannerE:
+ 435 0000 00000000 		.word	0
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 14
+
+
+ 436 0004 00000000 		.word	0
+ 437 0008 00000000 		.word	0
+ 438 000c 00000000 		.word	0
+ 439 0010 00000000 		.word	__cxa_pure_virtual
+ 440 0014 00000000 		.word	_ZN6tflite5micro18MicroMemoryPlanner9AddBufferEiiii
+ 441 0018 00000000 		.word	__cxa_pure_virtual
+ 442 001c 00000000 		.word	__cxa_pure_virtual
+ 443 0020 00000000 		.word	__cxa_pure_virtual
+ 444 0024 00000000 		.word	_ZN6tflite5micro18MicroMemoryPlanner4InitEPhi
+ 445 0028 00000000 		.word	__cxa_pure_virtual
+ 446 002c 00000000 		.word	_ZN6tflite5micro18MicroMemoryPlanner15PrintMemoryPlanEv
+ 447              		.global	_ZTVN6tflite5micro30NonPersistentMemoryPlannerShimE
+ 448              		.section	.rodata._ZTVN6tflite5micro30NonPersistentMemoryPlannerShimE,"a"
+ 449              		.align	2
+ 452              	_ZTVN6tflite5micro30NonPersistentMemoryPlannerShimE:
+ 453 0000 00000000 		.word	0
+ 454 0004 00000000 		.word	0
+ 455 0008 00000000 		.word	_ZN6tflite5micro30NonPersistentMemoryPlannerShimD1Ev
+ 456 000c 00000000 		.word	_ZN6tflite5micro30NonPersistentMemoryPlannerShimD0Ev
+ 457 0010 00000000 		.word	_ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii
+ 458 0014 00000000 		.word	_ZN6tflite5micro18MicroMemoryPlanner9AddBufferEiiii
+ 459 0018 00000000 		.word	_ZN6tflite5micro30NonPersistentMemoryPlannerShim20GetMaximumMemorySizeEv
+ 460 001c 00000000 		.word	_ZN6tflite5micro30NonPersistentMemoryPlannerShim14GetBufferCountEv
+ 461 0020 00000000 		.word	_ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi
+ 462 0024 00000000 		.word	_ZN6tflite5micro18MicroMemoryPlanner4InitEPhi
+ 463 0028 00000000 		.word	_ZNK6tflite5micro30NonPersistentMemoryPlannerShim21preserves_all_tensorsEv
+ 464 002c 00000000 		.word	_ZN6tflite5micro18MicroMemoryPlanner15PrintMemoryPlanEv
+ 465              		.weak	__cxa_pure_virtual
+ 466              		.text
+ 467              	.Letext0:
+ 468              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 469              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 470              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 471              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 472              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 473              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 474              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 475              		.file 11 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 476              		.file 12 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 477              		.file 13 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 478              		.file 14 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 479              		.file 15 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 480              		.file 16 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 481              		.file 17 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 482              		.file 18 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 483              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 484              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 485              		.file 21 "lib/tflite-micro/tensorflow/lite/micro/micro_log.h"
+ 486              		.file 22 "lib/tflite-micro/tensorflow/lite/micro/memory_planner/memory_plan_struct.h"
+ 487              		.file 23 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ 488              		.file 24 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 489              		.file 25 "<built-in>"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 non_persistent_buffer_planner_shim.cc
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:21     .text._ZN6tflite5micro18MicroMemoryPlanner9AddBufferEiiii:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:27     .text._ZN6tflite5micro18MicroMemoryPlanner9AddBufferEiiii:00000000 _ZN6tflite5micro18MicroMemoryPlanner9AddBufferEiiii
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:46     .text._ZN6tflite5micro18MicroMemoryPlanner4InitEPhi:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:52     .text._ZN6tflite5micro18MicroMemoryPlanner4InitEPhi:00000000 _ZN6tflite5micro18MicroMemoryPlanner4InitEPhi
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:70     .text._ZN6tflite5micro18MicroMemoryPlanner15PrintMemoryPlanEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:76     .text._ZN6tflite5micro18MicroMemoryPlanner15PrintMemoryPlanEv:00000000 _ZN6tflite5micro18MicroMemoryPlanner15PrintMemoryPlanEv
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:90     .text._ZNK6tflite5micro30NonPersistentMemoryPlannerShim21preserves_all_tensorsEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:96     .text._ZNK6tflite5micro30NonPersistentMemoryPlannerShim21preserves_all_tensorsEv:00000000 _ZNK6tflite5micro30NonPersistentMemoryPlannerShim21preserves_all_tensorsEv
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:115    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimD2Ev:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:121    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimD2Ev:00000000 _ZN6tflite5micro30NonPersistentMemoryPlannerShimD2Ev
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:151    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimD2Ev:0000000c $d
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:452    .rodata._ZTVN6tflite5micro30NonPersistentMemoryPlannerShimE:00000000 _ZTVN6tflite5micro30NonPersistentMemoryPlannerShimE
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:434    .rodata._ZTVN6tflite5micro18MicroMemoryPlannerE:00000000 _ZTVN6tflite5micro18MicroMemoryPlannerE
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:121    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimD2Ev:00000000 _ZN6tflite5micro30NonPersistentMemoryPlannerShimD1Ev
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:159    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim20GetMaximumMemorySizeEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:165    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim20GetMaximumMemorySizeEv:00000000 _ZN6tflite5micro30NonPersistentMemoryPlannerShim20GetMaximumMemorySizeEv
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:183    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim14GetBufferCountEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:189    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim14GetBufferCountEv:00000000 _ZN6tflite5micro30NonPersistentMemoryPlannerShim14GetBufferCountEv
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:209    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimD0Ev:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:215    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimD0Ev:00000000 _ZN6tflite5micro30NonPersistentMemoryPlannerShimD0Ev
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:245    .rodata._ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:250    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:256    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii:00000000 _ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:307    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim9AddBufferEiii:00000020 $d
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:312    .rodata._ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:317    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:323    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi:00000000 _ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:375    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShim18GetOffsetForBufferEiPi:00000024 $d
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:380    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimC2EPKNS0_10BufferPlanE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:386    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimC2EPKNS0_10BufferPlanE:00000000 _ZN6tflite5micro30NonPersistentMemoryPlannerShimC2EPKNS0_10BufferPlanE
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:422    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimC2EPKNS0_10BufferPlanE:00000010 $d
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:386    .text._ZN6tflite5micro30NonPersistentMemoryPlannerShimC2EPKNS0_10BufferPlanE:00000000 _ZN6tflite5micro30NonPersistentMemoryPlannerShimC1EPKNS0_10BufferPlanE
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:431    .rodata._ZTVN6tflite5micro18MicroMemoryPlannerE:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccFCDKzZ.s:449    .rodata._ZTVN6tflite5micro30NonPersistentMemoryPlannerShimE:00000000 $d
+
+UNDEFINED SYMBOLS
+_ZdlPvj
+_Z11MicroPrintfPKcz
+__cxa_pure_virtual

@@ -1,0 +1,209 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"health_fusion.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "App/health_fusion.c"
+  20              		.section	.text.health_fusion,"ax",%progbits
+  21              		.align	1
+  22              		.global	health_fusion
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	health_fusion:
+  28              	.LVL0:
+  29              	.LFB0:
+   1:App/health_fusion.c **** /**
+   2:App/health_fusion.c ****  * @file health_fusion.c
+   3:App/health_fusion.c ****  * @brief Multi-layer health fusion implementation
+   4:App/health_fusion.c ****  * @author Chetan I K
+   5:App/health_fusion.c ****  * @date October 2026
+   6:App/health_fusion.c ****  */
+   7:App/health_fusion.c **** 
+   8:App/health_fusion.c **** #include "health_fusion.h"
+   9:App/health_fusion.c **** 
+  10:App/health_fusion.c **** float health_fusion(float sensor, float electrical, float controller,
+  11:App/health_fusion.c ****                     float memory, float tinyml) {
+  30              		.loc 1 11 49 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		@ link register save eliminated.
+  12:App/health_fusion.c ****     float fused = WEIGHT_SENSOR     * sensor +
+  35              		.loc 1 12 5 view .LVU1
+  36              		.loc 1 12 37 is_stmt 0 view .LVU2
+  37 0000 DFED157A 		vldr.32	s15, .L5
+  38 0004 20EE270A 		vmul.f32	s0, s0, s15
+  39              	.LVL1:
+  13:App/health_fusion.c ****                   WEIGHT_ELECTRICAL * electrical +
+  40              		.loc 1 13 37 view .LVU3
+  41 0008 DFED147A 		vldr.32	s15, .L5+4
+  42 000c 60EEA70A 		vmul.f32	s1, s1, s15
+  43              	.LVL2:
+  12:App/health_fusion.c ****     float fused = WEIGHT_SENSOR     * sensor +
+  44              		.loc 1 12 46 view .LVU4
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s 			page 2
+
+
+  45 0010 30EE200A 		vadd.f32	s0, s0, s1
+  14:App/health_fusion.c ****                   WEIGHT_CONTROLLER * controller +
+  46              		.loc 1 14 37 view .LVU5
+  47 0014 9FED127A 		vldr.32	s14, .L5+8
+  48 0018 21EE071A 		vmul.f32	s2, s2, s14
+  49              	.LVL3:
+  13:App/health_fusion.c ****                   WEIGHT_ELECTRICAL * electrical +
+  50              		.loc 1 13 50 view .LVU6
+  51 001c 30EE010A 		vadd.f32	s0, s0, s2
+  15:App/health_fusion.c ****                   WEIGHT_MEMORY     * memory +
+  52              		.loc 1 15 37 view .LVU7
+  53 0020 61EE871A 		vmul.f32	s3, s3, s14
+  54              	.LVL4:
+  14:App/health_fusion.c ****                   WEIGHT_CONTROLLER * controller +
+  55              		.loc 1 14 50 view .LVU8
+  56 0024 30EE210A 		vadd.f32	s0, s0, s3
+  16:App/health_fusion.c ****                   WEIGHT_TINYML     * tinyml;
+  57              		.loc 1 16 37 view .LVU9
+  58 0028 22EE272A 		vmul.f32	s4, s4, s15
+  59              	.LVL5:
+  12:App/health_fusion.c ****                   WEIGHT_ELECTRICAL * electrical +
+  60              		.loc 1 12 11 view .LVU10
+  61 002c 30EE020A 		vadd.f32	s0, s0, s4
+  62              	.LVL6:
+  17:App/health_fusion.c **** 
+  18:App/health_fusion.c ****     if (fused < 0.0f)   fused = 0.0f;
+  63              		.loc 1 18 5 is_stmt 1 view .LVU11
+  64              		.loc 1 18 8 is_stmt 0 view .LVU12
+  65 0030 B5EEC00A 		vcmpe.f32	s0, #0
+  66 0034 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  67 0038 07D4     		bmi	.L3
+  19:App/health_fusion.c ****     if (fused > 100.0f) fused = 100.0f;
+  68              		.loc 1 19 5 is_stmt 1 view .LVU13
+  69              		.loc 1 19 8 is_stmt 0 view .LVU14
+  70 003a DFED0A7A 		vldr.32	s15, .L5+12
+  71 003e B4EEE70A 		vcmpe.f32	s0, s15
+  72 0042 F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  73 0046 03DC     		bgt	.L4
+  74 0048 7047     		bx	lr
+  75              	.L3:
+  18:App/health_fusion.c ****     if (fused > 100.0f) fused = 100.0f;
+  76              		.loc 1 18 31 discriminator 1 view .LVU15
+  77 004a 9FED070A 		vldr.32	s0, .L5+16
+  78              	.LVL7:
+  18:App/health_fusion.c ****     if (fused > 100.0f) fused = 100.0f;
+  79              		.loc 1 18 31 discriminator 1 view .LVU16
+  80 004e 7047     		bx	lr
+  81              	.LVL8:
+  82              	.L4:
+  83              		.loc 1 19 31 discriminator 1 view .LVU17
+  84 0050 9FED040A 		vldr.32	s0, .L5+12
+  85              	.LVL9:
+  20:App/health_fusion.c **** 
+  21:App/health_fusion.c ****     return fused;
+  86              		.loc 1 21 5 is_stmt 1 view .LVU18
+  22:App/health_fusion.c **** }
+  87              		.loc 1 22 1 is_stmt 0 view .LVU19
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s 			page 3
+
+
+  88 0054 7047     		bx	lr
+  89              	.L6:
+  90 0056 00BF     		.align	2
+  91              	.L5:
+  92 0058 9A99993E 		.word	1050253722
+  93 005c CDCC4C3E 		.word	1045220557
+  94 0060 9A99193E 		.word	1041865114
+  95 0064 0000C842 		.word	1120403456
+  96 0068 00000000 		.word	0
+  97              		.cfi_endproc
+  98              	.LFE0:
+ 100              		.section	.text.compute_memory_health_score,"ax",%progbits
+ 101              		.align	1
+ 102              		.global	compute_memory_health_score
+ 103              		.syntax unified
+ 104              		.thumb
+ 105              		.thumb_func
+ 107              	compute_memory_health_score:
+ 108              	.LFB1:
+  23:App/health_fusion.c **** 
+  24:App/health_fusion.c **** float compute_memory_health_score(void) {
+ 109              		.loc 1 24 41 is_stmt 1 view -0
+ 110              		.cfi_startproc
+ 111              		@ args = 0, pretend = 0, frame = 0
+ 112              		@ frame_needed = 0, uses_anonymous_args = 0
+ 113              		@ link register save eliminated.
+  25:App/health_fusion.c ****     return 100.0f;
+ 114              		.loc 1 25 5 view .LVU21
+  26:App/health_fusion.c **** }
+ 115              		.loc 1 26 1 is_stmt 0 view .LVU22
+ 116 0000 9FED010A 		vldr.32	s0, .L8
+ 117 0004 7047     		bx	lr
+ 118              	.L9:
+ 119 0006 00BF     		.align	2
+ 120              	.L8:
+ 121 0008 0000C842 		.word	1120403456
+ 122              		.cfi_endproc
+ 123              	.LFE1:
+ 125              		.section	.text.compute_controller_health_score,"ax",%progbits
+ 126              		.align	1
+ 127              		.global	compute_controller_health_score
+ 128              		.syntax unified
+ 129              		.thumb
+ 130              		.thumb_func
+ 132              	compute_controller_health_score:
+ 133              	.LFB2:
+  27:App/health_fusion.c **** 
+  28:App/health_fusion.c **** float compute_controller_health_score(void) {
+ 134              		.loc 1 28 45 is_stmt 1 view -0
+ 135              		.cfi_startproc
+ 136              		@ args = 0, pretend = 0, frame = 0
+ 137              		@ frame_needed = 0, uses_anonymous_args = 0
+ 138              		@ link register save eliminated.
+  29:App/health_fusion.c ****     return 100.0f;
+ 139              		.loc 1 29 5 view .LVU24
+  30:App/health_fusion.c **** }...
+ 140              		.loc 1 30 1 is_stmt 0 view .LVU25
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s 			page 4
+
+
+ 141 0000 9FED010A 		vldr.32	s0, .L11
+ 142 0004 7047     		bx	lr
+ 143              	.L12:
+ 144 0006 00BF     		.align	2
+ 145              	.L11:
+ 146 0008 0000C842 		.word	1120403456
+ 147              		.cfi_endproc
+ 148              	.LFE2:
+ 150              		.text
+ 151              	.Letext0:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s 			page 5
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 health_fusion.c
+C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s:21     .text.health_fusion:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s:27     .text.health_fusion:00000000 health_fusion
+C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s:92     .text.health_fusion:00000058 $d
+C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s:101    .text.compute_memory_health_score:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s:107    .text.compute_memory_health_score:00000000 compute_memory_health_score
+C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s:121    .text.compute_memory_health_score:00000008 $d
+C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s:126    .text.compute_controller_health_score:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s:132    .text.compute_controller_health_score:00000000 compute_controller_health_score
+C:\Users\Chetan\AppData\Local\Temp\cctEdOJd.s:146    .text.compute_controller_health_score:00000008 $d
+
+NO UNDEFINED SYMBOLS

@@ -1,0 +1,562 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"state_machine.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "App/state_machine.c"
+  20              		.section	.text.determine_target_state,"ax",%progbits
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	determine_target_state:
+  27              	.LVL0:
+  28              	.LFB2:
+   1:App/state_machine.c **** /**
+   2:App/state_machine.c ****  * @file state_machine.c
+   3:App/state_machine.c ****  * @brief SwasthEdge state machine implementation
+   4:App/state_machine.c ****  * @author Chetan I K
+   5:App/state_machine.c ****  * @date October 2026
+   6:App/state_machine.c ****  */
+   7:App/state_machine.c **** 
+   8:App/state_machine.c **** #include "state_machine.h"
+   9:App/state_machine.c **** 
+  10:App/state_machine.c **** static SwasthEdgeState current_state;
+  11:App/state_machine.c **** static uint8_t consecutive_count;
+  12:App/state_machine.c **** 
+  13:App/state_machine.c **** static SwasthEdgeState determine_target_state(float confidence);
+  14:App/state_machine.c **** 
+  15:App/state_machine.c **** void state_machine_init(void) {
+  16:App/state_machine.c ****     current_state = STATE_NORMAL;
+  17:App/state_machine.c ****     consecutive_count = 0;
+  18:App/state_machine.c **** }
+  19:App/state_machine.c **** 
+  20:App/state_machine.c **** void state_machine_update(float confidence) {
+  21:App/state_machine.c ****     SwasthEdgeState target = determine_target_state(confidence);
+  22:App/state_machine.c **** 
+  23:App/state_machine.c ****     if (target != current_state) {
+  24:App/state_machine.c ****         consecutive_count++;
+  25:App/state_machine.c ****         if (consecutive_count >= CONSECUTIVE_READINGS) {
+  26:App/state_machine.c ****             current_state = target;
+  27:App/state_machine.c ****             consecutive_count = 0;
+  28:App/state_machine.c ****         }
+  29:App/state_machine.c ****     } else {
+  30:App/state_machine.c ****         consecutive_count = 0;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 2
+
+
+  31:App/state_machine.c ****     }
+  32:App/state_machine.c **** }
+  33:App/state_machine.c **** 
+  34:App/state_machine.c **** static SwasthEdgeState determine_target_state(float confidence) {
+  29              		.loc 1 34 65 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  35:App/state_machine.c ****     if (current_state == STATE_NORMAL) {
+  34              		.loc 1 35 5 view .LVU1
+  35              		.loc 1 35 23 is_stmt 0 view .LVU2
+  36 0000 1F4B     		ldr	r3, .L15
+  37 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+  38              		.loc 1 35 8 view .LVU3
+  39 0004 38B9     		cbnz	r0, .L2
+  36:App/state_machine.c ****         if (confidence < CONFIDENCE_NORMAL_MIN) return STATE_WARNING;
+  40              		.loc 1 36 9 is_stmt 1 view .LVU4
+  41              		.loc 1 36 12 is_stmt 0 view .LVU5
+  42 0006 DFED1F7A 		vldr.32	s15, .L15+4
+  43 000a B4EEE70A 		vcmpe.f32	s0, s15
+  44 000e F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  45 0012 2FD4     		bmi	.L12
+  46              	.L3:
+  37:App/state_machine.c ****     } else if (current_state == STATE_WARNING) {
+  38:App/state_machine.c ****         if (confidence < CONFIDENCE_WARNING_MIN) return STATE_DEGRADED;
+  39:App/state_machine.c ****         else if (confidence > CONFIDENCE_RECOVERY_NORMAL) return STATE_NORMAL;
+  40:App/state_machine.c ****     } else if (current_state == STATE_DEGRADED) {
+  41:App/state_machine.c ****         if (confidence < CONFIDENCE_DEGRADED_MIN) return STATE_CRITICAL;
+  42:App/state_machine.c ****         else if (confidence > CONFIDENCE_RECOVERY_WARNING) return STATE_WARNING;
+  43:App/state_machine.c ****     } else if (current_state == STATE_CRITICAL) {
+  44:App/state_machine.c ****         if (confidence > CONFIDENCE_RECOVERY_DEGRADED) return STATE_DEGRADED;
+  45:App/state_machine.c ****     }
+  46:App/state_machine.c ****     return current_state;
+  47:App/state_machine.c **** }
+  47              		.loc 1 47 1 view .LVU6
+  48 0014 7047     		bx	lr
+  49              	.L2:
+  37:App/state_machine.c ****     } else if (current_state == STATE_WARNING) {
+  50              		.loc 1 37 12 is_stmt 1 view .LVU7
+  37:App/state_machine.c ****     } else if (current_state == STATE_WARNING) {
+  51              		.loc 1 37 15 is_stmt 0 view .LVU8
+  52 0016 0128     		cmp	r0, #1
+  53 0018 0CD0     		beq	.L13
+  40:App/state_machine.c ****         if (confidence < CONFIDENCE_DEGRADED_MIN) return STATE_CRITICAL;
+  54              		.loc 1 40 12 is_stmt 1 view .LVU9
+  40:App/state_machine.c ****         if (confidence < CONFIDENCE_DEGRADED_MIN) return STATE_CRITICAL;
+  55              		.loc 1 40 15 is_stmt 0 view .LVU10
+  56 001a 0228     		cmp	r0, #2
+  57 001c 1AD0     		beq	.L14
+  43:App/state_machine.c ****         if (confidence > CONFIDENCE_RECOVERY_DEGRADED) return STATE_DEGRADED;
+  58              		.loc 1 43 12 is_stmt 1 view .LVU11
+  43:App/state_machine.c ****         if (confidence > CONFIDENCE_RECOVERY_DEGRADED) return STATE_DEGRADED;
+  59              		.loc 1 43 15 is_stmt 0 view .LVU12
+  60 001e 0328     		cmp	r0, #3
+  61 0020 F8D1     		bne	.L3
+  44:App/state_machine.c ****     }
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 3
+
+
+  62              		.loc 1 44 9 is_stmt 1 view .LVU13
+  44:App/state_machine.c ****     }
+  63              		.loc 1 44 12 is_stmt 0 view .LVU14
+  64 0022 DFED197A 		vldr.32	s15, .L15+8
+  65 0026 B4EEE70A 		vcmpe.f32	s0, s15
+  66 002a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  67 002e F1DD     		ble	.L3
+  44:App/state_machine.c ****     }
+  68              		.loc 1 44 63 discriminator 1 view .LVU15
+  69 0030 0220     		movs	r0, #2
+  70 0032 EFE7     		b	.L3
+  71              	.L13:
+  38:App/state_machine.c ****         else if (confidence > CONFIDENCE_RECOVERY_NORMAL) return STATE_NORMAL;
+  72              		.loc 1 38 9 is_stmt 1 view .LVU16
+  38:App/state_machine.c ****         else if (confidence > CONFIDENCE_RECOVERY_NORMAL) return STATE_NORMAL;
+  73              		.loc 1 38 12 is_stmt 0 view .LVU17
+  74 0034 DFED157A 		vldr.32	s15, .L15+12
+  75 0038 B4EEE70A 		vcmpe.f32	s0, s15
+  76 003c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  77 0040 1AD4     		bmi	.L7
+  39:App/state_machine.c ****     } else if (current_state == STATE_DEGRADED) {
+  78              		.loc 1 39 14 is_stmt 1 view .LVU18
+  39:App/state_machine.c ****     } else if (current_state == STATE_DEGRADED) {
+  79              		.loc 1 39 17 is_stmt 0 view .LVU19
+  80 0042 DFED137A 		vldr.32	s15, .L15+16
+  81 0046 B4EEE70A 		vcmpe.f32	s0, s15
+  82 004a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  83 004e E1DD     		ble	.L3
+  39:App/state_machine.c ****     } else if (current_state == STATE_DEGRADED) {
+  84              		.loc 1 39 66 discriminator 1 view .LVU20
+  85 0050 0020     		movs	r0, #0
+  86 0052 7047     		bx	lr
+  87              	.L14:
+  41:App/state_machine.c ****         else if (confidence > CONFIDENCE_RECOVERY_WARNING) return STATE_WARNING;
+  88              		.loc 1 41 9 is_stmt 1 view .LVU21
+  41:App/state_machine.c ****         else if (confidence > CONFIDENCE_RECOVERY_WARNING) return STATE_WARNING;
+  89              		.loc 1 41 12 is_stmt 0 view .LVU22
+  90 0054 F3EE097A 		vmov.f32	s15, #2.5e+1
+  91 0058 B4EEE70A 		vcmpe.f32	s0, s15
+  92 005c F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  93 0060 0CD4     		bmi	.L9
+  42:App/state_machine.c ****     } else if (current_state == STATE_CRITICAL) {
+  94              		.loc 1 42 14 is_stmt 1 view .LVU23
+  42:App/state_machine.c ****     } else if (current_state == STATE_CRITICAL) {
+  95              		.loc 1 42 17 is_stmt 0 view .LVU24
+  96 0062 DFED0C7A 		vldr.32	s15, .L15+20
+  97 0066 B4EEE70A 		vcmpe.f32	s0, s15
+  98 006a F1EE10FA 		vmrs	APSR_nzcv, FPSCR
+  99 006e D1DD     		ble	.L3
+  42:App/state_machine.c ****     } else if (current_state == STATE_CRITICAL) {
+ 100              		.loc 1 42 67 discriminator 1 view .LVU25
+ 101 0070 0120     		movs	r0, #1
+ 102 0072 7047     		bx	lr
+ 103              	.L12:
+  36:App/state_machine.c ****     } else if (current_state == STATE_WARNING) {
+ 104              		.loc 1 36 56 discriminator 1 view .LVU26
+ 105 0074 0120     		movs	r0, #1
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 4
+
+
+ 106 0076 7047     		bx	lr
+ 107              	.L7:
+  38:App/state_machine.c ****         else if (confidence > CONFIDENCE_RECOVERY_NORMAL) return STATE_NORMAL;
+ 108              		.loc 1 38 57 discriminator 1 view .LVU27
+ 109 0078 0220     		movs	r0, #2
+ 110 007a 7047     		bx	lr
+ 111              	.L9:
+  41:App/state_machine.c ****         else if (confidence > CONFIDENCE_RECOVERY_WARNING) return STATE_WARNING;
+ 112              		.loc 1 41 58 discriminator 1 view .LVU28
+ 113 007c 0320     		movs	r0, #3
+ 114 007e 7047     		bx	lr
+ 115              	.L16:
+ 116              		.align	2
+ 117              	.L15:
+ 118 0080 00000000 		.word	current_state
+ 119 0084 00009642 		.word	1117126656
+ 120 0088 00000C42 		.word	1108082688
+ 121 008c 00004842 		.word	1112014848
+ 122 0090 0000AA42 		.word	1118437376
+ 123 0094 00007042 		.word	1114636288
+ 124              		.cfi_endproc
+ 125              	.LFE2:
+ 127              		.section	.text.state_machine_init,"ax",%progbits
+ 128              		.align	1
+ 129              		.global	state_machine_init
+ 130              		.syntax unified
+ 131              		.thumb
+ 132              		.thumb_func
+ 134              	state_machine_init:
+ 135              	.LFB0:
+  15:App/state_machine.c ****     current_state = STATE_NORMAL;
+ 136              		.loc 1 15 31 is_stmt 1 view -0
+ 137              		.cfi_startproc
+ 138              		@ args = 0, pretend = 0, frame = 0
+ 139              		@ frame_needed = 0, uses_anonymous_args = 0
+ 140              		@ link register save eliminated.
+  16:App/state_machine.c ****     consecutive_count = 0;
+ 141              		.loc 1 16 5 view .LVU30
+  16:App/state_machine.c ****     consecutive_count = 0;
+ 142              		.loc 1 16 19 is_stmt 0 view .LVU31
+ 143 0000 0023     		movs	r3, #0
+ 144 0002 024A     		ldr	r2, .L18
+ 145 0004 1370     		strb	r3, [r2]
+  17:App/state_machine.c **** }
+ 146              		.loc 1 17 5 is_stmt 1 view .LVU32
+  17:App/state_machine.c **** }
+ 147              		.loc 1 17 23 is_stmt 0 view .LVU33
+ 148 0006 024A     		ldr	r2, .L18+4
+ 149 0008 1370     		strb	r3, [r2]
+  18:App/state_machine.c **** 
+ 150              		.loc 1 18 1 view .LVU34
+ 151 000a 7047     		bx	lr
+ 152              	.L19:
+ 153              		.align	2
+ 154              	.L18:
+ 155 000c 00000000 		.word	current_state
+ 156 0010 00000000 		.word	consecutive_count
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 5
+
+
+ 157              		.cfi_endproc
+ 158              	.LFE0:
+ 160              		.section	.text.state_machine_update,"ax",%progbits
+ 161              		.align	1
+ 162              		.global	state_machine_update
+ 163              		.syntax unified
+ 164              		.thumb
+ 165              		.thumb_func
+ 167              	state_machine_update:
+ 168              	.LVL1:
+ 169              	.LFB1:
+  20:App/state_machine.c ****     SwasthEdgeState target = determine_target_state(confidence);
+ 170              		.loc 1 20 45 is_stmt 1 view -0
+ 171              		.cfi_startproc
+ 172              		@ args = 0, pretend = 0, frame = 0
+ 173              		@ frame_needed = 0, uses_anonymous_args = 0
+  20:App/state_machine.c ****     SwasthEdgeState target = determine_target_state(confidence);
+ 174              		.loc 1 20 45 is_stmt 0 view .LVU36
+ 175 0000 08B5     		push	{r3, lr}
+ 176              	.LCFI0:
+ 177              		.cfi_def_cfa_offset 8
+ 178              		.cfi_offset 3, -8
+ 179              		.cfi_offset 14, -4
+  21:App/state_machine.c **** 
+ 180              		.loc 1 21 5 is_stmt 1 view .LVU37
+  21:App/state_machine.c **** 
+ 181              		.loc 1 21 30 is_stmt 0 view .LVU38
+ 182 0002 FFF7FEFF 		bl	determine_target_state
+ 183              	.LVL2:
+  23:App/state_machine.c ****         consecutive_count++;
+ 184              		.loc 1 23 5 is_stmt 1 view .LVU39
+  23:App/state_machine.c ****         consecutive_count++;
+ 185              		.loc 1 23 16 is_stmt 0 view .LVU40
+ 186 0006 0A4B     		ldr	r3, .L24
+ 187 0008 1B78     		ldrb	r3, [r3]	@ zero_extendqisi2
+  23:App/state_machine.c ****         consecutive_count++;
+ 188              		.loc 1 23 8 view .LVU41
+ 189 000a 8342     		cmp	r3, r0
+ 190 000c 0CD0     		beq	.L21
+  24:App/state_machine.c ****         if (consecutive_count >= CONSECUTIVE_READINGS) {
+ 191              		.loc 1 24 9 is_stmt 1 view .LVU42
+  24:App/state_machine.c ****         if (consecutive_count >= CONSECUTIVE_READINGS) {
+ 192              		.loc 1 24 26 is_stmt 0 view .LVU43
+ 193 000e 094A     		ldr	r2, .L24+4
+ 194 0010 1378     		ldrb	r3, [r2]	@ zero_extendqisi2
+ 195 0012 0133     		adds	r3, r3, #1
+ 196 0014 DBB2     		uxtb	r3, r3
+ 197 0016 1370     		strb	r3, [r2]
+  25:App/state_machine.c ****             current_state = target;
+ 198              		.loc 1 25 9 is_stmt 1 view .LVU44
+  25:App/state_machine.c ****             current_state = target;
+ 199              		.loc 1 25 12 is_stmt 0 view .LVU45
+ 200 0018 022B     		cmp	r3, #2
+ 201 001a 08D9     		bls	.L20
+  26:App/state_machine.c ****             consecutive_count = 0;
+ 202              		.loc 1 26 13 is_stmt 1 view .LVU46
+  26:App/state_machine.c ****             consecutive_count = 0;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 6
+
+
+ 203              		.loc 1 26 27 is_stmt 0 view .LVU47
+ 204 001c 044B     		ldr	r3, .L24
+ 205 001e 1870     		strb	r0, [r3]
+  27:App/state_machine.c ****         }
+ 206              		.loc 1 27 13 is_stmt 1 view .LVU48
+  27:App/state_machine.c ****         }
+ 207              		.loc 1 27 31 is_stmt 0 view .LVU49
+ 208 0020 1346     		mov	r3, r2
+ 209 0022 0022     		movs	r2, #0
+ 210 0024 1A70     		strb	r2, [r3]
+ 211 0026 02E0     		b	.L20
+ 212              	.L21:
+  30:App/state_machine.c ****     }
+ 213              		.loc 1 30 9 is_stmt 1 view .LVU50
+  30:App/state_machine.c ****     }
+ 214              		.loc 1 30 27 is_stmt 0 view .LVU51
+ 215 0028 024B     		ldr	r3, .L24+4
+ 216 002a 0022     		movs	r2, #0
+ 217 002c 1A70     		strb	r2, [r3]
+ 218              	.L20:
+  32:App/state_machine.c **** 
+ 219              		.loc 1 32 1 view .LVU52
+ 220 002e 08BD     		pop	{r3, pc}
+ 221              	.L25:
+ 222              		.align	2
+ 223              	.L24:
+ 224 0030 00000000 		.word	current_state
+ 225 0034 00000000 		.word	consecutive_count
+ 226              		.cfi_endproc
+ 227              	.LFE1:
+ 229              		.section	.text.state_machine_get_state,"ax",%progbits
+ 230              		.align	1
+ 231              		.global	state_machine_get_state
+ 232              		.syntax unified
+ 233              		.thumb
+ 234              		.thumb_func
+ 236              	state_machine_get_state:
+ 237              	.LFB3:
+  48:App/state_machine.c **** 
+  49:App/state_machine.c **** SwasthEdgeState state_machine_get_state(void) {
+ 238              		.loc 1 49 47 is_stmt 1 view -0
+ 239              		.cfi_startproc
+ 240              		@ args = 0, pretend = 0, frame = 0
+ 241              		@ frame_needed = 0, uses_anonymous_args = 0
+ 242              		@ link register save eliminated.
+  50:App/state_machine.c ****     return current_state;
+ 243              		.loc 1 50 5 view .LVU54
+  51:App/state_machine.c **** }
+ 244              		.loc 1 51 1 is_stmt 0 view .LVU55
+ 245 0000 014B     		ldr	r3, .L27
+ 246 0002 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 247 0004 7047     		bx	lr
+ 248              	.L28:
+ 249 0006 00BF     		.align	2
+ 250              	.L27:
+ 251 0008 00000000 		.word	current_state
+ 252              		.cfi_endproc
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 7
+
+
+ 253              	.LFE3:
+ 255              		.section	.rodata.state_machine_get_name_by_state.str1.4,"aMS",%progbits,1
+ 256              		.align	2
+ 257              	.LC0:
+ 258 0000 4E4F524D 		.ascii	"NORMAL\000"
+ 258      414C00
+ 259 0007 00       		.align	2
+ 260              	.LC1:
+ 261 0008 5741524E 		.ascii	"WARNING\000"
+ 261      494E4700 
+ 262              		.align	2
+ 263              	.LC2:
+ 264 0010 44454752 		.ascii	"DEGRADED\000"
+ 264      41444544 
+ 264      00
+ 265 0019 000000   		.align	2
+ 266              	.LC3:
+ 267 001c 43524954 		.ascii	"CRITICAL\000"
+ 267      4943414C 
+ 267      00
+ 268 0025 000000   		.align	2
+ 269              	.LC4:
+ 270 0028 554E4B4E 		.ascii	"UNKNOWN\000"
+ 270      4F574E00 
+ 271              		.section	.text.state_machine_get_name_by_state,"ax",%progbits
+ 272              		.align	1
+ 273              		.global	state_machine_get_name_by_state
+ 274              		.syntax unified
+ 275              		.thumb
+ 276              		.thumb_func
+ 278              	state_machine_get_name_by_state:
+ 279              	.LVL3:
+ 280              	.LFB5:
+  52:App/state_machine.c **** 
+  53:App/state_machine.c **** const char* state_machine_get_name(void) {
+  54:App/state_machine.c ****     return state_machine_get_name_by_state(current_state);
+  55:App/state_machine.c **** }
+  56:App/state_machine.c **** 
+  57:App/state_machine.c **** const char* state_machine_get_name_by_state(SwasthEdgeState state) {
+ 281              		.loc 1 57 68 is_stmt 1 view -0
+ 282              		.cfi_startproc
+ 283              		@ args = 0, pretend = 0, frame = 0
+ 284              		@ frame_needed = 0, uses_anonymous_args = 0
+ 285              		@ link register save eliminated.
+  58:App/state_machine.c ****     switch (state) {
+ 286              		.loc 1 58 5 view .LVU57
+ 287 0000 0228     		cmp	r0, #2
+ 288 0002 09D0     		beq	.L32
+ 289 0004 04D8     		bhi	.L31
+ 290 0006 48B1     		cbz	r0, .L33
+ 291 0008 0128     		cmp	r0, #1
+ 292 000a 09D1     		bne	.L34
+  59:App/state_machine.c ****         case STATE_NORMAL:   return "NORMAL";
+  60:App/state_machine.c ****         case STATE_WARNING:  return "WARNING";
+ 293              		.loc 1 60 37 is_stmt 0 view .LVU58
+ 294 000c 0648     		ldr	r0, .L36
+ 295              	.LVL4:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 8
+
+
+ 296              		.loc 1 60 37 view .LVU59
+ 297 000e 7047     		bx	lr
+ 298              	.LVL5:
+ 299              	.L31:
+  58:App/state_machine.c ****     switch (state) {
+ 300              		.loc 1 58 5 view .LVU60
+ 301 0010 0328     		cmp	r0, #3
+ 302 0012 07D1     		bne	.L35
+  61:App/state_machine.c ****         case STATE_DEGRADED: return "DEGRADED";
+  62:App/state_machine.c ****         case STATE_CRITICAL: return "CRITICAL";
+ 303              		.loc 1 62 37 view .LVU61
+ 304 0014 0548     		ldr	r0, .L36+4
+ 305              	.LVL6:
+ 306              		.loc 1 62 37 view .LVU62
+ 307 0016 7047     		bx	lr
+ 308              	.LVL7:
+ 309              	.L32:
+  61:App/state_machine.c ****         case STATE_DEGRADED: return "DEGRADED";
+ 310              		.loc 1 61 37 view .LVU63
+ 311 0018 0548     		ldr	r0, .L36+8
+ 312              	.LVL8:
+  61:App/state_machine.c ****         case STATE_DEGRADED: return "DEGRADED";
+ 313              		.loc 1 61 37 view .LVU64
+ 314 001a 7047     		bx	lr
+ 315              	.LVL9:
+ 316              	.L33:
+  58:App/state_machine.c ****         case STATE_NORMAL:   return "NORMAL";
+ 317              		.loc 1 58 5 view .LVU65
+ 318 001c 0548     		ldr	r0, .L36+12
+ 319              	.LVL10:
+  58:App/state_machine.c ****         case STATE_NORMAL:   return "NORMAL";
+ 320              		.loc 1 58 5 view .LVU66
+ 321 001e 7047     		bx	lr
+ 322              	.LVL11:
+ 323              	.L34:
+  63:App/state_machine.c ****         default:             return "UNKNOWN";
+ 324              		.loc 1 63 37 view .LVU67
+ 325 0020 0548     		ldr	r0, .L36+16
+ 326              	.LVL12:
+ 327              		.loc 1 63 37 view .LVU68
+ 328 0022 7047     		bx	lr
+ 329              	.LVL13:
+ 330              	.L35:
+ 331              		.loc 1 63 37 view .LVU69
+ 332 0024 0448     		ldr	r0, .L36+16
+ 333              	.LVL14:
+  64:App/state_machine.c ****     }
+  65:App/state_machine.c **** }...
+ 334              		.loc 1 65 1 view .LVU70
+ 335 0026 7047     		bx	lr
+ 336              	.L37:
+ 337              		.align	2
+ 338              	.L36:
+ 339 0028 08000000 		.word	.LC1
+ 340 002c 1C000000 		.word	.LC3
+ 341 0030 10000000 		.word	.LC2
+ 342 0034 00000000 		.word	.LC0
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 9
+
+
+ 343 0038 28000000 		.word	.LC4
+ 344              		.cfi_endproc
+ 345              	.LFE5:
+ 347              		.section	.text.state_machine_get_name,"ax",%progbits
+ 348              		.align	1
+ 349              		.global	state_machine_get_name
+ 350              		.syntax unified
+ 351              		.thumb
+ 352              		.thumb_func
+ 354              	state_machine_get_name:
+ 355              	.LFB4:
+  53:App/state_machine.c **** const char* state_machine_get_name(void) {
+ 356              		.loc 1 53 42 is_stmt 1 view -0
+ 357              		.cfi_startproc
+ 358              		@ args = 0, pretend = 0, frame = 0
+ 359              		@ frame_needed = 0, uses_anonymous_args = 0
+ 360 0000 08B5     		push	{r3, lr}
+ 361              	.LCFI1:
+ 362              		.cfi_def_cfa_offset 8
+ 363              		.cfi_offset 3, -8
+ 364              		.cfi_offset 14, -4
+  54:App/state_machine.c ****     return state_machine_get_name_by_state(current_state);
+ 365              		.loc 1 54 5 view .LVU72
+  54:App/state_machine.c ****     return state_machine_get_name_by_state(current_state);
+ 366              		.loc 1 54 12 is_stmt 0 view .LVU73
+ 367 0002 024B     		ldr	r3, .L40
+ 368 0004 1878     		ldrb	r0, [r3]	@ zero_extendqisi2
+ 369 0006 FFF7FEFF 		bl	state_machine_get_name_by_state
+ 370              	.LVL15:
+  55:App/state_machine.c **** }
+ 371              		.loc 1 55 1 view .LVU74
+ 372 000a 08BD     		pop	{r3, pc}
+ 373              	.L41:
+ 374              		.align	2
+ 375              	.L40:
+ 376 000c 00000000 		.word	current_state
+ 377              		.cfi_endproc
+ 378              	.LFE4:
+ 380              		.section	.bss.consecutive_count,"aw",%nobits
+ 383              	consecutive_count:
+ 384 0000 00       		.space	1
+ 385              		.section	.bss.current_state,"aw",%nobits
+ 388              	current_state:
+ 389 0000 00       		.space	1
+ 390              		.text
+ 391              	.Letext0:
+ 392              		.file 2 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 393              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 394              		.file 4 "App/state_machine.h"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s 			page 10
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 state_machine.c
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:21     .text.determine_target_state:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:26     .text.determine_target_state:00000000 determine_target_state
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:118    .text.determine_target_state:00000080 $d
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:388    .bss.current_state:00000000 current_state
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:128    .text.state_machine_init:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:134    .text.state_machine_init:00000000 state_machine_init
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:155    .text.state_machine_init:0000000c $d
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:383    .bss.consecutive_count:00000000 consecutive_count
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:161    .text.state_machine_update:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:167    .text.state_machine_update:00000000 state_machine_update
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:224    .text.state_machine_update:00000030 $d
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:230    .text.state_machine_get_state:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:236    .text.state_machine_get_state:00000000 state_machine_get_state
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:251    .text.state_machine_get_state:00000008 $d
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:256    .rodata.state_machine_get_name_by_state.str1.4:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:272    .text.state_machine_get_name_by_state:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:278    .text.state_machine_get_name_by_state:00000000 state_machine_get_name_by_state
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:339    .text.state_machine_get_name_by_state:00000028 $d
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:348    .text.state_machine_get_name:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:354    .text.state_machine_get_name:00000000 state_machine_get_name
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:376    .text.state_machine_get_name:0000000c $d
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:384    .bss.consecutive_count:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccX8T2mv.s:389    .bss.current_state:00000000 $d
+
+NO UNDEFINED SYMBOLS

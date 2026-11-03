@@ -1,0 +1,50 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccU2MSop.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"circular_buffer_flexbuffers_generated_data.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/circular_buffer_flexbuffers_generated_data
+  20              		.global	g_gen_data_circular_buffer_config
+  21              		.section	.rodata.g_gen_data_circular_buffer_config,"a"
+  22              		.align	2
+  25              	g_gen_data_circular_buffer_config:
+  26 0000 6379636C 		.ascii	"cycles_max\000\001\014\001\001\001\001\004\002$\001"
+  26      65735F6D 
+  26      61780001 
+  26      0C010101 
+  26      01040224 
+  27              		.global	g_gen_data_size_circular_buffer_config
+  28              		.section	.rodata.g_gen_data_size_circular_buffer_config,"a"
+  29              		.align	2
+  32              	g_gen_data_size_circular_buffer_config:
+  33 0000 15000000 		.word	21
+  34              		.text
+  35              	.Letext0:
+  36              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/kernels/circular_buffer_flexbuffers_generated_data
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccU2MSop.s 			page 2
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 circular_buffer_flexbuffers_generated_data.cc
+C:\Users\Chetan\AppData\Local\Temp\ccU2MSop.s:25     .rodata.g_gen_data_circular_buffer_config:00000000 g_gen_data_circular_buffer_config
+C:\Users\Chetan\AppData\Local\Temp\ccU2MSop.s:22     .rodata.g_gen_data_circular_buffer_config:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccU2MSop.s:32     .rodata.g_gen_data_size_circular_buffer_config:00000000 g_gen_data_size_circular_buffer_config
+C:\Users\Chetan\AppData\Local\Temp\ccU2MSop.s:29     .rodata.g_gen_data_size_circular_buffer_config:00000000 $d
+
+NO UNDEFINED SYMBOLS

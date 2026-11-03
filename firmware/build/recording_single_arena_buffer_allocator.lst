@@ -1,0 +1,1059 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"recording_single_arena_buffer_allocator.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allo
+  20              		.section	.text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev,"ax",%progbits
+  21              		.align	1
+  22              		.global	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev:
+  28              	.LVL0:
+  29              	.LFB63:
+   1:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** #include "tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** #include <new>
+  19:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  20:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** #include "tensorflow/lite/micro/compatibility.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** namespace tflite {
+  23:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** namespace micro {
+  24:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  25:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** RecordingSingleArenaBufferAllocator::RecordingSingleArenaBufferAllocator(
+  26:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     uint8_t* buffer_head, size_t buffer_size)
+  27:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     : SingleArenaBufferAllocator(buffer_head, buffer_size),
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       requested_head_bytes_(0),
+  29:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       requested_tail_bytes_(0),
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 2
+
+
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       used_bytes_(0),
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       alloc_count_(0) {}
+  32:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  33:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** RecordingSingleArenaBufferAllocator::~RecordingSingleArenaBufferAllocator() {}
+  30              		.loc 1 33 1 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 33 1 is_stmt 0 view .LVU1
+  35 0000 10B5     		push	{r4, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 8
+  38              		.cfi_offset 4, -8
+  39              		.cfi_offset 14, -4
+  40 0002 0446     		mov	r4, r0
+  41              	.LBB21:
+  42              		.loc 1 33 75 view .LVU2
+  43 0004 034B     		ldr	r3, .L3
+  44 0006 0360     		str	r3, [r0]
+  45 0008 4433     		adds	r3, r3, #68
+  46 000a 4360     		str	r3, [r0, #4]
+  47              		.loc 1 33 78 view .LVU3
+  48 000c FFF7FEFF 		bl	_ZN6tflite5micro26SingleArenaBufferAllocatorD2Ev
+  49              	.LVL1:
+  50              		.loc 1 33 78 view .LVU4
+  51              	.LBE21:
+  52 0010 2046     		mov	r0, r4
+  53 0012 10BD     		pop	{r4, pc}
+  54              	.LVL2:
+  55              	.L4:
+  56              		.loc 1 33 78 view .LVU5
+  57              		.align	2
+  58              	.L3:
+  59 0014 08000000 		.word	_ZTVN6tflite5micro35RecordingSingleArenaBufferAllocatorE+8
+  60              		.cfi_endproc
+  61              	.LFE63:
+  63              		.thumb_set .LTHUNK0,_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev
+  64              		.section	.text._ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev,"ax",%progbits
+  65              		.align	1
+  66              		.global	_ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev
+  67              		.syntax unified
+  68              		.thumb
+  69              		.thumb_func
+  71              	_ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev:
+  72              	.LFB84:
+  73              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allo
+   1:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 3
+
+
+  12:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** #ifndef TENSORFLOW_LITE_MICRO_ARENA_ALLOCATOR_RECORDING_SINGLE_ARENA_BUFFER_ALLOCATOR_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** #define TENSORFLOW_LITE_MICRO_ARENA_ALLOCATOR_RECORDING_SINGLE_ARENA_BUFFER_ALLOCATOR_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** #include "tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h"
+  20:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** #include "tensorflow/lite/micro/compatibility.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** namespace tflite {
+  23:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** namespace micro {
+  24:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+  25:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** // Utility class used to log allocations of a SingleArenaBufferAllocator. Should
+  26:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** // only be used in debug/evaluation settings or unit tests to evaluate
+  27:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** // allocation usage.
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** class RecordingSingleArenaBufferAllocator : public SingleArenaBufferAllocator {
+  29:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****  public:
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   RecordingSingleArenaBufferAllocator(uint8_t* buffer_head, size_t buffer_size);
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   // TODO(b/157615197): Cleanup constructors/destructor and use factory
+  32:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   // functions.
+  33:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   ~RecordingSingleArenaBufferAllocator() override;
+  74              		.loc 2 33 3 is_stmt 1 view -0
+  75              		.cfi_startproc
+  76              		@ args = 0, pretend = 0, frame = 0
+  77              		@ frame_needed = 0, uses_anonymous_args = 0
+  78 0000 A0F10400 		sub	r0, r0, #4
+  79 0004 FFF7FEBF 		b	.LTHUNK0
+  80              		.cfi_endproc
+  81              	.LFE84:
+  83              		.global	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev
+  84              		.thumb_set _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev,_ZN6tflite5micro35RecordingSi
+  85              		.section	.text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev,"ax",%progbits
+  86              		.align	1
+  87              		.global	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev
+  88              		.syntax unified
+  89              		.thumb
+  90              		.thumb_func
+  92              	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev:
+  93              	.LVL3:
+  94              	.LFB65:
+  95              		.loc 1 33 1 view -0
+  96              		.cfi_startproc
+  97              		@ args = 0, pretend = 0, frame = 0
+  98              		@ frame_needed = 0, uses_anonymous_args = 0
+  99              		.loc 1 33 1 is_stmt 0 view .LVU8
+ 100 0000 10B5     		push	{r4, lr}
+ 101              	.LCFI1:
+ 102              		.cfi_def_cfa_offset 8
+ 103              		.cfi_offset 4, -8
+ 104              		.cfi_offset 14, -4
+ 105 0002 0446     		mov	r4, r0
+ 106              		.loc 1 33 78 view .LVU9
+ 107 0004 FFF7FEFF 		bl	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev
+ 108              	.LVL4:
+ 109              		.loc 1 33 78 discriminator 1 view .LVU10
+ 110 0008 3421     		movs	r1, #52
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 4
+
+
+ 111 000a 2046     		mov	r0, r4
+ 112 000c FFF7FEFF 		bl	_ZdlPvj
+ 113              	.LVL5:
+ 114              		.loc 1 33 78 view .LVU11
+ 115 0010 2046     		mov	r0, r4
+ 116 0012 10BD     		pop	{r4, pc}
+ 117              		.loc 1 33 78 view .LVU12
+ 118              		.cfi_endproc
+ 119              	.LFE65:
+ 121              		.thumb_set .LTHUNK1,_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev
+ 122              		.section	.text._ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev,"ax",%progbits
+ 123              		.align	1
+ 124              		.global	_ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev
+ 125              		.syntax unified
+ 126              		.thumb
+ 127              		.thumb_func
+ 129              	_ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev:
+ 130              	.LFB85:
+ 131              		.loc 2 33 3 is_stmt 1 view -0
+ 132              		.cfi_startproc
+ 133              		@ args = 0, pretend = 0, frame = 0
+ 134              		@ frame_needed = 0, uses_anonymous_args = 0
+ 135 0000 A0F10400 		sub	r0, r0, #4
+ 136 0004 FFF7FEBF 		b	.LTHUNK1
+ 137              		.cfi_endproc
+ 138              	.LFE85:
+ 140              		.section	.text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator12ResizeBufferEPhjj,"ax",%prog
+ 141              		.align	1
+ 142              		.global	_ZN6tflite5micro35RecordingSingleArenaBufferAllocator12ResizeBufferEPhjj
+ 143              		.syntax unified
+ 144              		.thumb
+ 145              		.thumb_func
+ 147              	_ZN6tflite5micro35RecordingSingleArenaBufferAllocator12ResizeBufferEPhjj:
+ 148              	.LVL6:
+ 149              	.LFB82:
+  34:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** RecordingSingleArenaBufferAllocator*
+  36:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** RecordingSingleArenaBufferAllocator::Create(uint8_t* buffer_head,
+  37:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****                                             size_t buffer_size) {
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   TFLITE_DCHECK(buffer_head != nullptr);
+  39:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   RecordingSingleArenaBufferAllocator tmp =
+  40:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       RecordingSingleArenaBufferAllocator(buffer_head, buffer_size);
+  41:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  42:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   uint8_t* allocator_buffer = tmp.AllocatePersistentBuffer(
+  43:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       sizeof(RecordingSingleArenaBufferAllocator),
+  44:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       alignof(RecordingSingleArenaBufferAllocator));
+  45:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   // Use the default copy constructor to populate internal states.
+  46:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   return new (allocator_buffer) RecordingSingleArenaBufferAllocator(tmp);
+  47:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+  48:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  49:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** size_t RecordingSingleArenaBufferAllocator::GetRequestedBytes() const {
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   return requested_head_bytes_ + requested_tail_bytes_;
+  51:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+  52:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  53:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** size_t RecordingSingleArenaBufferAllocator::GetUsedBytes() const {
+  54:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   return used_bytes_;
+  55:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 5
+
+
+  56:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  57:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** size_t RecordingSingleArenaBufferAllocator::GetAllocatedCount() const {
+  58:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   return alloc_count_;
+  59:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+  60:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  61:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** TfLiteStatus RecordingSingleArenaBufferAllocator::ResizeBuffer(
+  62:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     uint8_t* resizable_buf, size_t size, size_t alignment) {
+ 150              		.loc 1 62 60 view -0
+ 151              		.cfi_startproc
+ 152              		@ args = 0, pretend = 0, frame = 0
+ 153              		@ frame_needed = 0, uses_anonymous_args = 0
+ 154              		.loc 1 62 60 is_stmt 0 view .LVU15
+ 155 0000 2DE9F843 		push	{r3, r4, r5, r6, r7, r8, r9, lr}
+ 156              	.LCFI2:
+ 157              		.cfi_def_cfa_offset 32
+ 158              		.cfi_offset 3, -32
+ 159              		.cfi_offset 4, -28
+ 160              		.cfi_offset 5, -24
+ 161              		.cfi_offset 6, -20
+ 162              		.cfi_offset 7, -16
+ 163              		.cfi_offset 8, -12
+ 164              		.cfi_offset 9, -8
+ 165              		.cfi_offset 14, -4
+ 166 0004 0446     		mov	r4, r0
+ 167 0006 0F46     		mov	r7, r1
+ 168 0008 1546     		mov	r5, r2
+ 169 000a 9146     		mov	r9, r2
+ 170 000c 1E46     		mov	r6, r3
+  63:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   const uint8_t* previous_head = head();
+ 171              		.loc 1 63 3 is_stmt 1 view .LVU16
+ 172              		.loc 1 63 38 is_stmt 0 view .LVU17
+ 173 000e FFF7FEFF 		bl	_ZNK6tflite5micro26SingleArenaBufferAllocator4headEv
+ 174              	.LVL7:
+ 175              		.loc 1 63 38 view .LVU18
+ 176 0012 8046     		mov	r8, r0
+ 177              	.LVL8:
+  64:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   TfLiteStatus status =
+ 178              		.loc 1 64 3 is_stmt 1 view .LVU19
+  65:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       SingleArenaBufferAllocator::ResizeBuffer(resizable_buf, size, alignment);
+ 179              		.loc 1 65 47 is_stmt 0 view .LVU20
+ 180 0014 3346     		mov	r3, r6
+ 181 0016 2A46     		mov	r2, r5
+ 182 0018 3946     		mov	r1, r7
+ 183 001a 2046     		mov	r0, r4
+ 184              	.LVL9:
+ 185              		.loc 1 65 47 view .LVU21
+ 186 001c FFF7FEFF 		bl	_ZN6tflite5micro26SingleArenaBufferAllocator12ResizeBufferEPhjj
+ 187              	.LVL10:
+  66:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   if (status == kTfLiteOk) {
+ 188              		.loc 1 66 3 is_stmt 1 view .LVU22
+ 189 0020 0546     		mov	r5, r0
+ 190              	.LVL11:
+ 191              		.loc 1 66 3 is_stmt 0 view .LVU23
+ 192 0022 10B1     		cbz	r0, .L10
+ 193              	.LVL12:
+ 194              	.L8:
+  67:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     used_bytes_ += head() - previous_head;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 6
+
+
+  68:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     requested_head_bytes_ = size;
+  69:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   }
+  70:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   return status;
+ 195              		.loc 1 70 3 is_stmt 1 view .LVU24
+  71:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ 196              		.loc 1 71 1 is_stmt 0 view .LVU25
+ 197 0024 2846     		mov	r0, r5
+ 198 0026 BDE8F883 		pop	{r3, r4, r5, r6, r7, r8, r9, pc}
+ 199              	.LVL13:
+ 200              	.L10:
+  67:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     used_bytes_ += head() - previous_head;
+ 201              		.loc 1 67 5 is_stmt 1 view .LVU26
+  67:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     used_bytes_ += head() - previous_head;
+ 202              		.loc 1 67 24 is_stmt 0 view .LVU27
+ 203 002a 2046     		mov	r0, r4
+ 204              	.LVL14:
+  67:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     used_bytes_ += head() - previous_head;
+ 205              		.loc 1 67 24 view .LVU28
+ 206 002c FFF7FEFF 		bl	_ZNK6tflite5micro26SingleArenaBufferAllocator4headEv
+ 207              	.LVL15:
+  67:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     used_bytes_ += head() - previous_head;
+ 208              		.loc 1 67 27 discriminator 1 view .LVU29
+ 209 0030 4346     		mov	r3, r8
+ 210 0032 C01A     		subs	r0, r0, r3
+  67:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     used_bytes_ += head() - previous_head;
+ 211              		.loc 1 67 5 discriminator 1 view .LVU30
+ 212 0034 E36A     		ldr	r3, [r4, #44]
+  67:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     used_bytes_ += head() - previous_head;
+ 213              		.loc 1 67 17 discriminator 1 view .LVU31
+ 214 0036 1844     		add	r0, r0, r3
+ 215 0038 E062     		str	r0, [r4, #44]
+  68:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   }
+ 216              		.loc 1 68 5 is_stmt 1 view .LVU32
+  68:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   }
+ 217              		.loc 1 68 27 is_stmt 0 view .LVU33
+ 218 003a C4F82490 		str	r9, [r4, #36]
+ 219 003e F1E7     		b	.L8
+ 220              		.cfi_endproc
+ 221              	.LFE82:
+ 223              		.section	.text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj,
+ 224              		.align	1
+ 225              		.global	_ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj
+ 226              		.syntax unified
+ 227              		.thumb
+ 228              		.thumb_func
+ 230              	_ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj:
+ 231              	.LVL16:
+ 232              	.LFB83:
+  72:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+  73:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** uint8_t* RecordingSingleArenaBufferAllocator::AllocatePersistentBuffer(
+  74:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     size_t size, size_t alignment) {
+ 233              		.loc 1 74 36 is_stmt 1 view -0
+ 234              		.cfi_startproc
+ 235              		@ args = 0, pretend = 0, frame = 0
+ 236              		@ frame_needed = 0, uses_anonymous_args = 0
+ 237              		.loc 1 74 36 is_stmt 0 view .LVU35
+ 238 0000 F8B5     		push	{r3, r4, r5, r6, r7, lr}
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 7
+
+
+ 239              	.LCFI3:
+ 240              		.cfi_def_cfa_offset 24
+ 241              		.cfi_offset 3, -24
+ 242              		.cfi_offset 4, -20
+ 243              		.cfi_offset 5, -16
+ 244              		.cfi_offset 6, -12
+ 245              		.cfi_offset 7, -8
+ 246              		.cfi_offset 14, -4
+ 247 0002 0446     		mov	r4, r0
+ 248 0004 0D46     		mov	r5, r1
+ 249 0006 1646     		mov	r6, r2
+  75:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   const uint8_t* previous_tail = tail();
+ 250              		.loc 1 75 3 is_stmt 1 view .LVU36
+ 251              		.loc 1 75 38 is_stmt 0 view .LVU37
+ 252 0008 FFF7FEFF 		bl	_ZNK6tflite5micro26SingleArenaBufferAllocator4tailEv
+ 253              	.LVL17:
+ 254              		.loc 1 75 38 view .LVU38
+ 255 000c 0746     		mov	r7, r0
+ 256              	.LVL18:
+  76:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   uint8_t* result =
+ 257              		.loc 1 76 3 is_stmt 1 view .LVU39
+  77:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       SingleArenaBufferAllocator::AllocatePersistentBuffer(size, alignment);
+ 258              		.loc 1 77 59 is_stmt 0 view .LVU40
+ 259 000e 3246     		mov	r2, r6
+ 260 0010 2946     		mov	r1, r5
+ 261 0012 2046     		mov	r0, r4
+ 262              	.LVL19:
+ 263              		.loc 1 77 59 view .LVU41
+ 264 0014 FFF7FEFF 		bl	_ZN6tflite5micro26SingleArenaBufferAllocator24AllocatePersistentBufferEjj
+ 265              	.LVL20:
+  78:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   if (result != nullptr) {
+ 266              		.loc 1 78 3 is_stmt 1 view .LVU42
+ 267 0018 0646     		mov	r6, r0
+ 268              	.LVL21:
+ 269              		.loc 1 78 3 is_stmt 0 view .LVU43
+ 270 001a 60B1     		cbz	r0, .L11
+  79:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     used_bytes_ += previous_tail - tail();
+ 271              		.loc 1 79 5 is_stmt 1 view .LVU44
+ 272              		.loc 1 79 40 is_stmt 0 view .LVU45
+ 273 001c 2046     		mov	r0, r4
+ 274              	.LVL22:
+ 275              		.loc 1 79 40 view .LVU46
+ 276 001e FFF7FEFF 		bl	_ZNK6tflite5micro26SingleArenaBufferAllocator4tailEv
+ 277              	.LVL23:
+ 278              		.loc 1 79 34 discriminator 1 view .LVU47
+ 279 0022 381A     		subs	r0, r7, r0
+ 280              		.loc 1 79 5 discriminator 1 view .LVU48
+ 281 0024 E36A     		ldr	r3, [r4, #44]
+ 282              		.loc 1 79 17 discriminator 1 view .LVU49
+ 283 0026 1844     		add	r0, r0, r3
+ 284 0028 E062     		str	r0, [r4, #44]
+  80:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     requested_tail_bytes_ += size;
+ 285              		.loc 1 80 5 is_stmt 1 view .LVU50
+ 286 002a A36A     		ldr	r3, [r4, #40]
+ 287              		.loc 1 80 27 is_stmt 0 view .LVU51
+ 288 002c 2B44     		add	r3, r3, r5
+ 289 002e A362     		str	r3, [r4, #40]
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 8
+
+
+  81:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     alloc_count_++;
+ 290              		.loc 1 81 5 is_stmt 1 view .LVU52
+ 291 0030 236B     		ldr	r3, [r4, #48]
+ 292              		.loc 1 81 17 is_stmt 0 view .LVU53
+ 293 0032 0133     		adds	r3, r3, #1
+ 294 0034 2363     		str	r3, [r4, #48]
+  82:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   }
+  83:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   return result;
+ 295              		.loc 1 83 3 is_stmt 1 view .LVU54
+ 296              	.L11:
+  84:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ 297              		.loc 1 84 1 is_stmt 0 view .LVU55
+ 298 0036 3046     		mov	r0, r6
+ 299 0038 F8BD     		pop	{r3, r4, r5, r6, r7, pc}
+ 300              		.loc 1 84 1 view .LVU56
+ 301              		.cfi_endproc
+ 302              	.LFE83:
+ 304              		.thumb_set .LTHUNK2,_ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBuffe
+ 305              		.section	.text._ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBuffe
+ 306              		.align	1
+ 307              		.global	_ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj
+ 308              		.syntax unified
+ 309              		.thumb
+ 310              		.thumb_func
+ 312              	_ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj:
+ 313              	.LFB86:
+  34:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   static RecordingSingleArenaBufferAllocator* Create(uint8_t* buffer_head,
+  36:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****                                                      size_t buffer_size);
+  37:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   // Returns the number of bytes requested from the head or tail.
+  39:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   size_t GetRequestedBytes() const;
+  40:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+  41:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   // Returns the number of bytes actually allocated from the head or tail. This
+  42:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   // value will be >= to the number of requested bytes due to padding and
+  43:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   // alignment.
+  44:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   size_t GetUsedBytes() const;
+  45:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+  46:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   // Returns the number of alloc calls from the head or tail.
+  47:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   size_t GetAllocatedCount() const;
+  48:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h **** 
+  49:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   TfLiteStatus ResizeBuffer(uint8_t* resizable_buf, size_t size,
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****                             size_t alignment) override;
+  51:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****   uint8_t* AllocatePersistentBuffer(size_t size, size_t alignment) override;
+ 314              		.loc 2 51 12 is_stmt 1 view -0
+ 315              		.cfi_startproc
+ 316              		@ args = 0, pretend = 0, frame = 0
+ 317              		@ frame_needed = 0, uses_anonymous_args = 0
+ 318 0000 A0F10400 		sub	r0, r0, #4
+ 319 0004 FFF7FEBF 		b	.LTHUNK2
+ 320              		.cfi_endproc
+ 321              	.LFE86:
+ 323              		.section	.text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2EPhj,"ax",%progbits
+ 324              		.align	1
+ 325              		.global	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2EPhj
+ 326              		.syntax unified
+ 327              		.thumb
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 9
+
+
+ 328              		.thumb_func
+ 330              	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2EPhj:
+ 331              	.LVL24:
+ 332              	.LFB60:
+  25:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     uint8_t* buffer_head, size_t buffer_size)
+ 333              		.loc 1 25 1 view -0
+ 334              		.cfi_startproc
+ 335              		@ args = 0, pretend = 0, frame = 0
+ 336              		@ frame_needed = 0, uses_anonymous_args = 0
+  25:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****     uint8_t* buffer_head, size_t buffer_size)
+ 337              		.loc 1 25 1 is_stmt 0 view .LVU59
+ 338 0000 10B5     		push	{r4, lr}
+ 339              	.LCFI4:
+ 340              		.cfi_def_cfa_offset 8
+ 341              		.cfi_offset 4, -8
+ 342              		.cfi_offset 14, -4
+ 343 0002 0446     		mov	r4, r0
+ 344              	.LBB22:
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 345              		.loc 1 31 21 view .LVU60
+ 346 0004 FFF7FEFF 		bl	_ZN6tflite5micro26SingleArenaBufferAllocatorC2EPhj
+ 347              	.LVL25:
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 348              		.loc 1 31 21 discriminator 1 view .LVU61
+ 349 0008 054B     		ldr	r3, .L16
+ 350 000a 2360     		str	r3, [r4]
+ 351 000c 4433     		adds	r3, r3, #68
+ 352 000e 6360     		str	r3, [r4, #4]
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       requested_tail_bytes_(0),
+ 353              		.loc 1 28 7 view .LVU62
+ 354 0010 0023     		movs	r3, #0
+ 355 0012 6362     		str	r3, [r4, #36]
+  29:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       used_bytes_(0),
+ 356              		.loc 1 29 7 view .LVU63
+ 357 0014 A362     		str	r3, [r4, #40]
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       alloc_count_(0) {}
+ 358              		.loc 1 30 7 view .LVU64
+ 359 0016 E362     		str	r3, [r4, #44]
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 360              		.loc 1 31 7 view .LVU65
+ 361 0018 2363     		str	r3, [r4, #48]
+ 362              	.LBE22:
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 363              		.loc 1 31 24 view .LVU66
+ 364 001a 2046     		mov	r0, r4
+ 365 001c 10BD     		pop	{r4, pc}
+ 366              	.LVL26:
+ 367              	.L17:
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 368              		.loc 1 31 24 view .LVU67
+ 369 001e 00BF     		.align	2
+ 370              	.L16:
+ 371 0020 08000000 		.word	_ZTVN6tflite5micro35RecordingSingleArenaBufferAllocatorE+8
+ 372              		.cfi_endproc
+ 373              	.LFE60:
+ 375              		.global	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC1EPhj
+ 376              		.thumb_set _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC1EPhj,_ZN6tflite5micro35Recording
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 10
+
+
+ 377              		.section	.text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2ERKS1_,"axG",%progbits,_ZN6t
+ 378              		.align	1
+ 379              		.weak	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2ERKS1_
+ 380              		.syntax unified
+ 381              		.thumb
+ 382              		.thumb_func
+ 384              	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2ERKS1_:
+ 385              	.LVL27:
+ 386              	.LFB77:
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****  public:
+ 387              		.loc 2 28 7 is_stmt 1 view -0
+ 388              		.cfi_startproc
+ 389              		@ args = 0, pretend = 0, frame = 0
+ 390              		@ frame_needed = 0, uses_anonymous_args = 0
+ 391              		@ link register save eliminated.
+ 392              	.LBB23:
+ 393              	.LBB24:
+ 394              	.LBI24:
+ 395              		.file 3 "lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** /* Copyright 2020 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** #ifndef TENSORFLOW_LITE_MICRO_ARENA_ALLOCATOR_SINGLE_ARENA_BUFFER_ALLOCATOR_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** #define TENSORFLOW_LITE_MICRO_ARENA_ALLOCATOR_SINGLE_ARENA_BUFFER_ALLOCATOR_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** #include <cstddef>
+  20:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** #include <cstdint>
+  21:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** #include "tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** #include "tensorflow/lite/micro/compatibility.h"
+  24:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** #include "tensorflow/lite/micro/micro_common.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** 
+  26:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** namespace tflite {
+  27:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** namespace micro {
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** 
+  29:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** // TODO(petewarden): This allocator never frees up or reuses  any memory, even
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** // though we have enough information about lifetimes of the tensors to do so.
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** // This makes it pretty wasteful, so we should use a more intelligent method.
+  32:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/single_arena_buffer_allocator.h **** class SingleArenaBufferAllocator : public INonPersistentBufferAllocator,
+ 396              		.loc 3 32 7 view .LVU69
+ 397              	.LBB25:
+ 398              	.LBB26:
+ 399              	.LBB27:
+ 400              	.LBI27:
+ 401              		.file 4 "lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 11
+
+
+   1:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** /* Copyright 2022 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #ifndef TENSORFLOW_LITE_MICRO_ARENA_ALLOCATOR_IBUFFER_ALLOCATOR_H_
+  16:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #define TENSORFLOW_LITE_MICRO_ARENA_ALLOCATOR_IBUFFER_ALLOCATOR_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #include <cstddef>
+  19:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #include <cstdint>
+  20:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** #include "tensorflow/lite/micro/micro_common.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  23:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** namespace tflite {
+  24:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** namespace micro {
+  25:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // Interface classes that the TFLM framework relies on to get buffers it needs.
+  26:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // There are two types of buffers that the TFLM framework requires: persistent
+  27:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // and non-persistent. Persistent buffers, once allocated, are never freed by
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // the TFLM framework. Non-persist buffers can be allocated and deallocated by
+  29:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // the TFLM framework. This file defines two interfaces classes that TFLM
+  30:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // framework will rely on to manage these buffers.
+  31:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  32:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // Interface class for managing persistent buffers.
+  33:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** class IPersistentBufferAllocator {
+  34:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****  public:
+  35:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   IPersistentBufferAllocator() {}
+  36:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual ~IPersistentBufferAllocator() {}
+  37:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   // Allocates persistent memory. The persistent buffer is never freed.
+  39:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual uint8_t* AllocatePersistentBuffer(size_t size, size_t alignment) = 0;
+  40:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  41:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   // Returns the size of all persistent allocations in bytes.
+  42:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****   virtual size_t GetPersistentUsedBytes() const = 0;
+  43:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** };
+  44:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** 
+  45:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // Interface class for managing non-persistent buffers.
+  46:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // The default non-persistent buffers are temp buffers that are not resizable.
+  47:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** // Support of at least one resizable buffer is required.
+  48:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h **** class INonPersistentBufferAllocator {
+ 402              		.loc 4 48 7 view .LVU70
+ 403              	.LBB28:
+ 404              	.LBB29:
+ 405 0000 114A     		ldr	r2, .L19
+ 406 0002 0260     		str	r2, [r0]
+ 407              	.LVL28:
+ 408              		.loc 4 48 7 is_stmt 0 view .LVU71
+ 409              	.LBE29:
+ 410              	.LBE28:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 12
+
+
+ 411              	.LBE27:
+ 412              	.LBB30:
+ 413              	.LBI30:
+  33:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****  public:
+ 414              		.loc 4 33 7 is_stmt 1 view .LVU72
+ 415              	.LBB31:
+ 416              	.LBB32:
+ 417 0004 114A     		ldr	r2, .L19+4
+ 418 0006 4260     		str	r2, [r0, #4]
+ 419              	.LVL29:
+  33:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/ibuffer_allocator.h ****  public:
+ 420              		.loc 4 33 7 is_stmt 0 view .LVU73
+ 421              	.LBE32:
+ 422              	.LBE31:
+ 423              	.LBE30:
+ 424              		.loc 3 32 7 discriminator 2 view .LVU74
+ 425 0008 114A     		ldr	r2, .L19+8
+ 426 000a 0260     		str	r2, [r0]
+ 427 000c 4432     		adds	r2, r2, #68
+ 428 000e 4260     		str	r2, [r0, #4]
+ 429 0010 8A68     		ldr	r2, [r1, #8]
+ 430 0012 8260     		str	r2, [r0, #8]
+ 431 0014 CA68     		ldr	r2, [r1, #12]
+ 432 0016 C260     		str	r2, [r0, #12]
+ 433 0018 0A69     		ldr	r2, [r1, #16]
+ 434 001a 0261     		str	r2, [r0, #16]
+ 435 001c 4A69     		ldr	r2, [r1, #20]
+ 436 001e 4261     		str	r2, [r0, #20]
+ 437 0020 8A69     		ldr	r2, [r1, #24]
+ 438 0022 8261     		str	r2, [r0, #24]
+ 439 0024 CA69     		ldr	r2, [r1, #28]
+ 440 0026 C261     		str	r2, [r0, #28]
+ 441 0028 0A6A     		ldr	r2, [r1, #32]
+ 442 002a 0262     		str	r2, [r0, #32]
+ 443              	.LVL30:
+ 444              		.loc 3 32 7 discriminator 2 view .LVU75
+ 445              	.LBE26:
+ 446              	.LBE25:
+ 447              	.LBE24:
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****  public:
+ 448              		.loc 2 28 7 discriminator 1 view .LVU76
+ 449 002c 094A     		ldr	r2, .L19+12
+ 450 002e 0260     		str	r2, [r0]
+ 451 0030 4432     		adds	r2, r2, #68
+ 452 0032 4260     		str	r2, [r0, #4]
+ 453 0034 4A6A     		ldr	r2, [r1, #36]
+ 454 0036 4262     		str	r2, [r0, #36]
+ 455 0038 8A6A     		ldr	r2, [r1, #40]
+ 456 003a 8262     		str	r2, [r0, #40]
+ 457 003c CA6A     		ldr	r2, [r1, #44]
+ 458 003e C262     		str	r2, [r0, #44]
+ 459 0040 0A6B     		ldr	r2, [r1, #48]
+ 460 0042 0263     		str	r2, [r0, #48]
+ 461              	.LBE23:
+  28:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.h ****  public:
+ 462              		.loc 2 28 7 view .LVU77
+ 463 0044 7047     		bx	lr
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 13
+
+
+ 464              	.L20:
+ 465 0046 00BF     		.align	2
+ 466              	.L19:
+ 467 0048 08000000 		.word	_ZTVN6tflite5micro29INonPersistentBufferAllocatorE+8
+ 468 004c 08000000 		.word	_ZTVN6tflite5micro26IPersistentBufferAllocatorE+8
+ 469 0050 08000000 		.word	_ZTVN6tflite5micro26SingleArenaBufferAllocatorE+8
+ 470 0054 08000000 		.word	_ZTVN6tflite5micro35RecordingSingleArenaBufferAllocatorE+8
+ 471              		.cfi_endproc
+ 472              	.LFE77:
+ 474              		.weak	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC1ERKS1_
+ 475              		.thumb_set _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC1ERKS1_,_ZN6tflite5micro35Recordi
+ 476              		.section	.text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator6CreateEPhj,"ax",%progbits
+ 477              		.align	1
+ 478              		.global	_ZN6tflite5micro35RecordingSingleArenaBufferAllocator6CreateEPhj
+ 479              		.syntax unified
+ 480              		.thumb
+ 481              		.thumb_func
+ 483              	_ZN6tflite5micro35RecordingSingleArenaBufferAllocator6CreateEPhj:
+ 484              	.LVL31:
+ 485              	.LFB66:
+  37:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   TFLITE_DCHECK(buffer_head != nullptr);
+ 486              		.loc 1 37 65 is_stmt 1 view -0
+ 487              		.cfi_startproc
+ 488              		@ args = 0, pretend = 0, frame = 56
+ 489              		@ frame_needed = 0, uses_anonymous_args = 0
+  37:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   TFLITE_DCHECK(buffer_head != nullptr);
+ 490              		.loc 1 37 65 is_stmt 0 view .LVU79
+ 491 0000 30B5     		push	{r4, r5, lr}
+ 492              	.LCFI5:
+ 493              		.cfi_def_cfa_offset 12
+ 494              		.cfi_offset 4, -12
+ 495              		.cfi_offset 5, -8
+ 496              		.cfi_offset 14, -4
+ 497 0002 8FB0     		sub	sp, sp, #60
+ 498              	.LCFI6:
+ 499              		.cfi_def_cfa_offset 72
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   RecordingSingleArenaBufferAllocator tmp =
+ 500              		.loc 1 38 3 is_stmt 1 view .LVU80
+ 501 0004 A0B1     		cbz	r0, .L24
+ 502 0006 0A46     		mov	r2, r1
+ 503 0008 0146     		mov	r1, r0
+ 504              	.LVL32:
+  39:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       RecordingSingleArenaBufferAllocator(buffer_head, buffer_size);
+ 505              		.loc 1 39 3 view .LVU81
+  40:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 506              		.loc 1 40 67 is_stmt 0 view .LVU82
+ 507 000a 01AC     		add	r4, sp, #4
+ 508 000c 2046     		mov	r0, r4
+ 509              	.LVL33:
+  40:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 510              		.loc 1 40 67 view .LVU83
+ 511 000e FFF7FEFF 		bl	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC1EPhj
+ 512              	.LVL34:
+  42:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       sizeof(RecordingSingleArenaBufferAllocator),
+ 513              		.loc 1 42 3 is_stmt 1 view .LVU84
+  42:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****       sizeof(RecordingSingleArenaBufferAllocator),
+ 514              		.loc 1 42 59 is_stmt 0 view .LVU85
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 14
+
+
+ 515 0012 0422     		movs	r2, #4
+ 516 0014 3421     		movs	r1, #52
+ 517 0016 2046     		mov	r0, r4
+ 518 0018 FFF7FEFF 		bl	_ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj
+ 519              	.LVL35:
+ 520 001c 0546     		mov	r5, r0
+ 521              	.LVL36:
+  46:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ 522              		.loc 1 46 3 is_stmt 1 view .LVU86
+  46:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ 523              		.loc 1 46 72 is_stmt 0 discriminator 1 view .LVU87
+ 524 001e 2146     		mov	r1, r4
+ 525 0020 FFF7FEFF 		bl	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC1ERKS1_
+ 526              	.LVL37:
+  47:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 527              		.loc 1 47 1 view .LVU88
+ 528 0024 2046     		mov	r0, r4
+ 529 0026 FFF7FEFF 		bl	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev
+ 530              	.LVL38:
+ 531 002a 2846     		mov	r0, r5
+ 532 002c 0FB0     		add	sp, sp, #60
+ 533              	.LCFI7:
+ 534              		.cfi_remember_state
+ 535              		.cfi_def_cfa_offset 12
+ 536              		@ sp needed
+ 537 002e 30BD     		pop	{r4, r5, pc}
+ 538              	.LVL39:
+ 539              	.L24:
+ 540              	.LCFI8:
+ 541              		.cfi_restore_state
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   RecordingSingleArenaBufferAllocator tmp =
+ 542              		.loc 1 38 3 discriminator 1 view .LVU89
+ 543 0030 FFF7FEFF 		bl	abort
+ 544              	.LVL40:
+  38:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   RecordingSingleArenaBufferAllocator tmp =
+ 545              		.loc 1 38 3 discriminator 1 view .LVU90
+ 546              		.cfi_endproc
+ 547              	.LFE66:
+ 549              		.section	.text._ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetRequestedBytesEv,"ax",%p
+ 550              		.align	1
+ 551              		.global	_ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetRequestedBytesEv
+ 552              		.syntax unified
+ 553              		.thumb
+ 554              		.thumb_func
+ 556              	_ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetRequestedBytesEv:
+ 557              	.LVL41:
+ 558              	.LFB79:
+  49:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   return requested_head_bytes_ + requested_tail_bytes_;
+ 559              		.loc 1 49 71 is_stmt 1 view -0
+ 560              		.cfi_startproc
+ 561              		@ args = 0, pretend = 0, frame = 0
+ 562              		@ frame_needed = 0, uses_anonymous_args = 0
+ 563              		@ link register save eliminated.
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ 564              		.loc 1 50 3 view .LVU92
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ 565              		.loc 1 50 10 is_stmt 0 view .LVU93
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 15
+
+
+ 566 0000 426A     		ldr	r2, [r0, #36]
+  50:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ 567              		.loc 1 50 34 view .LVU94
+ 568 0002 806A     		ldr	r0, [r0, #40]
+ 569              	.LVL42:
+  51:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 570              		.loc 1 51 1 view .LVU95
+ 571 0004 1044     		add	r0, r0, r2
+ 572 0006 7047     		bx	lr
+ 573              		.cfi_endproc
+ 574              	.LFE79:
+ 576              		.section	.text._ZNK6tflite5micro35RecordingSingleArenaBufferAllocator12GetUsedBytesEv,"ax",%progbi
+ 577              		.align	1
+ 578              		.global	_ZNK6tflite5micro35RecordingSingleArenaBufferAllocator12GetUsedBytesEv
+ 579              		.syntax unified
+ 580              		.thumb
+ 581              		.thumb_func
+ 583              	_ZNK6tflite5micro35RecordingSingleArenaBufferAllocator12GetUsedBytesEv:
+ 584              	.LVL43:
+ 585              	.LFB80:
+  53:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   return used_bytes_;
+ 586              		.loc 1 53 66 is_stmt 1 view -0
+ 587              		.cfi_startproc
+ 588              		@ args = 0, pretend = 0, frame = 0
+ 589              		@ frame_needed = 0, uses_anonymous_args = 0
+ 590              		@ link register save eliminated.
+  54:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ 591              		.loc 1 54 3 view .LVU97
+  55:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 592              		.loc 1 55 1 is_stmt 0 view .LVU98
+ 593 0000 C06A     		ldr	r0, [r0, #44]
+ 594              	.LVL44:
+  55:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 595              		.loc 1 55 1 view .LVU99
+ 596 0002 7047     		bx	lr
+ 597              		.cfi_endproc
+ 598              	.LFE80:
+ 600              		.section	.text._ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetAllocatedCountEv,"ax",%p
+ 601              		.align	1
+ 602              		.global	_ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetAllocatedCountEv
+ 603              		.syntax unified
+ 604              		.thumb
+ 605              		.thumb_func
+ 607              	_ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetAllocatedCountEv:
+ 608              	.LVL45:
+ 609              	.LFB81:
+  57:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc ****   return alloc_count_;
+ 610              		.loc 1 57 71 is_stmt 1 view -0
+ 611              		.cfi_startproc
+ 612              		@ args = 0, pretend = 0, frame = 0
+ 613              		@ frame_needed = 0, uses_anonymous_args = 0
+ 614              		@ link register save eliminated.
+  58:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** }
+ 615              		.loc 1 58 3 view .LVU101
+  59:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 616              		.loc 1 59 1 is_stmt 0 view .LVU102
+ 617 0000 006B     		ldr	r0, [r0, #48]
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 16
+
+
+ 618              	.LVL46:
+  59:lib/tflite-micro/tensorflow/lite/micro/arena_allocator/recording_single_arena_buffer_allocator.cc **** 
+ 619              		.loc 1 59 1 view .LVU103
+ 620 0002 7047     		bx	lr
+ 621              		.cfi_endproc
+ 622              	.LFE81:
+ 624              		.weak	_ZTVN6tflite5micro26IPersistentBufferAllocatorE
+ 625              		.section	.rodata._ZTVN6tflite5micro26IPersistentBufferAllocatorE,"aG",%progbits,_ZTVN6tflite5micro
+ 626              		.align	2
+ 629              	_ZTVN6tflite5micro26IPersistentBufferAllocatorE:
+ 630 0000 00000000 		.word	0
+ 631 0004 00000000 		.word	0
+ 632 0008 00000000 		.word	0
+ 633 000c 00000000 		.word	0
+ 634 0010 00000000 		.word	__cxa_pure_virtual
+ 635 0014 00000000 		.word	__cxa_pure_virtual
+ 636              		.weak	_ZTVN6tflite5micro29INonPersistentBufferAllocatorE
+ 637              		.section	.rodata._ZTVN6tflite5micro29INonPersistentBufferAllocatorE,"aG",%progbits,_ZTVN6tflite5mi
+ 638              		.align	2
+ 641              	_ZTVN6tflite5micro29INonPersistentBufferAllocatorE:
+ 642 0000 00000000 		.word	0
+ 643 0004 00000000 		.word	0
+ 644 0008 00000000 		.word	0
+ 645 000c 00000000 		.word	0
+ 646 0010 00000000 		.word	__cxa_pure_virtual
+ 647 0014 00000000 		.word	__cxa_pure_virtual
+ 648 0018 00000000 		.word	__cxa_pure_virtual
+ 649 001c 00000000 		.word	__cxa_pure_virtual
+ 650 0020 00000000 		.word	__cxa_pure_virtual
+ 651 0024 00000000 		.word	__cxa_pure_virtual
+ 652 0028 00000000 		.word	__cxa_pure_virtual
+ 653 002c 00000000 		.word	__cxa_pure_virtual
+ 654 0030 00000000 		.word	__cxa_pure_virtual
+ 655 0034 00000000 		.word	__cxa_pure_virtual
+ 656 0038 00000000 		.word	__cxa_pure_virtual
+ 657              		.global	_ZTVN6tflite5micro35RecordingSingleArenaBufferAllocatorE
+ 658              		.section	.rodata._ZTVN6tflite5micro35RecordingSingleArenaBufferAllocatorE,"a"
+ 659              		.align	2
+ 662              	_ZTVN6tflite5micro35RecordingSingleArenaBufferAllocatorE:
+ 663 0000 00000000 		.word	0
+ 664 0004 00000000 		.word	0
+ 665 0008 00000000 		.word	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev
+ 666 000c 00000000 		.word	_ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev
+ 667 0010 00000000 		.word	_ZN6tflite5micro26SingleArenaBufferAllocator12AllocateTempEjj
+ 668 0014 00000000 		.word	_ZN6tflite5micro26SingleArenaBufferAllocator14DeallocateTempEPh
+ 669 0018 00000000 		.word	_ZN6tflite5micro26SingleArenaBufferAllocator20IsAllTempDeallocatedEv
+ 670 001c 00000000 		.word	_ZN6tflite5micro26SingleArenaBufferAllocator20ResetTempAllocationsEv
+ 671 0020 00000000 		.word	_ZN6tflite5micro26SingleArenaBufferAllocator23AllocateResizableBufferEjj
+ 672 0024 00000000 		.word	_ZN6tflite5micro35RecordingSingleArenaBufferAllocator12ResizeBufferEPhjj
+ 673 0028 00000000 		.word	_ZN6tflite5micro26SingleArenaBufferAllocator25DeallocateResizableBufferEPh
+ 674 002c 00000000 		.word	_ZNK6tflite5micro26SingleArenaBufferAllocator23GetOverlayMemoryAddressEv
+ 675 0030 00000000 		.word	_ZN6tflite5micro26SingleArenaBufferAllocator33ReserveNonPersistentOverlayMemoryEjj
+ 676 0034 00000000 		.word	_ZNK6tflite5micro26SingleArenaBufferAllocator25GetNonPersistentUsedBytesEv
+ 677 0038 00000000 		.word	_ZNK6tflite5micro26SingleArenaBufferAllocator18GetAvailableMemoryEj
+ 678 003c 00000000 		.word	_ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj
+ 679 0040 00000000 		.word	_ZNK6tflite5micro26SingleArenaBufferAllocator22GetPersistentUsedBytesEv
+ 680 0044 FCFFFFFF 		.word	-4
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 17
+
+
+ 681 0048 00000000 		.word	0
+ 682 004c 00000000 		.word	_ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev
+ 683 0050 00000000 		.word	_ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev
+ 684 0054 00000000 		.word	_ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj
+ 685 0058 00000000 		.word	_ZThn4_NK6tflite5micro26SingleArenaBufferAllocator22GetPersistentUsedBytesEv
+ 686              		.weak	__cxa_pure_virtual
+ 687              		.text
+ 688              	.Letext0:
+ 689              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 690              		.file 6 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 691              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 692              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 693              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 694              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 695              		.file 11 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 696              		.file 12 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 697              		.file 13 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 698              		.file 14 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ 699              		.file 15 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 700              		.file 16 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 701              		.file 17 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 702              		.file 18 "<built-in>"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 18
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 recording_single_arena_buffer_allocator.cc
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:21     .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:27     .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:59     .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev:00000014 $d
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:662    .rodata._ZTVN6tflite5micro35RecordingSingleArenaBufferAllocatorE:00000000 _ZTVN6tflite5micro35RecordingSingleArenaBufferAllocatorE
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:27     .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev:00000000 .LTHUNK0
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:65     .text._ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:71     .text._ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev:00000000 _ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:27     .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD2Ev:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD1Ev
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:86     .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:92     .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:92     .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev:00000000 .LTHUNK1
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:123    .text._ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:129    .text._ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev:00000000 _ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocatorD0Ev
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:141    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator12ResizeBufferEPhjj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:147    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator12ResizeBufferEPhjj:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocator12ResizeBufferEPhjj
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:224    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:230    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:230    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj:00000000 .LTHUNK2
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:306    .text._ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:312    .text._ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj:00000000 _ZThn4_N6tflite5micro35RecordingSingleArenaBufferAllocator24AllocatePersistentBufferEjj
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:324    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2EPhj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:330    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2EPhj:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2EPhj
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:371    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2EPhj:00000020 $d
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:330    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2EPhj:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC1EPhj
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:378    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2ERKS1_:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:384    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2ERKS1_:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2ERKS1_
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:467    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2ERKS1_:00000048 $d
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:641    .rodata._ZTVN6tflite5micro29INonPersistentBufferAllocatorE:00000000 _ZTVN6tflite5micro29INonPersistentBufferAllocatorE
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:629    .rodata._ZTVN6tflite5micro26IPersistentBufferAllocatorE:00000000 _ZTVN6tflite5micro26IPersistentBufferAllocatorE
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:384    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC2ERKS1_:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC1ERKS1_
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:477    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator6CreateEPhj:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:483    .text._ZN6tflite5micro35RecordingSingleArenaBufferAllocator6CreateEPhj:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocator6CreateEPhj
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:550    .text._ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetRequestedBytesEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:556    .text._ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetRequestedBytesEv:00000000 _ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetRequestedBytesEv
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:577    .text._ZNK6tflite5micro35RecordingSingleArenaBufferAllocator12GetUsedBytesEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:583    .text._ZNK6tflite5micro35RecordingSingleArenaBufferAllocator12GetUsedBytesEv:00000000 _ZNK6tflite5micro35RecordingSingleArenaBufferAllocator12GetUsedBytesEv
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:601    .text._ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetAllocatedCountEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:607    .text._ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetAllocatedCountEv:00000000 _ZNK6tflite5micro35RecordingSingleArenaBufferAllocator17GetAllocatedCountEv
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:626    .rodata._ZTVN6tflite5micro26IPersistentBufferAllocatorE:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:638    .rodata._ZTVN6tflite5micro29INonPersistentBufferAllocatorE:00000000 $d
+C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s:659    .rodata._ZTVN6tflite5micro35RecordingSingleArenaBufferAllocatorE:00000000 $d
+                           .group:00000000 _ZN6tflite5micro35RecordingSingleArenaBufferAllocatorC5ERKS1_
+
+UNDEFINED SYMBOLS
+_ZN6tflite5micro26SingleArenaBufferAllocatorD2Ev
+_ZdlPvj
+_ZNK6tflite5micro26SingleArenaBufferAllocator4headEv
+_ZN6tflite5micro26SingleArenaBufferAllocator12ResizeBufferEPhjj
+_ZNK6tflite5micro26SingleArenaBufferAllocator4tailEv
+_ZN6tflite5micro26SingleArenaBufferAllocator24AllocatePersistentBufferEjj
+_ZN6tflite5micro26SingleArenaBufferAllocatorC2EPhj
+_ZTVN6tflite5micro26SingleArenaBufferAllocatorE
+abort
+__cxa_pure_virtual
+_ZN6tflite5micro26SingleArenaBufferAllocator12AllocateTempEjj
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPrDVXa.s 			page 19
+
+
+_ZN6tflite5micro26SingleArenaBufferAllocator14DeallocateTempEPh
+_ZN6tflite5micro26SingleArenaBufferAllocator20IsAllTempDeallocatedEv
+_ZN6tflite5micro26SingleArenaBufferAllocator20ResetTempAllocationsEv
+_ZN6tflite5micro26SingleArenaBufferAllocator23AllocateResizableBufferEjj
+_ZN6tflite5micro26SingleArenaBufferAllocator25DeallocateResizableBufferEPh
+_ZNK6tflite5micro26SingleArenaBufferAllocator23GetOverlayMemoryAddressEv
+_ZN6tflite5micro26SingleArenaBufferAllocator33ReserveNonPersistentOverlayMemoryEjj
+_ZNK6tflite5micro26SingleArenaBufferAllocator25GetNonPersistentUsedBytesEv
+_ZNK6tflite5micro26SingleArenaBufferAllocator18GetAvailableMemoryEj
+_ZNK6tflite5micro26SingleArenaBufferAllocator22GetPersistentUsedBytesEv
+_ZThn4_NK6tflite5micro26SingleArenaBufferAllocator22GetPersistentUsedBytesEv

@@ -1,0 +1,848 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"decode_state.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc"
+  20              		.section	.text._ZN6tflite5micro11DecodeState20CreateDecodeStateLUTEPKNS0_13TfLiteContextEPNS0_22Mi
+  21              		.align	1
+  22              		.global	_ZN6tflite5micro11DecodeState20CreateDecodeStateLUTEPKNS0_13TfLiteContextEPNS0_22MicroProf
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro11DecodeState20CreateDecodeStateLUTEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInter
+  28              	.LVL0:
+  29              	.LFB998:
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** /* Copyright 2025 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** #include "tensorflow/lite/micro/kernels/decode_state.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** #include "tensorflow/lite/micro/kernels/decode_state_huffman.h"
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** #include "tensorflow/lite/micro/kernels/decode_state_lut.h"
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** #include "tensorflow/lite/micro/kernels/decode_state_prune.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** #include "tensorflow/lite/micro/micro_context.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** namespace tflite {
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** namespace micro {
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** DecodeState* DecodeState::CreateDecodeStateLUT(
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****     const TfLiteContext* context, MicroProfilerInterface* profiler) {
+  30              		.loc 1 26 69 view -0
+  31              		.cfi_startproc
+  32              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 2
+
+
+  33              		@ frame_needed = 0, uses_anonymous_args = 0
+  34              		.loc 1 26 69 is_stmt 0 view .LVU1
+  35 0000 38B5     		push	{r3, r4, r5, lr}
+  36              	.LCFI0:
+  37              		.cfi_def_cfa_offset 16
+  38              		.cfi_offset 3, -16
+  39              		.cfi_offset 4, -12
+  40              		.cfi_offset 5, -8
+  41              		.cfi_offset 14, -4
+  42 0002 0446     		mov	r4, r0
+  43 0004 0D46     		mov	r5, r1
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   MicroContext* const micro_context = GetMicroContext(context);
+  44              		.loc 1 27 3 is_stmt 1 view .LVU2
+  45              	.LVL1:
+  46              	.LBB44:
+  47              	.LBI44:
+  48              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/micro_context.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** /* Copyright 2024 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #ifndef TENSORFLOW_LITE_MICRO_MICRO_CONTEXT_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #define TENSORFLOW_LITE_MICRO_MICRO_CONTEXT_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include <cstddef>
+  20:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include <utility>
+  21:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include "tensorflow/lite/micro/micro_common.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include "tensorflow/lite/micro/micro_graph.h"
+  24:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include "tensorflow/lite/micro/micro_profiler_interface.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  26:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #ifdef USE_TFLM_COMPRESSION
+  27:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  28:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #include "tensorflow/lite/micro/compression.h"
+  29:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  30:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #endif  // USE_TFLM_COMPRESSION
+  31:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  32:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** namespace tflite {
+  33:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** namespace micro {
+  34:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** class DecodeState;  // can't use decode_state.h due to circular include
+  36:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  37:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** // MicroContext is the API between TFLM and the kernels.
+  38:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** class MicroContext {
+  39:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****  public:
+  40:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual ~MicroContext() = default;
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 3
+
+
+  41:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  42:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Allocate persistent buffer which has the same life time as the interpreter.
+  43:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns nullptr on failure.
+  44:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The memory is allocated from the tail.
+  45:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This method is only available in Init or Prepare stage.
+  46:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* AllocatePersistentBuffer(size_t bytes) = 0;
+  47:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  48:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Request a scratch buffer in the arena through static memory planning.
+  49:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This method is only available in Prepare stage and the buffer is allocated
+  50:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // by the interpreter between Prepare and Eval stage. In Eval stage,
+  51:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // GetScratchBuffer API can be used to fetch the address.
+  52:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus RequestScratchBufferInArena(size_t bytes,
+  53:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                    int* buffer_idx) = 0;
+  54:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  55:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Get the scratch buffer pointer.
+  56:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This method is only available in Eval stage.
+  57:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* GetScratchBuffer(int buffer_idx) = 0;
+  58:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  59:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a temporary TfLiteTensor struct for a given index.
+  60:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteTensor* AllocateTempTfLiteTensor(int tensor_idx) = 0;
+  61:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  62:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a temporary TfLiteTensor struct for the specified input tensor of a
+  63:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // given mode. This is the recommended API over the deprecated
+  64:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // GetInput/GetInputSafe to get a temp input tensor. The returned tensor shall
+  65:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // be freed via calling DeallocateTempTfLiteTensor.
+  66:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   TfLiteTensor* AllocateTempInputTensor(const TfLiteNode* node, int index);
+  67:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  68:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a temporary TfLiteTensor struct for the specified output tensor of
+  69:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // a given mode. This is the recommended API over the deprecated
+  70:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // GetOutput/GetOutputSafe to get a temp output tensor. The returned tensor
+  71:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // shall be freed via calling DeallocateTempTfLiteTensor.
+  72:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   TfLiteTensor* AllocateTempOutputTensor(const TfLiteNode* node, int index);
+  73:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  74:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a temporary TfLiteTensor struct for the specified intermediate
+  75:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // tensor of a given mode. This is the recommended API over the deprecated
+  76:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // GetIntermediates/GetIntermediatesSafe to get a temp intermediate tensor.
+  77:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The returned tensor shall be freed via calling DeallocateTempTfLiteTensor.
+  78:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   TfLiteTensor* AllocateTempIntermediateTensor(const TfLiteNode* node,
+  79:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                int index);
+  80:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  81:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Deallocates a temp TfLiteTensor.
+  82:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void DeallocateTempTfLiteTensor(TfLiteTensor* tensor) = 0;
+  83:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  84:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a pointer to a temporary buffer (from the arena).
+  85:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This API is only valid from the kernel's Prepare function and
+  86:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // the buffer's lifetime is also that of the Prepare function.
+  87:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual uint8_t* AllocateTempBuffer(size_t size, size_t alignment) = 0;
+  88:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  89:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Signals that the temporary buffer is no longer needed.
+  90:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void DeallocateTempBuffer(uint8_t* buffer) = 0;
+  91:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  92:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Returns a TfLiteEvalTensor struct for a given index.
+  93:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteEvalTensor* GetEvalTensor(int tensor_idx) = 0;
+  94:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+  95:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Does not take ownership of the pointer and the pointer must refer to valid
+  96:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // an object that outlive this class instance.
+  97:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This can only be called once to set one external context.
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 4
+
+
+  98:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus set_external_context(void* external_context_payload) = 0;
+  99:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 100:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* external_context() = 0;
+ 101:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 102:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual MicroGraph& graph() = 0;
+ 103:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 104:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #ifdef USE_TFLM_COMPRESSION
+ 105:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 106:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Available during Prepare & Eval. Returns false if tensor is not
+ 107:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // compressed.
+ 108:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual bool IsTensorCompressed(const TfLiteNode* node, int tensor_idx) = 0;
+ 109:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 110:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Only available during Prepare. The kernel is responsible for storing the
+ 111:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // scratch buffer handle.
+ 112:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual int AllocateDecompressionScratchBuffer(const TfLiteNode* node,
+ 113:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                  int tensor_idx) = 0;
+ 114:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 115:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Available during Prepare & Eval. Returns nullptr if tensor is not
+ 116:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // compressed.
+ 117:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual const CompressionTensorData* GetTensorCompressionData(
+ 118:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const TfLiteNode* node, int tensor_idx) = 0;
+ 119:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 120:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Only available during Prepare & Eval. Returns nullptr on failure, otherwise
+ 121:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // returns a pointer to the buffer.
+ 122:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* DecompressTensorToBuffer(
+ 123:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const TfLiteEvalTensor& tensor,
+ 124:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const CompressionTensorData& compression_data, void* buffer);
+ 125:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 126:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** #endif  // USE_TFLM_COMPRESSION
+ 127:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 128:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Used for configuring alternate decompression memory
+ 129:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   struct AlternateMemoryRegion {
+ 130:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     void* address;
+ 131:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     size_t bytes;
+ 132:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   };
+ 133:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 134:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Set the alternate decompression memory regions.
+ 135:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Can only be called during the kInit state.
+ 136:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus SetDecompressionMemory(
+ 137:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const AlternateMemoryRegion* regions, size_t count);
+ 138:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 139:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Return a pointer to memory that can be used for decompression.
+ 140:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The pointer will be aligned to the <alignment> value.
+ 141:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Return nullptr if the requested size is not available.
+ 142:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Can be called during kPrepare state.
+ 143:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void* AllocateDecompressionMemory(size_t bytes, size_t alignment);
+ 144:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 145:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Reset all allocation tracking.
+ 146:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Can be called during kPrepare state.
+ 147:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual void ResetDecompressionMemoryAllocations();
+ 148:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 149:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Set the alternate MicroProfilerInterface.
+ 150:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This can be used to profile subsystems simultaneously with the profiling
+ 151:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // of kernels during the Eval phase.  See (b/379584353).
+ 152:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The alternate MicroProfilerInterface is currently used by the tensor
+ 153:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // decompression subsystem.
+ 154:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus SetAlternateProfiler(
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 5
+
+
+ 155:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       MicroProfilerInterface* alt_profiler) {
+ 156:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     return kTfLiteError;
+ 157:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   }
+ 158:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 159:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Get the alternate MicroProfilerInterface.
+ 160:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // This can be used to profile subsystems simultaneously with the profiling
+ 161:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // of kernels during the Eval phase.  See (b/379584353).
+ 162:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // The alternate MicroProfilerInterface is currently used by the tensor
+ 163:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // decompression subsystem.
+ 164:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual MicroProfilerInterface* GetAlternateProfiler() const {
+ 165:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     return nullptr;
+ 166:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   }
+ 167:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 168:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   struct CustomDecodeRegistration {
+ 169:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     tflite::micro::DecodeState* (*create_state)(const CustomDecodeRegistration&,
+ 170:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                 const TfLiteContext&,
+ 171:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                                                 MicroProfilerInterface*);
+ 172:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     uint8_t type;  // custom decode type
+ 173:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   };
+ 174:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 175:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Set the DECODE operator custom registrations.
+ 176:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Can only be called during the kInit state.
+ 177:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   virtual TfLiteStatus SetCustomDecodeRegistrations(
+ 178:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****       const CustomDecodeRegistration* registrations, size_t count);
+ 179:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 180:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Get the custom DECODE operator registrations.
+ 181:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   std::pair<const CustomDecodeRegistration*, size_t /*count*/>
+ 182:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   GetCustomDecodeRegistrations() const {
+ 183:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****     return std::make_pair(custom_decode_registrations_,
+ 184:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****                           custom_decode_registrations_size_);
+ 185:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   }
+ 186:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 187:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // Initializes the TfLiteContext impl_ pointer to bind to this MicroContext
+ 188:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // instance.
+ 189:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   void InitTfLiteContext(TfLiteContext* context);
+ 190:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 191:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****  private:
+ 192:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   const AlternateMemoryRegion* decompress_regions_ = nullptr;
+ 193:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   size_t decompress_regions_size_ = 0;
+ 194:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   // array of size_t elements with length equal to decompress_regions_size_
+ 195:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   size_t* decompress_regions_allocations_ = nullptr;
+ 196:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 197:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   const CustomDecodeRegistration* custom_decode_registrations_ = nullptr;
+ 198:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   size_t custom_decode_registrations_size_ = 0;
+ 199:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 200:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   TF_LITE_REMOVE_VIRTUAL_DELETE
+ 201:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** };
+ 202:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** 
+ 203:lib/tflite-micro/tensorflow/lite/micro/micro_context.h **** inline MicroContext* GetMicroContext(const TfLiteContext* context) {
+  49              		.loc 2 203 22 view .LVU3
+  50              	.LBB45:
+ 204:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   return reinterpret_cast<MicroContext*>(context->impl_);
+  51              		.loc 2 204 3 view .LVU4
+  52              		.loc 2 204 56 is_stmt 0 view .LVU5
+  53 0006 0068     		ldr	r0, [r0]
+  54              	.LVL2:
+  55              		.loc 2 204 56 view .LVU6
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 6
+
+
+  56              	.LBE45:
+  57              	.LBE44:
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   void* buffer =
+  58              		.loc 1 28 3 is_stmt 1 view .LVU7
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****       micro_context->AllocatePersistentBuffer(sizeof(DecodeStateLut));
+  59              		.loc 1 29 46 is_stmt 0 view .LVU8
+  60 0008 0368     		ldr	r3, [r0]
+  61 000a 9B68     		ldr	r3, [r3, #8]
+  62 000c 2421     		movs	r1, #36
+  63              	.LVL3:
+  64              		.loc 1 29 46 view .LVU9
+  65 000e 9847     		blx	r3
+  66              	.LVL4:
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   if (buffer == nullptr) {
+  67              		.loc 1 30 3 is_stmt 1 view .LVU10
+  68 0010 0346     		mov	r3, r0
+  69 0012 90B1     		cbz	r0, .L1
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****     return nullptr;
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   }
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   DecodeState* dsp = new (buffer) DecodeStateLut(context, profiler);
+  70              		.loc 1 33 3 view .LVU11
+  71              	.LVL5:
+  72              	.LBB46:
+  73              	.LBI46:
+  74              		.file 3 "lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** /* Copyright 2025 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_DECODE_STATE_LUT_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_DECODE_STATE_LUT_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** #include <cstdint>
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** #include "tensorflow/lite/micro/compatibility.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** #include "tensorflow/lite/micro/kernels/decode_state.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** 
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** namespace tflite {
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** namespace micro {
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** 
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** class DecodeStateLut : public DecodeState {
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h ****  public:
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h ****   DecodeStateLut() = delete;
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h **** 
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h ****   DecodeStateLut(const TfLiteContext* context, MicroProfilerInterface* profiler)
+  75              		.loc 3 31 3 view .LVU12
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 7
+
+
+  76              	.LBB47:
+  77              	.LBB48:
+  78              	.LBB49:
+  79              	.LBI49:
+  80              		.file 4 "lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** /* Copyright 2025 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_DECODE_STATE_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_DECODE_STATE_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** #include <cstdint>
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** #include "tensorflow/lite/micro/compatibility.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** #include "tensorflow/lite/micro/kernels/kernel_util.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** #include "tensorflow/lite/micro/micro_common.h"
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** #include "tensorflow/lite/micro/micro_profiler_interface.h"
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** 
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** namespace tflite {
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** namespace micro {
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** 
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** class DecodeState {
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h ****  public:
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h ****   DecodeState() = delete;
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h **** 
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h ****   DecodeState(const TfLiteContext* context, MicroProfilerInterface* profiler)
+  81              		.loc 4 33 3 view .LVU13
+  82              	.LBB50:
+  83              	.LBB51:
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h ****       : context_(context), micro_profiler_(profiler) {}
+  84              		.loc 4 34 52 is_stmt 0 view .LVU14
+  85 0014 0A4A     		ldr	r2, .L4
+  86 0016 0260     		str	r2, [r0]
+  87              		.loc 4 34 9 view .LVU15
+  88 0018 4460     		str	r4, [r0, #4]
+  89              		.loc 4 34 28 view .LVU16
+  90 001a 9D60     		str	r5, [r3, #8]
+  91              	.LVL6:
+  92              		.loc 4 34 28 view .LVU17
+  93              	.LBE51:
+  94              	.LBE50:
+  95              	.LBE49:
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_lut.h ****       : DecodeState(context, profiler) {}
+  96              		.loc 3 32 38 discriminator 1 view .LVU18
+  97 001c 094A     		ldr	r2, .L4+4
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 8
+
+
+  98 001e 0260     		str	r2, [r0]
+  99 0020 0022     		movs	r2, #0
+ 100 0022 C260     		str	r2, [r0, #12]
+ 101 0024 0261     		str	r2, [r0, #16]
+ 102 0026 0121     		movs	r1, #1
+ 103 0028 4161     		str	r1, [r0, #20]
+ 104 002a 8261     		str	r2, [r0, #24]
+ 105 002c C261     		str	r2, [r0, #28]
+ 106 002e 80F82020 		strb	r2, [r0, #32]
+ 107 0032 80F82120 		strb	r2, [r0, #33]
+ 108 0036 80F82220 		strb	r2, [r0, #34]
+ 109              	.LVL7:
+ 110              		.loc 3 32 38 discriminator 1 view .LVU19
+ 111              	.LBE48:
+ 112              	.LBE47:
+ 113              	.LBE46:
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   return dsp;
+ 114              		.loc 1 35 3 is_stmt 1 view .LVU20
+ 115              	.L1:
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** }
+ 116              		.loc 1 36 1 is_stmt 0 view .LVU21
+ 117 003a 1846     		mov	r0, r3
+ 118              	.LVL8:
+ 119              		.loc 1 36 1 view .LVU22
+ 120 003c 38BD     		pop	{r3, r4, r5, pc}
+ 121              	.LVL9:
+ 122              	.L5:
+ 123              		.loc 1 36 1 view .LVU23
+ 124 003e 00BF     		.align	2
+ 125              	.L4:
+ 126 0040 08000000 		.word	_ZTVN6tflite5micro11DecodeStateE+8
+ 127 0044 08000000 		.word	_ZTVN6tflite5micro14DecodeStateLutE+8
+ 128              		.cfi_endproc
+ 129              	.LFE998:
+ 131              		.section	.text._ZN6tflite5micro11DecodeState22CreateDecodeStatePruneEPKNS0_13TfLiteContextEPNS0_22
+ 132              		.align	1
+ 133              		.global	_ZN6tflite5micro11DecodeState22CreateDecodeStatePruneEPKNS0_13TfLiteContextEPNS0_22MicroPr
+ 134              		.syntax unified
+ 135              		.thumb
+ 136              		.thumb_func
+ 138              	_ZN6tflite5micro11DecodeState22CreateDecodeStatePruneEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInt
+ 139              	.LVL10:
+ 140              	.LFB999:
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** DecodeState* DecodeState::CreateDecodeStatePrune(
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****     const TfLiteContext* context, MicroProfilerInterface* profiler) {
+ 141              		.loc 1 39 69 is_stmt 1 view -0
+ 142              		.cfi_startproc
+ 143              		@ args = 0, pretend = 0, frame = 0
+ 144              		@ frame_needed = 0, uses_anonymous_args = 0
+ 145              		.loc 1 39 69 is_stmt 0 view .LVU25
+ 146 0000 38B5     		push	{r3, r4, r5, lr}
+ 147              	.LCFI1:
+ 148              		.cfi_def_cfa_offset 16
+ 149              		.cfi_offset 3, -16
+ 150              		.cfi_offset 4, -12
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 9
+
+
+ 151              		.cfi_offset 5, -8
+ 152              		.cfi_offset 14, -4
+ 153 0002 0446     		mov	r4, r0
+ 154 0004 0D46     		mov	r5, r1
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   MicroContext* const micro_context = GetMicroContext(context);
+ 155              		.loc 1 40 3 is_stmt 1 view .LVU26
+ 156              	.LVL11:
+ 157              	.LBB52:
+ 158              	.LBI52:
+ 203:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   return reinterpret_cast<MicroContext*>(context->impl_);
+ 159              		.loc 2 203 22 view .LVU27
+ 160              	.LBB53:
+ 161              		.loc 2 204 3 view .LVU28
+ 162              		.loc 2 204 56 is_stmt 0 view .LVU29
+ 163 0006 0068     		ldr	r0, [r0]
+ 164              	.LVL12:
+ 165              		.loc 2 204 56 view .LVU30
+ 166              	.LBE53:
+ 167              	.LBE52:
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   void* buffer =
+ 168              		.loc 1 41 3 is_stmt 1 view .LVU31
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****       micro_context->AllocatePersistentBuffer(sizeof(DecodeStatePrune));
+ 169              		.loc 1 42 46 is_stmt 0 view .LVU32
+ 170 0008 0368     		ldr	r3, [r0]
+ 171 000a 9B68     		ldr	r3, [r3, #8]
+ 172 000c 2821     		movs	r1, #40
+ 173              	.LVL13:
+ 174              		.loc 1 42 46 view .LVU33
+ 175 000e 9847     		blx	r3
+ 176              	.LVL14:
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   if (buffer == nullptr) {
+ 177              		.loc 1 43 3 is_stmt 1 view .LVU34
+ 178 0010 0346     		mov	r3, r0
+ 179 0012 88B1     		cbz	r0, .L6
+  44:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****     return nullptr;
+  45:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   }
+  46:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   DecodeState* dsp = new (buffer) DecodeStatePrune(context, profiler);
+ 180              		.loc 1 46 3 view .LVU35
+ 181              	.LVL15:
+ 182              	.LBB54:
+ 183              	.LBI54:
+ 184              		.file 5 "lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** /* Copyright 2025 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 10
+
+
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_DECODE_STATE_PRUNE_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_DECODE_STATE_PRUNE_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** #include <cstdint>
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** #include "tensorflow/lite/micro/compatibility.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** #include "tensorflow/lite/micro/kernels/decode_state.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** 
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** namespace tflite {
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** namespace micro {
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** 
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** class DecodeStatePrune : public DecodeState {
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h ****  public:
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h ****   DecodeStatePrune() = delete;
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h **** 
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h ****   DecodeStatePrune(const TfLiteContext* context,
+ 185              		.loc 5 31 3 view .LVU36
+ 186              	.LBB55:
+ 187              	.LBB56:
+ 188              	.LBB57:
+ 189              	.LBI57:
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h ****       : context_(context), micro_profiler_(profiler) {}
+ 190              		.loc 4 33 3 view .LVU37
+ 191              	.LBB58:
+ 192              	.LBB59:
+ 193              		.loc 4 34 52 is_stmt 0 view .LVU38
+ 194 0014 094A     		ldr	r2, .L9
+ 195 0016 0260     		str	r2, [r0]
+ 196              		.loc 4 34 9 view .LVU39
+ 197 0018 4460     		str	r4, [r0, #4]
+ 198              		.loc 4 34 28 view .LVU40
+ 199 001a 9D60     		str	r5, [r3, #8]
+ 200              	.LVL16:
+ 201              		.loc 4 34 28 view .LVU41
+ 202              	.LBE59:
+ 203              	.LBE58:
+ 204              	.LBE57:
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h ****                    MicroProfilerInterface* profiler)
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_prune.h ****       : DecodeState(context, profiler) {}
+ 205              		.loc 5 33 38 discriminator 1 view .LVU42
+ 206 001c 084A     		ldr	r2, .L9+4
+ 207 001e 0260     		str	r2, [r0]
+ 208 0020 0022     		movs	r2, #0
+ 209 0022 C260     		str	r2, [r0, #12]
+ 210 0024 0261     		str	r2, [r0, #16]
+ 211 0026 0121     		movs	r1, #1
+ 212 0028 4161     		str	r1, [r0, #20]
+ 213 002a 8261     		str	r2, [r0, #24]
+ 214 002c C261     		str	r2, [r0, #28]
+ 215 002e 0262     		str	r2, [r0, #32]
+ 216 0030 80F82420 		strb	r2, [r0, #36]
+ 217 0034 80F82520 		strb	r2, [r0, #37]
+ 218              	.LVL17:
+ 219              		.loc 5 33 38 discriminator 1 view .LVU43
+ 220              	.LBE56:
+ 221              	.LBE55:
+ 222              	.LBE54:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 11
+
+
+  47:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+  48:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   return dsp;
+ 223              		.loc 1 48 3 is_stmt 1 view .LVU44
+ 224              	.L6:
+  49:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** }
+ 225              		.loc 1 49 1 is_stmt 0 view .LVU45
+ 226 0038 1846     		mov	r0, r3
+ 227              	.LVL18:
+ 228              		.loc 1 49 1 view .LVU46
+ 229 003a 38BD     		pop	{r3, r4, r5, pc}
+ 230              	.LVL19:
+ 231              	.L10:
+ 232              		.loc 1 49 1 view .LVU47
+ 233              		.align	2
+ 234              	.L9:
+ 235 003c 08000000 		.word	_ZTVN6tflite5micro11DecodeStateE+8
+ 236 0040 08000000 		.word	_ZTVN6tflite5micro16DecodeStatePruneE+8
+ 237              		.cfi_endproc
+ 238              	.LFE999:
+ 240              		.section	.text._ZN6tflite5micro11DecodeState24CreateDecodeStateHuffmanEPKNS0_13TfLiteContextEPNS0_
+ 241              		.align	1
+ 242              		.global	_ZN6tflite5micro11DecodeState24CreateDecodeStateHuffmanEPKNS0_13TfLiteContextEPNS0_22Micro
+ 243              		.syntax unified
+ 244              		.thumb
+ 245              		.thumb_func
+ 247              	_ZN6tflite5micro11DecodeState24CreateDecodeStateHuffmanEPKNS0_13TfLiteContextEPNS0_22MicroProfilerI
+ 248              	.LVL20:
+ 249              	.LFB1000:
+  50:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+  51:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** DecodeState* DecodeState::CreateDecodeStateHuffman(
+  52:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****     const TfLiteContext* context, MicroProfilerInterface* profiler) {
+ 250              		.loc 1 52 69 is_stmt 1 view -0
+ 251              		.cfi_startproc
+ 252              		@ args = 0, pretend = 0, frame = 0
+ 253              		@ frame_needed = 0, uses_anonymous_args = 0
+ 254              		.loc 1 52 69 is_stmt 0 view .LVU49
+ 255 0000 38B5     		push	{r3, r4, r5, lr}
+ 256              	.LCFI2:
+ 257              		.cfi_def_cfa_offset 16
+ 258              		.cfi_offset 3, -16
+ 259              		.cfi_offset 4, -12
+ 260              		.cfi_offset 5, -8
+ 261              		.cfi_offset 14, -4
+ 262 0002 0446     		mov	r4, r0
+ 263 0004 0D46     		mov	r5, r1
+  53:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   MicroContext* const micro_context = GetMicroContext(context);
+ 264              		.loc 1 53 3 is_stmt 1 view .LVU50
+ 265              	.LVL21:
+ 266              	.LBB60:
+ 267              	.LBI60:
+ 203:lib/tflite-micro/tensorflow/lite/micro/micro_context.h ****   return reinterpret_cast<MicroContext*>(context->impl_);
+ 268              		.loc 2 203 22 view .LVU51
+ 269              	.LBB61:
+ 270              		.loc 2 204 3 view .LVU52
+ 271              		.loc 2 204 56 is_stmt 0 view .LVU53
+ 272 0006 0068     		ldr	r0, [r0]
+ 273              	.LVL22:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 12
+
+
+ 274              		.loc 2 204 56 view .LVU54
+ 275              	.LBE61:
+ 276              	.LBE60:
+  54:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   void* buffer =
+ 277              		.loc 1 54 3 is_stmt 1 view .LVU55
+  55:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****       micro_context->AllocatePersistentBuffer(sizeof(DecodeStateHuffman));
+ 278              		.loc 1 55 46 is_stmt 0 view .LVU56
+ 279 0008 0368     		ldr	r3, [r0]
+ 280 000a 9B68     		ldr	r3, [r3, #8]
+ 281 000c 1C21     		movs	r1, #28
+ 282              	.LVL23:
+ 283              		.loc 1 55 46 view .LVU57
+ 284 000e 9847     		blx	r3
+ 285              	.LVL24:
+  56:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   if (buffer == nullptr) {
+ 286              		.loc 1 56 3 is_stmt 1 view .LVU58
+ 287 0010 0346     		mov	r3, r0
+ 288 0012 58B1     		cbz	r0, .L11
+  57:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****     return nullptr;
+  58:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   }
+  59:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   DecodeState* dsp = new (buffer) DecodeStateHuffman(context, profiler);
+ 289              		.loc 1 59 3 view .LVU59
+ 290              	.LVL25:
+ 291              	.LBB62:
+ 292              	.LBI62:
+ 293              		.file 6 "lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h"
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** /* Copyright 2025 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** #ifndef TENSORFLOW_LITE_MICRO_KERNELS_DECODE_STATE_HUFFMAN_H_
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** #define TENSORFLOW_LITE_MICRO_KERNELS_DECODE_STATE_HUFFMAN_H_
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** 
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** #include <cstddef>
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** #include <cstdint>
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** 
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** #include "tensorflow/lite/micro/compatibility.h"
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** #include "tensorflow/lite/micro/kernels/decode_state.h"
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** 
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** namespace tflite {
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** namespace micro {
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** 
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** class DecodeStateHuffman : public DecodeState {
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h ****  public:
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h ****   DecodeStateHuffman() = delete;
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h **** 
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 13
+
+
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h ****   DecodeStateHuffman(const TfLiteContext* context,
+ 294              		.loc 6 32 3 view .LVU60
+ 295              	.LBB63:
+ 296              	.LBB64:
+ 297              	.LBB65:
+ 298              	.LBI65:
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.h ****       : context_(context), micro_profiler_(profiler) {}
+ 299              		.loc 4 33 3 view .LVU61
+ 300              	.LBB66:
+ 301              	.LBB67:
+ 302              		.loc 4 34 52 is_stmt 0 view .LVU62
+ 303 0014 064A     		ldr	r2, .L14
+ 304 0016 0260     		str	r2, [r0]
+ 305              		.loc 4 34 9 view .LVU63
+ 306 0018 4460     		str	r4, [r0, #4]
+ 307              		.loc 4 34 28 view .LVU64
+ 308 001a 9D60     		str	r5, [r3, #8]
+ 309              	.LVL26:
+ 310              		.loc 4 34 28 view .LVU65
+ 311              	.LBE67:
+ 312              	.LBE66:
+ 313              	.LBE65:
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h ****                      MicroProfilerInterface* profiler)
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state_huffman.h ****       : DecodeState(context, profiler) {}
+ 314              		.loc 6 34 38 discriminator 1 view .LVU66
+ 315 001c 054A     		ldr	r2, .L14+4
+ 316 001e 0260     		str	r2, [r0]
+ 317 0020 0022     		movs	r2, #0
+ 318 0022 C260     		str	r2, [r0, #12]
+ 319 0024 0261     		str	r2, [r0, #16]
+ 320 0026 4261     		str	r2, [r0, #20]
+ 321 0028 0276     		strb	r2, [r0, #24]
+ 322 002a 4276     		strb	r2, [r0, #25]
+ 323              	.LVL27:
+ 324              		.loc 6 34 38 discriminator 1 view .LVU67
+ 325              	.LBE64:
+ 326              	.LBE63:
+ 327              	.LBE62:
+  60:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** 
+  61:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc ****   return dsp;
+ 328              		.loc 1 61 3 is_stmt 1 view .LVU68
+ 329              	.L11:
+  62:lib/tflite-micro/tensorflow/lite/micro/kernels/decode_state.cc **** }
+ 330              		.loc 1 62 1 is_stmt 0 view .LVU69
+ 331 002c 1846     		mov	r0, r3
+ 332              	.LVL28:
+ 333              		.loc 1 62 1 view .LVU70
+ 334 002e 38BD     		pop	{r3, r4, r5, pc}
+ 335              	.LVL29:
+ 336              	.L15:
+ 337              		.loc 1 62 1 view .LVU71
+ 338              		.align	2
+ 339              	.L14:
+ 340 0030 08000000 		.word	_ZTVN6tflite5micro11DecodeStateE+8
+ 341 0034 08000000 		.word	_ZTVN6tflite5micro18DecodeStateHuffmanE+8
+ 342              		.cfi_endproc
+ 343              	.LFE1000:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 14
+
+
+ 345              		.weak	_ZTVN6tflite5micro11DecodeStateE
+ 346              		.section	.rodata._ZTVN6tflite5micro11DecodeStateE,"aG",%progbits,_ZTVN6tflite5micro11DecodeStateE,
+ 347              		.align	2
+ 350              	_ZTVN6tflite5micro11DecodeStateE:
+ 351 0000 00000000 		.word	0
+ 352 0004 00000000 		.word	0
+ 353 0008 00000000 		.word	__cxa_pure_virtual
+ 354 000c 00000000 		.word	__cxa_pure_virtual
+ 355 0010 00000000 		.word	0
+ 356 0014 00000000 		.word	0
+ 357              		.weak	__cxa_pure_virtual
+ 358              		.text
+ 359              	.Letext0:
+ 360              		.file 7 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 361              		.file 8 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 362              		.file 9 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 363              		.file 10 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 364              		.file 11 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 365              		.file 12 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 366              		.file 13 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 367              		.file 14 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 368              		.file 15 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 369              		.file 16 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 370              		.file 17 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 371              		.file 18 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 372              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 373              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 374              		.file 21 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 375              		.file 22 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 376              		.file 23 "lib/tflite-micro/tensorflow/lite/micro/micro_log.h"
+ 377              		.file 24 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ 378              		.file 25 "lib/tflite-micro/tensorflow/lite/micro/builtin_op_data.h"
+ 379              		.file 26 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h"
+ 380              		.file 27 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/types.h"
+ 381              		.file 28 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+ 382              		.file 29 "lib/tflite-micro/tensorflow/lite/micro/micro_profiler_interface.h"
+ 383              		.file 30 "lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h"
+ 384              		.file 31 "lib/tflite-micro/tensorflow/lite/micro/micro_graph.h"
+ 385              		.file 32 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 386              		.file 33 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 387              		.file 34 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 388              		.file 35 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 389              		.file 36 "<built-in>"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 decode_state.cc
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:21     .text._ZN6tflite5micro11DecodeState20CreateDecodeStateLUTEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:27     .text._ZN6tflite5micro11DecodeState20CreateDecodeStateLUTEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE:00000000 _ZN6tflite5micro11DecodeState20CreateDecodeStateLUTEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:126    .text._ZN6tflite5micro11DecodeState20CreateDecodeStateLUTEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE:00000040 $d
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:350    .rodata._ZTVN6tflite5micro11DecodeStateE:00000000 _ZTVN6tflite5micro11DecodeStateE
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:132    .text._ZN6tflite5micro11DecodeState22CreateDecodeStatePruneEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:138    .text._ZN6tflite5micro11DecodeState22CreateDecodeStatePruneEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE:00000000 _ZN6tflite5micro11DecodeState22CreateDecodeStatePruneEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:235    .text._ZN6tflite5micro11DecodeState22CreateDecodeStatePruneEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE:0000003c $d
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:241    .text._ZN6tflite5micro11DecodeState24CreateDecodeStateHuffmanEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:247    .text._ZN6tflite5micro11DecodeState24CreateDecodeStateHuffmanEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE:00000000 _ZN6tflite5micro11DecodeState24CreateDecodeStateHuffmanEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:340    .text._ZN6tflite5micro11DecodeState24CreateDecodeStateHuffmanEPKNS0_13TfLiteContextEPNS0_22MicroProfilerInterfaceE:00000030 $d
+C:\Users\Chetan\AppData\Local\Temp\cc5zcf9C.s:347    .rodata._ZTVN6tflite5micro11DecodeStateE:00000000 $d
+
+UNDEFINED SYMBOLS
+_ZTVN6tflite5micro14DecodeStateLutE
+_ZTVN6tflite5micro16DecodeStatePruneE
+_ZTVN6tflite5micro18DecodeStateHuffmanE
+__cxa_pure_virtual

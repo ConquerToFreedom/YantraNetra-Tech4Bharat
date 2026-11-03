@@ -1,0 +1,78 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPW28SZ.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"system_setup.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/system_setup.cc"
+  20              		.section	.text._ZN6tflite5micro16InitializeTargetEv,"ax",%progbits
+  21              		.align	1
+  22              		.global	_ZN6tflite5micro16InitializeTargetEv
+  23              		.syntax unified
+  24              		.thumb
+  25              		.thumb_func
+  27              	_ZN6tflite5micro16InitializeTargetEv:
+  28              	.LFB0:
+   1:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** /* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** 
+  16:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** #include "tensorflow/lite/micro/system_setup.h"
+  17:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** 
+  18:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** namespace tflite {
+  19:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** namespace micro {
+  20:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** 
+  21:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** // To add an equivalent function for your own platform, create your own
+  22:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** // implementation file, and place it in a subfolder named after the target. See
+  23:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** // tensorflow/lite/micro/debug_log.cc for a similar example.
+  24:lib/tflite-micro/tensorflow/lite/micro/system_setup.cc **** void InitializeTarget() {}
+  29              		.loc 1 24 25 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		@ link register save eliminated.
+  34              		.loc 1 24 26 is_stmt 0 view .LVU1
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPW28SZ.s 			page 2
+
+
+  35 0000 7047     		bx	lr
+  36              		.cfi_endproc
+  37              	.LFE0:
+  39              		.text
+  40              	.Letext0:
+  41              		.file 2 "lib/tflite-micro/tensorflow/lite/micro/system_setup.h"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccPW28SZ.s 			page 3
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 system_setup.cc
+C:\Users\Chetan\AppData\Local\Temp\ccPW28SZ.s:21     .text._ZN6tflite5micro16InitializeTargetEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccPW28SZ.s:27     .text._ZN6tflite5micro16InitializeTargetEv:00000000 _ZN6tflite5micro16InitializeTargetEv
+
+NO UNDEFINED SYMBOLS

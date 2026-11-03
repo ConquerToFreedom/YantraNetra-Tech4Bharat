@@ -1,0 +1,293 @@
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"logical.cc"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.file 1 "lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc"
+  20              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L13LogicalOrEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNo
+  21              		.align	1
+  22              		.syntax unified
+  23              		.thumb
+  24              		.thumb_func
+  26              	_ZN6tflite5micro12_GLOBAL__N_1L13LogicalOrEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:
+  27              	.LVL0:
+  28              	.LFB2978:
+   1:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** /* Copyright 2021 The TensorFlow Authors. All Rights Reserved.
+   2:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+   3:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** Licensed under the Apache License, Version 2.0 (the "License");
+   4:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** you may not use this file except in compliance with the License.
+   5:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** You may obtain a copy of the License at
+   6:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+   7:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc ****     http://www.apache.org/licenses/LICENSE-2.0
+   8:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+   9:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** Unless required by applicable law or agreed to in writing, software
+  10:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** distributed under the License is distributed on an "AS IS" BASIS,
+  11:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  12:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** See the License for the specific language governing permissions and
+  13:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** limitations under the License.
+  14:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** ==============================================================================*/
+  15:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** #include "tensorflow/lite/micro/kernels/logical.h"
+  16:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+  17:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** #include "tensorflow/lite/micro/compatibility.h"
+  18:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** #include "tensorflow/lite/micro/kernels/internal/reference/binary_function.h"
+  19:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** #include "tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+  20:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** #include "tensorflow/lite/micro/kernels/kernel_util.h"
+  21:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** #include "tensorflow/lite/micro/micro_common.h"
+  22:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+  23:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** namespace tflite {
+  24:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** namespace micro {
+  25:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** namespace {
+  26:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+  27:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** TfLiteStatus LogicalOrEval(TfLiteContext* context, TfLiteNode* node) {
+  29              		.loc 1 27 70 view -0
+  30              		.cfi_startproc
+  31              		@ args = 0, pretend = 0, frame = 0
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s 			page 2
+
+
+  32              		@ frame_needed = 0, uses_anonymous_args = 0
+  33              		.loc 1 27 70 is_stmt 0 view .LVU1
+  34 0000 08B5     		push	{r3, lr}
+  35              	.LCFI0:
+  36              		.cfi_def_cfa_offset 8
+  37              		.cfi_offset 3, -8
+  38              		.cfi_offset 14, -4
+  28:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc ****   return LogicalImpl(context, node, LogicalOr);
+  39              		.loc 1 28 3 is_stmt 1 view .LVU2
+  40              		.loc 1 28 21 is_stmt 0 view .LVU3
+  41 0002 024A     		ldr	r2, .L3
+  42 0004 FFF7FEFF 		bl	_ZN6tflite5micro11LogicalImplEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEPFbbbE
+  43              	.LVL1:
+  29:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** }
+  44              		.loc 1 29 1 view .LVU4
+  45 0008 08BD     		pop	{r3, pc}
+  46              	.L4:
+  47 000a 00BF     		.align	2
+  48              	.L3:
+  49 000c 00000000 		.word	_ZN6tflite5micro9LogicalOrEbb
+  50              		.cfi_endproc
+  51              	.LFE2978:
+  53              		.section	.text._ZN6tflite5micro12_GLOBAL__N_1L14LogicalAndEvalEPNS0_13TfLiteContextEPNS0_10TfLiteN
+  54              		.align	1
+  55              		.syntax unified
+  56              		.thumb
+  57              		.thumb_func
+  59              	_ZN6tflite5micro12_GLOBAL__N_1L14LogicalAndEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:
+  60              	.LVL2:
+  61              	.LFB2979:
+  30:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+  31:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** TfLiteStatus LogicalAndEval(TfLiteContext* context, TfLiteNode* node) {
+  62              		.loc 1 31 71 is_stmt 1 view -0
+  63              		.cfi_startproc
+  64              		@ args = 0, pretend = 0, frame = 0
+  65              		@ frame_needed = 0, uses_anonymous_args = 0
+  66              		.loc 1 31 71 is_stmt 0 view .LVU6
+  67 0000 08B5     		push	{r3, lr}
+  68              	.LCFI1:
+  69              		.cfi_def_cfa_offset 8
+  70              		.cfi_offset 3, -8
+  71              		.cfi_offset 14, -4
+  32:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc ****   return LogicalImpl(context, node, LogicalAnd);
+  72              		.loc 1 32 3 is_stmt 1 view .LVU7
+  73              		.loc 1 32 21 is_stmt 0 view .LVU8
+  74 0002 024A     		ldr	r2, .L7
+  75 0004 FFF7FEFF 		bl	_ZN6tflite5micro11LogicalImplEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEPFbbbE
+  76              	.LVL3:
+  33:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** }
+  77              		.loc 1 33 1 view .LVU9
+  78 0008 08BD     		pop	{r3, pc}
+  79              	.L8:
+  80 000a 00BF     		.align	2
+  81              	.L7:
+  82 000c 00000000 		.word	_ZN6tflite5micro10LogicalAndEbb
+  83              		.cfi_endproc
+  84              	.LFE2979:
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s 			page 3
+
+
+  86              		.section	.text._ZN6tflite5micro19Register_LOGICAL_OREv,"ax",%progbits
+  87              		.align	1
+  88              		.global	_ZN6tflite5micro19Register_LOGICAL_OREv
+  89              		.syntax unified
+  90              		.thumb
+  91              		.thumb_func
+  93              	_ZN6tflite5micro19Register_LOGICAL_OREv:
+  94              	.LVL4:
+  95              	.LFB2980:
+  34:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+  35:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** }  // namespace
+  36:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+  37:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** TFLMRegistration Register_LOGICAL_OR() {
+  96              		.loc 1 37 40 is_stmt 1 view -0
+  97              		.cfi_startproc
+  98              		@ args = 0, pretend = 0, frame = 0
+  99              		@ frame_needed = 0, uses_anonymous_args = 0
+ 100              		.loc 1 37 40 is_stmt 0 view .LVU11
+ 101 0000 10B5     		push	{r4, lr}
+ 102              	.LCFI2:
+ 103              		.cfi_def_cfa_offset 8
+ 104              		.cfi_offset 4, -8
+ 105              		.cfi_offset 14, -4
+ 106 0002 82B0     		sub	sp, sp, #8
+ 107              	.LCFI3:
+ 108              		.cfi_def_cfa_offset 16
+ 109 0004 0446     		mov	r4, r0
+  38:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc ****   return tflite::micro::RegisterOp(nullptr, nullptr, LogicalOrEval);
+ 110              		.loc 1 38 3 is_stmt 1 view .LVU12
+ 111              		.loc 1 38 35 is_stmt 0 view .LVU13
+ 112 0006 0021     		movs	r1, #0
+ 113 0008 0191     		str	r1, [sp, #4]
+ 114 000a 0091     		str	r1, [sp]
+ 115 000c 034B     		ldr	r3, .L11
+ 116 000e 0A46     		mov	r2, r1
+ 117 0010 FFF7FEFF 		bl	_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLit
+ 118              	.LVL5:
+  39:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** }
+ 119              		.loc 1 39 1 view .LVU14
+ 120 0014 2046     		mov	r0, r4
+ 121 0016 02B0     		add	sp, sp, #8
+ 122              	.LCFI4:
+ 123              		.cfi_def_cfa_offset 8
+ 124              		@ sp needed
+ 125 0018 10BD     		pop	{r4, pc}
+ 126              	.LVL6:
+ 127              	.L12:
+ 128              		.loc 1 39 1 view .LVU15
+ 129 001a 00BF     		.align	2
+ 130              	.L11:
+ 131 001c 00000000 		.word	_ZN6tflite5micro12_GLOBAL__N_1L13LogicalOrEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ 132              		.cfi_endproc
+ 133              	.LFE2980:
+ 135              		.section	.text._ZN6tflite5micro20Register_LOGICAL_ANDEv,"ax",%progbits
+ 136              		.align	1
+ 137              		.global	_ZN6tflite5micro20Register_LOGICAL_ANDEv
+ 138              		.syntax unified
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s 			page 4
+
+
+ 139              		.thumb
+ 140              		.thumb_func
+ 142              	_ZN6tflite5micro20Register_LOGICAL_ANDEv:
+ 143              	.LVL7:
+ 144              	.LFB2981:
+  40:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** 
+  41:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** TFLMRegistration Register_LOGICAL_AND() {
+ 145              		.loc 1 41 41 is_stmt 1 view -0
+ 146              		.cfi_startproc
+ 147              		@ args = 0, pretend = 0, frame = 0
+ 148              		@ frame_needed = 0, uses_anonymous_args = 0
+ 149              		.loc 1 41 41 is_stmt 0 view .LVU17
+ 150 0000 10B5     		push	{r4, lr}
+ 151              	.LCFI5:
+ 152              		.cfi_def_cfa_offset 8
+ 153              		.cfi_offset 4, -8
+ 154              		.cfi_offset 14, -4
+ 155 0002 82B0     		sub	sp, sp, #8
+ 156              	.LCFI6:
+ 157              		.cfi_def_cfa_offset 16
+ 158 0004 0446     		mov	r4, r0
+  42:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc ****   return tflite::micro::RegisterOp(nullptr, nullptr, LogicalAndEval);
+ 159              		.loc 1 42 3 is_stmt 1 view .LVU18
+ 160              		.loc 1 42 35 is_stmt 0 view .LVU19
+ 161 0006 0021     		movs	r1, #0
+ 162 0008 0191     		str	r1, [sp, #4]
+ 163 000a 0091     		str	r1, [sp]
+ 164 000c 034B     		ldr	r3, .L15
+ 165 000e 0A46     		mov	r2, r1
+ 166 0010 FFF7FEFF 		bl	_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLit
+ 167              	.LVL8:
+  43:lib/tflite-micro/tensorflow/lite/micro/kernels/logical.cc **** }
+ 168              		.loc 1 43 1 view .LVU20
+ 169 0014 2046     		mov	r0, r4
+ 170 0016 02B0     		add	sp, sp, #8
+ 171              	.LCFI7:
+ 172              		.cfi_def_cfa_offset 8
+ 173              		@ sp needed
+ 174 0018 10BD     		pop	{r4, pc}
+ 175              	.LVL9:
+ 176              	.L16:
+ 177              		.loc 1 43 1 view .LVU21
+ 178 001a 00BF     		.align	2
+ 179              	.L15:
+ 180 001c 00000000 		.word	_ZN6tflite5micro12_GLOBAL__N_1L14LogicalAndEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+ 181              		.cfi_endproc
+ 182              	.LFE2981:
+ 184              		.text
+ 185              	.Letext0:
+ 186              		.file 2 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-none
+ 187              		.file 3 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 188              		.file 4 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 189              		.file 5 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/in
+ 190              		.file 6 "lib/tflite-micro/tensorflow/lite/micro/micro_common.h"
+ 191              		.file 7 "lib/tflite-micro/tensorflow/lite/micro/builtin_op_data.h"
+ 192              		.file 8 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/runtime_shape.h"
+ 193              		.file 9 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/types.h"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s 			page 5
+
+
+ 194              		.file 10 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/common.h"
+ 195              		.file 11 "lib/tflite-micro/tensorflow/lite/micro/kernels/internal/tensor_ctypes.h"
+ 196              		.file 12 "lib/tflite-micro/tensorflow/lite/micro/micro_profiler_interface.h"
+ 197              		.file 13 "lib/tflite-micro/tensorflow/lite/micro/micro_context.h"
+ 198              		.file 14 "lib/tflite-micro/tensorflow/lite/micro/kernels/kernel_util.h"
+ 199              		.file 15 "lib/tflite-micro/tensorflow/lite/micro/kernels/logical.h"
+ 200              		.file 16 "lib/tflite-micro/tensorflow/lite/micro/micro_graph.h"
+ 201              		.file 17 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 202              		.file 18 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 203              		.file 19 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 204              		.file 20 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 205              		.file 21 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 206              		.file 22 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 207              		.file 23 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 208              		.file 24 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 209              		.file 25 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 210              		.file 26 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 211              		.file 27 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 212              		.file 28 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 213              		.file 29 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/lib/gcc/arm-non
+ 214              		.file 30 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 215              		.file 31 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 216              		.file 32 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 217              		.file 33 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 218              		.file 34 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 219              		.file 35 "C:/ArmToolchain/arm-gnu-toolchain-15.2.rel1-mingw-w64-i686-arm-none-eabi/arm-none-eabi/i
+ 220              		.file 36 "<built-in>"
+ARM GAS  C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s 			page 6
+
+
+DEFINED SYMBOLS
+                            *ABS*:00000000 logical.cc
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:21     .text._ZN6tflite5micro12_GLOBAL__N_1L13LogicalOrEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:26     .text._ZN6tflite5micro12_GLOBAL__N_1L13LogicalOrEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 _ZN6tflite5micro12_GLOBAL__N_1L13LogicalOrEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:49     .text._ZN6tflite5micro12_GLOBAL__N_1L13LogicalOrEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:0000000c $d
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:54     .text._ZN6tflite5micro12_GLOBAL__N_1L14LogicalAndEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:59     .text._ZN6tflite5micro12_GLOBAL__N_1L14LogicalAndEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:00000000 _ZN6tflite5micro12_GLOBAL__N_1L14LogicalAndEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:82     .text._ZN6tflite5micro12_GLOBAL__N_1L14LogicalAndEvalEPNS0_13TfLiteContextEPNS0_10TfLiteNodeE:0000000c $d
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:87     .text._ZN6tflite5micro19Register_LOGICAL_OREv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:93     .text._ZN6tflite5micro19Register_LOGICAL_OREv:00000000 _ZN6tflite5micro19Register_LOGICAL_OREv
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:131    .text._ZN6tflite5micro19Register_LOGICAL_OREv:0000001c $d
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:136    .text._ZN6tflite5micro20Register_LOGICAL_ANDEv:00000000 $t
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:142    .text._ZN6tflite5micro20Register_LOGICAL_ANDEv:00000000 _ZN6tflite5micro20Register_LOGICAL_ANDEv
+C:\Users\Chetan\AppData\Local\Temp\ccJEkYvB.s:180    .text._ZN6tflite5micro20Register_LOGICAL_ANDEv:0000001c $d
+
+UNDEFINED SYMBOLS
+_ZN6tflite5micro11LogicalImplEPNS0_13TfLiteContextEPNS0_10TfLiteNodeEPFbbbE
+_ZN6tflite5micro9LogicalOrEbb
+_ZN6tflite5micro10LogicalAndEbb
+_ZN6tflite5micro10RegisterOpEPFPvPNS0_13TfLiteContextEPKcjEPFNS0_12TfLiteStatusES3_PNS0_10TfLiteNodeEESC_PFvS3_S1_ESE_
